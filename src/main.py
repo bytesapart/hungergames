@@ -162,7 +162,7 @@ def check_vaccines(driver, vaccine_info):
                 continue
             elif txt.isnumeric():
                 list_of_vaccines.append(i)
-                break;
+                break
     return list_of_vaccines
 
 
