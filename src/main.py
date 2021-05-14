@@ -114,7 +114,7 @@ def find_vaccines(driver):
     wait.until(ec.presence_of_all_elements_located((By.XPATH, query)))
     all_vaccine_info = []
     wait.until(ec.presence_of_all_elements_located((By.XPATH,
-                                                    '//*[@id="main-content"]/app-appointment-table/ion-content/div/div/ion-grid/ion-row/ion-grid/ion-row/ion-col/ion-grid/ion-row/ion-col[2]/form/ion-grid/ion-row/ion-col[6]/div/div/mat-selection-list/div[4]/mat-list-option/div/div[2]/ion-row/ion-col[1]/div/h5')))
+                                                    '//*[@id="main-content"]/app-appointment-table/ion-content/div/div/ion-grid/ion-row/ion-grid/ion-row/ion-col/ion-grid/ion-row/ion-col[2]/form/ion-grid/ion-row/ion-col[6]/div/div/mat-selection-list/div[3]/mat-list-option/div/div[2]/ion-row/ion-col[1]/div/h5')))
     wait.until(ec.presence_of_all_elements_located((By.XPATH,
                                                     '//*[@id="main-content"]/app-appointment-table/ion-content/div/div/ion-grid/ion-row/ion-grid/ion-row/ion-col/ion-grid/ion-row/ion-col[2]/form/ion-grid/ion-row/ion-col[6]/div/div/mat-selection-list/div[1]/mat-list-option/div/div[2]/ion-row/ion-col[2]/ul')))
     wait.until(ec.presence_of_all_elements_located((By.XPATH, "//li")))
