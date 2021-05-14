@@ -187,7 +187,7 @@ def launch_chrome():
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     script_directory = Path().absolute()
     options.add_argument(f"--user-data-dir={script_directory}\\cd")
-    driver = webdriver.Chrome(options=options)
+    driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'chromedriver.exe'), options=options)
     driver.maximize_window()
     driver.get(r'https://www.cowin.gov.in/')
     driver.execute_script("window.open('" + "https://messages.google.com/web/authentication" + "', '_blank')")
