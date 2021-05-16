@@ -84,8 +84,8 @@ def select_district(driver):
     """
     wait = WebDriverWait(driver, 10)
     wait.until(ec.presence_of_element_located((By.ID, "mat-select-2")))
-    driver.find_element_by_id('mat-select-2').click()
     sleep(.5)
+    driver.find_element_by_id('mat-select-2').click()
     wait.until(ec.presence_of_element_located((By.ID, "cdk-overlay-1")))
     district_list = driver.find_elements_by_xpath("//div[@id='cdk-overlay-1']/div/div/mat-option/span")
     for district in district_list:
