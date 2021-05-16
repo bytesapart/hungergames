@@ -1,4 +1,5 @@
 Phone: 9867143600
 State: Maharashtra
 District: Mumbai
-Email: pilafoo@gmail.com
+Age: 18+
+Covishield: Yes

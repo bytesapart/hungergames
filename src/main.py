@@ -16,33 +16,91 @@ import sys
 PHONE_NUMBER = None
 USER_STATE = None
 USER_DISTRICT = None
-USER_EMAIL = None
+AGE = None
+COVISHIELD = None
+COVAXIN = None
+SPUTNIK = None
+PAID = None
+FREE = None
+HOSPITAL = None
+PIN_CODE = None
 
 
 def setup():
     print("Warning: Application is still in beta, has pointed edges. Very stabby. Much wow.")
+    print(
+        "\nWelcome to Hunger Games!\nOnly technologists who can code can get the vaccine, therfore, leading to a selection bias in the population! Wohoo!\n\n")
     global PHONE_NUMBER
     global USER_STATE
     global USER_DISTRICT
-    global USER_EMAIL
+    global AGE
+    global COVISHIELD
+    global COVAXIN
+    global SPUTNIK
+    global PAID
+    global FREE
+    global HOSPITAL
+    global PIN_CODE
     settings = os.path.join(os.path.dirname(os.getcwd()), "settings.txt")
     if os.path.exists(settings):
         with open(settings, 'r') as the_file:
             lines = the_file.readlines()
-            if len(lines) != 4:
+            if len(lines) < 4:
                 raise ValueError(
-                    "Please make sure that there are only 4 fields in the settings.txt file, that is, Phone, State, Distrcit and Email ")
-            PHONE_NUMBER = lines[0].split(':')[1].strip()
-            USER_STATE = lines[1].split(':')[1].strip()
-            USER_DISTRICT = lines[2].split(':')[1].strip()
-            USER_EMAIL = lines[3].split(':')[1].strip()
+                    "Please make sure that there are at least 3 fields in the settings.txt file, that is, Phone, State, District and Age")
+            for line in lines:
+                if line.split(':')[0].lower() == 'phone':
+                    PHONE_NUMBER = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'state':
+                    USER_STATE = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'district':
+                    USER_DISTRICT = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'age':
+                    AGE = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'covishield':
+                    COVISHIELD = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'covaxin':
+                    COVAXIN = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'sputnik':
+                    SPUTNIK = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'paid':
+                    PAID = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'free':
+                    FREE = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'hospital':
+                    HOSPITAL = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'pin':
+                    PIN_CODE = line.split(':')[1].strip()
+
     else:
-        print(
-            "\nWelcome to Hunger Games!\nOnly technologists who can code can get the vaccine, therfore, leading to a selection bias in the population! Wohoo!\n\n")
         PHONE_NUMBER = input("Your Number: ")
         USER_STATE = input("Your State: ").lower()
         USER_DISTRICT = input("Your District: ").lower()
-        USER_EMAIL = input("\nPlease type your e-mail:  ")
+        AGE = input("Your Age (Enter either 18+ or 45+): ").lower()
+        COVISHIELD = input("Covishield? (Press Enter to not apply this filter): ").lower()
+        if COVISHIELD == '':
+            COVISHIELD = None
+        COVAXIN = input("Covaxin? (Press Enter to not apply this filter): ").lower()
+        if COVAXIN == '':
+            COVAXIN = None
+        SPUTNIK = input("Sputnik? (Press Enter to not apply this filter): ").lower()
+        if SPUTNIK == '':
+            SPUTNIK = None
+        PAID = input("Paid? (Press Enter to not apply this filter): ").lower()
+        if PAID == '':
+            PAID = None
+        FREE = input("Free? (Press Enter to not apply this filter): ").lower()
+        if FREE == '':
+            FREE = None
+        HOSPITAL = input("Hospital? (Press Enter to not search via preferred hospital): ").lower()
+        if HOSPITAL == '':
+            HOSPITAL = None
+        PIN_CODE = input("Pin Code? (Press Enter to leave blank. If you have entered a hospital, this is mandatory to enter): ").lower()
+        if PIN_CODE == '':
+            PIN_CODE = None
+
+    if (HOSPITAL is not None and PIN_CODE is None) or (HOSPITAL is None and PIN_CODE is not None):
+        raise ValueError("Please make sure that Hospital Name AND Pin BOTH are entered")
 
 
 def select_state(driver):
@@ -58,15 +116,19 @@ def select_state(driver):
     None
 
     """
-    wait = WebDriverWait(driver, 10)
-    wait.until(ec.presence_of_element_located((By.ID, "mat-select-0")))
-    driver.find_element_by_id('mat-select-0').click()
-    wait.until(ec.presence_of_element_located((By.ID, "cdk-overlay-0")))
-    state_list = driver.find_elements_by_xpath("//div[@id='cdk-overlay-0']/div/div/mat-option/span")
-    for state in state_list:
-        if state.text.lower() == str(USER_STATE).lower():
-            state.click()
-            break
+    try:
+        wait = WebDriverWait(driver, 10)
+        wait.until(ec.presence_of_element_located((By.ID, "mat-select-0")))
+        driver.find_element_by_id('mat-select-0').click()
+        wait.until(ec.presence_of_element_located((By.ID, "cdk-overlay-0")))
+        state_list = driver.find_elements_by_xpath("//div[@id='cdk-overlay-0']/div/div/mat-option/span")
+        for state in state_list:
+            if state.text.lower() == str(USER_STATE).lower():
+                state.click()
+                break
+    except Exception:
+        print('Exception occured in select_state() function! Retrying...')
+        select_state(driver)
 
 
 def select_district(driver):
@@ -82,16 +144,19 @@ def select_district(driver):
     None
 
     """
-    wait = WebDriverWait(driver, 10)
-    wait.until(ec.presence_of_element_located((By.ID, "mat-select-2")))
-    sleep(.5)
-    driver.find_element_by_id('mat-select-2').click()
-    wait.until(ec.presence_of_element_located((By.ID, "cdk-overlay-1")))
-    district_list = driver.find_elements_by_xpath("//div[@id='cdk-overlay-1']/div/div/mat-option/span")
-    for district in district_list:
-        if district.text.lower() == str(USER_DISTRICT).lower():
-            district.click()
-            break
+    try:
+        wait = WebDriverWait(driver, 10)
+        wait.until(ec.presence_of_element_located((By.ID, "mat-select-2")))
+        driver.find_element_by_id('mat-select-2').click()
+        wait.until(ec.presence_of_element_located((By.ID, "cdk-overlay-1")))
+        district_list = driver.find_elements_by_xpath("//div[@id='cdk-overlay-1']/div/div/mat-option/span")
+        for district in district_list:
+            if district.text.lower() == str(USER_DISTRICT).lower():
+                district.click()
+                break
+    except Exception:
+        print("Exception Occured! Retrying in function select_district()")
+        select_district(driver)
 
 
 def find_vaccines(driver):
@@ -379,6 +444,35 @@ def login(driver):
     sleep(1)
 
 
+def filter_table(driver):
+    """
+
+    Parameters
+    ----------
+    driver : WebDriver
+             The Selenium ChromeDriver handlebar
+
+    Returns
+    -------
+    None
+    """
+    filter_buttons = driver.find_elements_by_class_name("form-check")
+    if AGE == '18+':
+        filter_buttons[0].click()
+    else:
+        filter_buttons[1].click()
+    if COVISHIELD is not None:
+        filter_buttons[2].click()
+    if COVAXIN is not None:
+        filter_buttons[3].click()
+    if SPUTNIK is not None:
+        filter_buttons[4].click()
+    if PAID is not None:
+        filter_buttons[5].click()
+    if FREE is not None:
+        filter_buttons[6].click()
+
+
 def main():
     """
 
@@ -421,7 +515,7 @@ def main():
         driver.find_elements_by_tag_name("ion-button")[0].click()
         wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, "form-check")))
         sleep(1)
-        driver.find_elements_by_class_name("form-check")[0].click()
+        filter_table(driver)
         vaccine_info = find_vaccines(driver)
         list_of_vaccines_index = check_vaccines(driver, vaccine_info)
         if len(list_of_vaccines_index) > 0:
@@ -429,11 +523,10 @@ def main():
             print("\n\n\nFound vaccine(s)!!!!")
             for index in list_of_vaccines_index:
                 print("      >>> " + vaccine_info[index][0])
-            vaccine_found = True
             play_alarm(vaccine_info)
         else:
             print(f"Vaccine not found!     " + f"Retrying in {check_in_x_seconds} seconds..\n")
-            sleep(1)
+            # sleep(1)
             go_back_to_main_page(driver)
             sleep(check_in_x_seconds)
 
