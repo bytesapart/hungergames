@@ -17,6 +17,7 @@ PHONE_NUMBER = None
 USER_STATE = None
 USER_DISTRICT = None
 AGE = None
+NAME = None
 COVISHIELD = None
 COVAXIN = None
 SPUTNIK = None
@@ -34,6 +35,7 @@ def setup():
     global USER_STATE
     global USER_DISTRICT
     global AGE
+    global NAME
     global COVISHIELD
     global COVAXIN
     global SPUTNIK
@@ -57,6 +59,8 @@ def setup():
                     USER_DISTRICT = line.split(':')[1].strip()
                 if line.split(':')[0].lower() == 'age':
                     AGE = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'name':
+                    NAME = line.split(':')[1].strip()
                 if line.split(':')[0].lower() == 'covishield':
                     COVISHIELD = line.split(':')[1].strip()
                 if line.split(':')[0].lower() == 'covaxin':
@@ -77,6 +81,7 @@ def setup():
         USER_STATE = input("Your State: ").lower()
         USER_DISTRICT = input("Your District: ").lower()
         AGE = input("Your Age (Enter either 18+ or 45+): ").lower()
+        NAME = input("Your Name: ").lower()
         COVISHIELD = input("Covishield? (Press Enter to not apply this filter): ").lower()
         if COVISHIELD == '':
             COVISHIELD = None
@@ -455,6 +460,7 @@ def filter_table(driver):
     Returns
     -------
     None
+
     """
     filter_buttons = driver.find_elements_by_class_name("form-check")
     if AGE == '18+':
@@ -471,6 +477,25 @@ def filter_table(driver):
         filter_buttons[5].click()
     if FREE is not None:
         filter_buttons[6].click()
+
+
+def schedule_for_candidate(driver):
+    """
+
+    Parameters
+    ----------
+    driver : WebDriver
+             The Selenium ChromeDriver handlebar
+
+    Returns
+    -------
+    None
+
+    """
+    schedule_button = driver.find_elements_by_xpath(
+        "//h3[contains(., '" + NAME + "')]/ancestor::ion-grid[contains(concat(' ', @class, ' '), ' cardblockcls ')]//ion-row[contains(concat(' ', @class, ' '), ' dose-data ')]//ul//a")[
+        0]
+    schedule_button.click()
 
 
 def main():
@@ -502,8 +527,9 @@ def main():
         print("\n>> Fetching fresh set of slots:")
         counting_entries += 1
         wait.until(ec.presence_of_element_located((By.CLASS_NAME, "btnlist")))
-        button_appointment_schedule = driver.find_element_by_class_name("btnlist").find_element_by_xpath("//li/a")
-        button_appointment_schedule.click()
+        # button_appointment_schedule = driver.find_element_by_class_name("btnlist").find_element_by_xpath("//li/a")
+        # button_appointment_schedule.click()
+        schedule_for_candidate(driver)
         # query_1 = "//ion-button[contains(@class, 'register-btn') and contains(@class, 'schedule-appointment') and contains(@class, 'md') and contains(@class, 'button') and contains(@class, 'button-solid') and contains(@class, 'ion-activatable') and contains(@class, 'ion-focusable') and contains(@class, 'hydrated')]"
         # wait.until(ec.presence_of_element_located((By.XPATH, query_1)))
         # button_appointment_schedule1 = driver.find_element_by_xpath(query_1)
