@@ -85,6 +85,7 @@ def select_district(driver):
     wait = WebDriverWait(driver, 10)
     wait.until(ec.presence_of_element_located((By.ID, "mat-select-2")))
     driver.find_element_by_id('mat-select-2').click()
+    sleep(.5)
     wait.until(ec.presence_of_element_located((By.ID, "cdk-overlay-1")))
     district_list = driver.find_elements_by_xpath("//div[@id='cdk-overlay-1']/div/div/mat-option/span")
     for district in district_list:
@@ -114,9 +115,9 @@ def find_vaccines(driver):
     wait.until(ec.presence_of_all_elements_located((By.XPATH, query)))
     all_vaccine_info = []
     wait.until(ec.presence_of_all_elements_located((By.XPATH,
-                                                    '//*[@id="main-content"]/app-appointment-table/ion-content/div/div/ion-grid/ion-row/ion-grid/ion-row/ion-col/ion-grid/ion-row/ion-col[2]/form/ion-grid/ion-row/ion-col[6]/div/div/mat-selection-list/div[3]/mat-list-option/div/div[2]/ion-row/ion-col[1]/div/h5')))
+                                                    '//mat-list-option/div/div[2]/ion-row/ion-col[1]/div/h5')))
     wait.until(ec.presence_of_all_elements_located((By.XPATH,
-                                                    '//*[@id="main-content"]/app-appointment-table/ion-content/div/div/ion-grid/ion-row/ion-grid/ion-row/ion-col/ion-grid/ion-row/ion-col[2]/form/ion-grid/ion-row/ion-col[6]/div/div/mat-selection-list/div[1]/mat-list-option/div/div[2]/ion-row/ion-col[2]/ul')))
+                                                    '//mat-list-option/div/div[2]/ion-row/ion-col[2]/ul')))
     wait.until(ec.presence_of_all_elements_located((By.XPATH, "//li")))
 
     vaccine_rows = driver.find_elements_by_xpath(query)
@@ -226,8 +227,8 @@ def get_otp(driver):
     """
     driver.switch_to.window(driver.window_handles[2])
     driver.get('https://messages.google.com/web/conversations')
-    sleep(15)
-    wait = WebDriverWait(driver, 30)
+    sleep(7)
+    wait = WebDriverWait(driver, 15)
     wait.until(ec.presence_of_all_elements_located((By.TAG_NAME, r"mws-conversation-list-item")))
     msg_container = driver.find_elements_by_tag_name(r"mws-conversation-list-item")[0]
     msg_container.find_element_by_tag_name("a").click()
@@ -265,17 +266,17 @@ def send_otp(driver):
     driver.switch_to.window(driver.window_handles[1])
     driver.get('https://selfregistration.cowin.gov.in/')
     sleep(3)
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 15)
     wait.until(ec.presence_of_element_located((By.ID, "mat-input-0")))
     box = driver.find_element_by_id("mat-input-0")
     for n in str(PHONE_NUMBER):
         box.send_keys(n)
-        sleep(.3)
+        # sleep(.3)
     wait.until(ec.presence_of_element_located((By.TAG_NAME, "ion-button")))
     button = driver.find_element_by_tag_name("ion-button")
     button.click()
     wait.until(ec.presence_of_element_located((By.ID, "mat-input-1")))
-    sleep(10)
+    sleep(5)
     print(">> Waiting for OTP")
 
 
@@ -302,7 +303,7 @@ def try_putting_otp(driver, otp):
     box = driver.find_element_by_id("mat-input-1")
     for char in otp:
         box.send_keys(char)
-        sleep(.6)
+        # sleep(.6)
     sleep(1)
     wait.until(ec.presence_of_element_located((By.TAG_NAME, "ion-button")))
     button = driver.find_element_by_tag_name("ion-button")
@@ -394,12 +395,12 @@ def main():
     # ===== Step 3: Do your Thang! =====
     vaccine_found = False
     counting_entries = 1
-    check_in_x_seconds = 20
+    check_in_x_seconds = 2
 
     while vaccine_found is False:
         if driver.current_url != "https://selfregistration.cowin.gov.in/dashboard":
-            print(">> User is logged out!    Trying to log back in 10 seconds...")
-            sleep(10)
+            print(">> User is logged out!    Trying to log back in 5 seconds...")
+            sleep(5)
             login(driver)
         wait = WebDriverWait(driver, 30)
         print("\n>> Fetching fresh set of slots:")
@@ -407,15 +408,15 @@ def main():
         wait.until(ec.presence_of_element_located((By.CLASS_NAME, "btnlist")))
         button_appointment_schedule = driver.find_element_by_class_name("btnlist").find_element_by_xpath("//li/a")
         button_appointment_schedule.click()
-        query_1 = "//ion-button[contains(@class, 'register-btn') and contains(@class, 'schedule-appointment') and contains(@class, 'md') and contains(@class, 'button') and contains(@class, 'button-solid') and contains(@class, 'ion-activatable') and contains(@class, 'ion-focusable') and contains(@class, 'hydrated')]"
-        wait.until(ec.presence_of_element_located((By.XPATH, query_1)))
-        button_appointment_schedule1 = driver.find_element_by_xpath(query_1)
-        button_appointment_schedule1.click()
+        # query_1 = "//ion-button[contains(@class, 'register-btn') and contains(@class, 'schedule-appointment') and contains(@class, 'md') and contains(@class, 'button') and contains(@class, 'button-solid') and contains(@class, 'ion-activatable') and contains(@class, 'ion-focusable') and contains(@class, 'hydrated')]"
+        # wait.until(ec.presence_of_element_located((By.XPATH, query_1)))
+        # button_appointment_schedule1 = driver.find_element_by_xpath(query_1)
+        # button_appointment_schedule1.click()
         switch_to_district(driver)
         select_state(driver)
         sleep(.5)
         select_district(driver)
-        driver.find_elements_by_tag_name("ion-button")[1].click()
+        driver.find_elements_by_tag_name("ion-button")[0].click()
         wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, "form-check")))
         sleep(1)
         driver.find_elements_by_class_name("form-check")[0].click()
