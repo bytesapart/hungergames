@@ -208,6 +208,8 @@ def open_messages(driver):
         toggle.click()
 
     while driver.current_url != r"https://messages.google.com/web/conversations":
+        driver.get(r"https://messages.google.com/web/conversations")
+        sleep(3)
         pass
 
 
