@@ -618,6 +618,7 @@ def main():
 
         if MODE is None or MODE.lower() == 'normal':
             if int(minutes) > 13:
+                start = time.time()
                 logout(driver)
                 sleep(1.5)
             if driver.current_url != "https://selfregistration.cowin.gov.in/dashboard":
@@ -627,6 +628,7 @@ def main():
         elif MODE.lower() == 'ultra':
             if int(minutes) > 13:
                 counting_entries = 0
+                start = time.time()
                 logout(driver)
                 sleep(1.5)
             if driver.current_url != "https://selfregistration.cowin.gov.in/appointment":
