@@ -12,6 +12,7 @@ from pathlib import Path
 from playsound import playsound
 import os
 import sys
+import time
 import svg_decode
 
 PHONE_NUMBER = None
@@ -403,7 +404,7 @@ def try_putting_otp(driver, otp):
         print(">> Successfully Logged in!")
 
 
-def switch_to_district(driver):
+def switch_to_district(driver, counting_entities):
     """
 
     Parameters
@@ -416,9 +417,11 @@ def switch_to_district(driver):
     None
 
     """
-    sleep(1)
+    if MODE is not None and MODE.lower() == 'ultra' and counting_entities != 1:
+        return None
+    sleep(.5)
     driver.find_element_by_class_name(r'status-switch').click()
-    sleep(1)
+    sleep(.5)
 
 
 def go_back_to_main_page(driver):
@@ -601,22 +604,35 @@ def main():
     counting_entries = 0
     check_in_x_seconds = 1
 
+    start = time.time()
+
     while vaccine_found is False:
+        end = time.time()
+        hours, rem = divmod(end - start, 3600)
+        minutes, seconds = divmod(rem, 60)
+
         if MODE is None or MODE.lower() == 'normal':
+            if int(minutes) > 13:
+                logout(driver)
+                sleep(1.5)
             if driver.current_url != "https://selfregistration.cowin.gov.in/dashboard":
                 print(">> User is logged out!    Trying to log back in 5 seconds...")
-                sleep(3)
+                sleep(1.5)
                 login(driver)
         elif MODE.lower() == 'ultra':
+            if int(minutes) > 13:
+                logout(driver)
+                sleep(1.5)
             if driver.current_url != "https://selfregistration.cowin.gov.in/appointment":
                 print(">> User is logged out!    Trying to log back in 5 seconds...")
-                sleep(3)
+                sleep(1.5)
                 login(driver)
 
         wait = WebDriverWait(driver, 30)
         print("\n>> Fetching fresh set of slots:")
         counting_entries += 1
         wait.until(ec.presence_of_element_located((By.CLASS_NAME, "btnlist")))
+
         # button_appointment_schedule = driver.find_element_by_class_name("btnlist").find_element_by_xpath("//li/a")
         # button_appointment_schedule.click()
         if MODE.lower() == 'ultra' and counting_entries == 1:
@@ -633,7 +649,7 @@ def main():
         if PIN_CODE is not None:
             search_using_pin(driver)
         else:
-            switch_to_district(driver)
+            switch_to_district(driver, counting_entries)
             select_state(driver)
             sleep(.5)
             select_district(driver)
