@@ -594,8 +594,8 @@ def book_vaccine(driver):
         box = driver.find_element_by_xpath("//input[@placeholder='Enter Security Code']")
         box.click()
 
-        for char in captcha:
-            box.send_keys(char)
+        # for char in captcha:
+        #     box.send_keys(char)
         wait.until(ec.presence_of_element_located((By.XPATH, "//ion-button[@type='submit']")))
         driver.find_element_by_xpath("//ion-button[@type='submit']").click()
     except Exception:
