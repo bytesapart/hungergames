@@ -1,8 +1,10 @@
 Phone: 9867143600
 State: Maharashtra
-District: Mumbai
-Age: 18+
-Name: Alka Bharat Muke
+District: Nandurbar
+Age: 45+
+Name: MI
 Covishield: Yes
 Slot: 3
+Hospital: AKKALKUWA
+Pin: 425415
 Mode: Ultra

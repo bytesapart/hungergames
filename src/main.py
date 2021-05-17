@@ -597,7 +597,7 @@ def book_vaccine(driver):
         for char in captcha:
             box.send_keys(char)
         wait.until(ec.presence_of_element_located((By.XPATH, "//ion-button[@type='submit']")))
-        driver.get_element_by_xpath("//ion-button[@type='submit']").click()
+        driver.find_element_by_xpath("//ion-button[@type='submit']").click()
     except Exception:
         print("Exception Occured! Retrying in function book_vaccine()")
         book_vaccine(driver)
