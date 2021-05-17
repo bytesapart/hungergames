@@ -220,12 +220,15 @@ def find_vaccines(driver):
                 # sleep(.1)
                 if vaccine_slot.find_element_by_tag_name("a").get_attribute('textContent').strip().isnumeric():
                     vaccine_hyperlink = vaccine_slot.find_element_by_tag_name("a")
+                    break
             final_info_grabbed = f"      >>> Vaccine Centre: {vaccine_center_name} -> Info(+7) "
             for vaccine_slot in vaccine_info_about_slots:
                 final_info_grabbed += vaccine_slot + " "
             all_vaccine_info.append((vaccine_center_name, vaccine_info_about_slots))
             print(final_info_grabbed)
             if HOSPITAL is not None:
+                break
+            if vaccine_hyperlink is not None:
                 break
 
         return all_vaccine_info, vaccine_hyperlink
@@ -594,8 +597,8 @@ def book_vaccine(driver):
         box = driver.find_element_by_xpath("//input[@placeholder='Enter Security Code']")
         box.click()
 
-        # for char in captcha:
-        #     box.send_keys(char)
+        for char in captcha:
+            box.send_keys(char)
         wait.until(ec.presence_of_element_located((By.XPATH, "//ion-button[@type='submit']")))
         driver.find_element_by_xpath("//ion-button[@type='submit']").click()
     except Exception:
