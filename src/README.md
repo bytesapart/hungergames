@@ -6,3 +6,9 @@
 1. Input all info
 1. When running for the first time, the google messages window will open from a google chrome window, scan the QR code there from your phone google messages application
 1. Yenjoy!
+
+Slots:
+1 = 9am to 11 am
+2 = 11am to 1 pm
+3 = 1pm to 3pm
+4 = 3pm to 5 pm

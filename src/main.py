@@ -12,6 +12,7 @@ from pathlib import Path
 from playsound import playsound
 import os
 import sys
+import svg_decode
 
 PHONE_NUMBER = None
 USER_STATE = None
@@ -25,6 +26,8 @@ PAID = None
 FREE = None
 HOSPITAL = None
 PIN_CODE = None
+SLOT = None
+MODE = None
 
 
 def setup():
@@ -43,6 +46,8 @@ def setup():
     global FREE
     global HOSPITAL
     global PIN_CODE
+    global SLOT
+    global MODE
     settings = os.path.join(os.path.dirname(os.getcwd()), "settings.txt")
     if os.path.exists(settings):
         with open(settings, 'r') as the_file:
@@ -75,6 +80,10 @@ def setup():
                     HOSPITAL = line.split(':')[1].strip()
                 if line.split(':')[0].lower() == 'pin':
                     PIN_CODE = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'slot':
+                    SLOT = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'mode':
+                    MODE = line.split(':')[1].strip()
 
     else:
         PHONE_NUMBER = input("Your Number: ")
@@ -100,11 +109,12 @@ def setup():
         HOSPITAL = input("Hospital? (Press Enter to not search via preferred hospital): ").lower()
         if HOSPITAL == '':
             HOSPITAL = None
-        PIN_CODE = input("Pin Code? (Press Enter to leave blank. If you have entered a hospital, this is mandatory to enter): ").lower()
+        PIN_CODE = input(
+            "Pin Code? (Press Enter to leave blank. If you have entered a hospital, this is mandatory to enter): ").lower()
         if PIN_CODE == '':
             PIN_CODE = None
 
-    if (HOSPITAL is not None and PIN_CODE is None) or (HOSPITAL is None and PIN_CODE is not None):
+    if HOSPITAL is not None and PIN_CODE is None:
         raise ValueError("Please make sure that Hospital Name AND Pin BOTH are entered")
 
 
@@ -178,7 +188,7 @@ def find_vaccines(driver):
         Returns a list of all the Vaccines information
 
     """
-    sleep(5)
+    sleep(.5)
     driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
     wait = WebDriverWait(driver, 20)
     query = "//div[contains(@class, 'mat-main-field') and contains(@class, 'center-main-field')]/mat-selection-list/div[contains(@class, 'ng-star-inserted')]"
@@ -192,22 +202,30 @@ def find_vaccines(driver):
 
     vaccine_rows = driver.find_elements_by_xpath(query)
 
+    vaccine_hyperlink = None
     for vaccine_row in vaccine_rows:
         vaccine_center = vaccine_row
         vaccine_center_name = vaccine_center.find_element_by_xpath(".//h5[@class='center-name-title']").get_attribute(
             'textContent')
+        if HOSPITAL is not None:
+            if HOSPITAL.lower() not in vaccine_center_name.lower():
+                continue
         vaccine_slot_avail_ul = vaccine_center.find_element_by_xpath(".//ul[@class='slot-available-wrap']")
         vaccine_info_about_slots = []
         vaccine_slot_li = vaccine_slot_avail_ul.find_elements_by_tag_name("li")
         for vaccine_slot in vaccine_slot_li:
             vaccine_info_about_slots.append(vaccine_slot.find_element_by_tag_name("a").get_attribute('textContent'))
+            if vaccine_slot.find_element_by_tag_name("a").get_attribute('textContent').strip().isnumeric():
+                vaccine_hyperlink = vaccine_slot.find_element_by_tag_name("a")
         final_info_grabbed = f"      >>> Vaccine Centre: {vaccine_center_name} -> Info(+7) "
         for vaccine_slot in vaccine_info_about_slots:
             final_info_grabbed += vaccine_slot + " "
         all_vaccine_info.append((vaccine_center_name, vaccine_info_about_slots))
         print(final_info_grabbed)
+        if HOSPITAL is not None:
+            break
 
-    return all_vaccine_info
+    return all_vaccine_info, vaccine_hyperlink
 
 
 def check_vaccines(driver, vaccine_info):
@@ -228,7 +246,7 @@ def check_vaccines(driver, vaccine_info):
     for i in range(len(vaccine_info)):
         for x in range(len(vaccine_info[i][1])):
             vaccine_info_fetched_text = vaccine_info[i][1][x]
-            txt = "" + vaccine_info_fetched_text
+            txt = str("" + vaccine_info_fetched_text).strip()
             if vaccine_info_fetched_text == "NA" or vaccine_info_fetched_text == "Booked":
                 continue
             elif txt.isnumeric():
@@ -498,6 +516,71 @@ def schedule_for_candidate(driver):
     schedule_button.click()
 
 
+def search_using_pin(driver):
+    """
+
+    Parameters
+    ----------
+    driver : WebDriver
+             The Selenium ChromeDriver handlebar
+
+    Returns
+    -------
+    None
+
+    """
+    try:
+        wait = WebDriverWait(driver, 10)
+        wait.until(ec.presence_of_element_located((By.XPATH, "//input[@appinputchar='pincode']")))
+        driver.find_element_by_xpath("//input[@appinputchar='pincode']").click()
+        box = driver.find_element_by_xpath("//input[@appinputchar='pincode']")
+        for char in PIN_CODE:
+            box.send_keys(char)
+        wait.until(ec.presence_of_element_located((By.TAG_NAME, "ion-button")))
+        # button = driver.find_element_by_tag_name("ion-button")
+        # button.click()
+    except Exception:
+        print("Exception Occured! Retrying in function search_using_pin()")
+        search_using_pin(driver)
+
+
+def book_vaccine(driver):
+    """
+
+    Parameters
+    ----------
+    driver : WebDriver
+             The Selenium ChromeDriver handlebar
+
+    Returns
+    -------
+    None
+
+    """
+    try:
+        wait = WebDriverWait(driver, 10)
+        wait.until(ec.presence_of_element_located((By.ID, "captchaImage")))
+        wait.until(ec.presence_of_element_located((By.CLASS_NAME, "time-slot-list")))
+        time_slots = driver.find_elements_by_xpath("//ion-button[contains(@class, 'time-slot')]")
+        if SLOT is not None:
+            time_to_pick = time_slots[int(SLOT) - 1]
+        else:
+            time_to_pick = time_slots[-1]
+        time_to_pick.click()
+        data = driver.find_element_by_id("captchaImage").get_attribute('src')
+        captcha = svg_decode.crack_captcha(data)
+        box = driver.find_element_by_xpath("//input[@placeholder='Enter Security Code']")
+        box.click()
+
+        for char in captcha:
+            box.send_keys(char)
+        wait.until(ec.presence_of_element_located((By.XPATH, "//ion-button[@type='submit']")))
+        # driver.get_element_by_xpath("//ion-button[@type='submit']").click()
+    except Exception:
+        print("Exception Occured! Retrying in function search_using_pin()")
+        book_vaccine(driver)
+
+
 def main():
     """
 
@@ -515,45 +598,66 @@ def main():
 
     # ===== Step 3: Do your Thang! =====
     vaccine_found = False
-    counting_entries = 1
-    check_in_x_seconds = 2
+    counting_entries = 0
+    check_in_x_seconds = 1
 
     while vaccine_found is False:
-        if driver.current_url != "https://selfregistration.cowin.gov.in/dashboard":
-            print(">> User is logged out!    Trying to log back in 5 seconds...")
-            sleep(5)
-            login(driver)
+        if MODE is None or MODE.lower() == 'normal':
+            if driver.current_url != "https://selfregistration.cowin.gov.in/dashboard":
+                print(">> User is logged out!    Trying to log back in 5 seconds...")
+                sleep(3)
+                login(driver)
+        elif MODE.lower() == 'ultra':
+            if driver.current_url != "https://selfregistration.cowin.gov.in/appointment":
+                print(">> User is logged out!    Trying to log back in 5 seconds...")
+                sleep(3)
+                login(driver)
+
         wait = WebDriverWait(driver, 30)
         print("\n>> Fetching fresh set of slots:")
         counting_entries += 1
         wait.until(ec.presence_of_element_located((By.CLASS_NAME, "btnlist")))
         # button_appointment_schedule = driver.find_element_by_class_name("btnlist").find_element_by_xpath("//li/a")
         # button_appointment_schedule.click()
-        schedule_for_candidate(driver)
+        if MODE.lower() == 'ultra' and counting_entries == 1:
+            schedule_for_candidate(driver)
+        elif MODE.lower() == 'normal':
+            schedule_for_candidate(driver)
+        elif MODE is None:
+            schedule_for_candidate(driver)
         # query_1 = "//ion-button[contains(@class, 'register-btn') and contains(@class, 'schedule-appointment') and contains(@class, 'md') and contains(@class, 'button') and contains(@class, 'button-solid') and contains(@class, 'ion-activatable') and contains(@class, 'ion-focusable') and contains(@class, 'hydrated')]"
         # wait.until(ec.presence_of_element_located((By.XPATH, query_1)))
         # button_appointment_schedule1 = driver.find_element_by_xpath(query_1)
         # button_appointment_schedule1.click()
-        switch_to_district(driver)
-        select_state(driver)
-        sleep(.5)
-        select_district(driver)
+        # Search via pin code if it is not None
+        if PIN_CODE is not None:
+            search_using_pin(driver)
+        else:
+            switch_to_district(driver)
+            select_state(driver)
+            sleep(.5)
+            select_district(driver)
         driver.find_elements_by_tag_name("ion-button")[0].click()
         wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, "form-check")))
-        sleep(1)
+        sleep(.5)
         filter_table(driver)
-        vaccine_info = find_vaccines(driver)
+        vaccine_info, vaccine_hyperlink = find_vaccines(driver)
         list_of_vaccines_index = check_vaccines(driver, vaccine_info)
         if len(list_of_vaccines_index) > 0:
             vaccine_found = True
             print("\n\n\nFound vaccine(s)!!!!")
             for index in list_of_vaccines_index:
                 print("      >>> " + vaccine_info[index][0])
-            play_alarm(vaccine_info)
+            # play_alarm(vaccine_info)
+            vaccine_hyperlink.click()
+            book_vaccine(driver)
         else:
             print(f"Vaccine not found!     " + f"Retrying in {check_in_x_seconds} seconds..\n")
             # sleep(1)
-            go_back_to_main_page(driver)
+            if MODE.lower() == 'normal':
+                go_back_to_main_page(driver)
+            elif MODE is None:
+                go_back_to_main_page(driver)
             sleep(check_in_x_seconds)
 
 

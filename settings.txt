@@ -4,3 +4,7 @@ District: Mumbai
 Age: 18+
 Name: Alka Bharat Muke
 Covishield: Yes
+Pin: 400056
+Hospital: NANAVATI
+Slot: 1
+Mode: Ultra
