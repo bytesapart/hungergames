@@ -204,7 +204,7 @@ def find_vaccines(driver):
 
         vaccine_rows = driver.find_elements_by_xpath(query)
 
-        vaccine_hyperlink = ''
+        vaccine_hyperlink = None
         for vaccine_row in vaccine_rows:
             vaccine_center = vaccine_row
             vaccine_center_name = vaccine_center.find_element_by_xpath(".//h5[@class='center-name-title']").get_attribute(
@@ -228,7 +228,10 @@ def find_vaccines(driver):
             if HOSPITAL is not None:
                 break
 
-        return all_vaccine_info, vaccine_hyperlink
+        if vaccine_hyperlink is None:
+            return all_vaccine_info
+        else:
+            return all_vaccine_info, vaccine_hyperlink
     except Exception:
         print("Exception Occured! Retrying in function find_vaccines()")
         find_vaccines(driver)
@@ -673,7 +676,13 @@ def main():
         wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, "form-check")))
         sleep(.5)
         filter_table(driver)
-        vaccine_info, vaccine_hyperlink = find_vaccines(driver)
+        # vaccine_info, vaccine_hyperlink = find_vaccines(driver)
+        vax_list = find_vaccines(driver)
+        if len(vax_list) == 1:
+            vaccine_info = vax_list[0]
+        else:
+            vaccine_info = vax_list[0]
+            vaccine_hyperlink = vax_list[1]
         list_of_vaccines_index = check_vaccines(driver, vaccine_info)
         if len(list_of_vaccines_index) > 0:
             vaccine_found = True
