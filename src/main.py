@@ -404,8 +404,9 @@ def try_putting_otp(driver, otp):
     sleep(1)
     wait.until(ec.presence_of_element_located((By.TAG_NAME, "ion-button")))
     button = driver.find_element_by_tag_name("ion-button")
-    button.click()
     sleep(5)
+    button.click()
+    sleep(1)
     if driver.current_url == "https://selfregistration.cowin.gov.in/dashboard":
         print(">> Successfully Logged in!")
 
