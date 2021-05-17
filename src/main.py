@@ -446,12 +446,16 @@ def logout(driver):
     None
 
     """
-    wait = WebDriverWait(driver, 10)
-    wait.until(ec.presence_of_element_located(
-        (By.XPATH, "//ul[contains(@class, 'navigation') and contains(@class, 'logout-text')]")))
-    driver.find_element_by_xpath("//ul[contains(@class, 'navigation') and contains(@class, 'logout-text')]/li").click()
-    driver.get('https://messages.google.com/web/authentication')
-    return
+    try:
+        wait = WebDriverWait(driver, 10)
+        wait.until(ec.presence_of_element_located(
+            (By.XPATH, "//ul[contains(@class, 'navigation') and contains(@class, 'logout-text')]")))
+        driver.find_element_by_xpath("//ul[contains(@class, 'navigation') and contains(@class, 'logout-text')]/li").click()
+        driver.get('https://messages.google.com/web/authentication')
+        return None
+    except Exception:
+        print("Exception Occured! Retrying in function logout()")
+        logout(driver)
 
 
 def login(driver):
@@ -518,10 +522,14 @@ def schedule_for_candidate(driver):
     None
 
     """
-    schedule_button = driver.find_elements_by_xpath(
-        "//h3[contains(., '" + NAME + "')]/ancestor::ion-grid[contains(concat(' ', @class, ' '), ' cardblockcls ')]//ion-row[contains(concat(' ', @class, ' '), ' dose-data ')]//ul//a")[
-        0]
-    schedule_button.click()
+    try:
+        schedule_button = driver.find_elements_by_xpath(
+            "//h3[contains(., '" + NAME + "')]/ancestor::ion-grid[contains(concat(' ', @class, ' '), ' cardblockcls ')]//ion-row[contains(concat(' ', @class, ' '), ' dose-data ')]//ul//a")[
+            0]
+        schedule_button.click()
+    except Exception:
+        print("Exception Occured! Retrying in function schedule_for_candidate()")
+        schedule_for_candidate(driver)
 
 
 def search_using_pin(driver):
