@@ -404,7 +404,7 @@ def try_putting_otp(driver, otp):
     sleep(1)
     wait.until(ec.presence_of_element_located((By.TAG_NAME, "ion-button")))
     button = driver.find_element_by_tag_name("ion-button")
-    sleep(5)
+    sleep(2)
     button.click()
     sleep(1)
     if driver.current_url == "https://selfregistration.cowin.gov.in/dashboard":
@@ -424,11 +424,15 @@ def switch_to_district(driver, counting_entities):
     None
 
     """
-    if MODE is not None and MODE.lower() == 'ultra' and counting_entities != 1:
-        return None
-    sleep(.5)
-    driver.find_element_by_class_name(r'status-switch').click()
-    sleep(.5)
+    try:
+        if MODE is not None and MODE.lower() == 'ultra' and counting_entities != 1:
+            return None
+        sleep(.5)
+        driver.find_element_by_class_name(r'status-switch').click()
+        sleep(.5)
+    except Exception:
+        print("Exception Occured! Retrying in function logout()")
+        switch_to_district(driver, counting_entities)
 
 
 def go_back_to_main_page(driver):
@@ -595,7 +599,7 @@ def book_vaccine(driver):
         wait.until(ec.presence_of_element_located((By.XPATH, "//ion-button[@type='submit']")))
         driver.get_element_by_xpath("//ion-button[@type='submit']").click()
     except Exception:
-        print("Exception Occured! Retrying in function search_using_pin()")
+        print("Exception Occured! Retrying in function book_vaccine()")
         book_vaccine(driver)
 
 
