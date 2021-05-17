@@ -228,13 +228,11 @@ def find_vaccines(driver):
             if HOSPITAL is not None:
                 break
 
-        if vaccine_hyperlink is None:
-            return all_vaccine_info
-        else:
-            return all_vaccine_info, vaccine_hyperlink
+        return all_vaccine_info, vaccine_hyperlink
     except Exception:
         print("Exception Occured! Retrying in function find_vaccines()")
-        find_vaccines(driver)
+        vaccine_info, vaccine_hyperlink = find_vaccines(driver)
+        return vaccine_info, vaccine_hyperlink
 
 
 def check_vaccines(driver, vaccine_info):
@@ -676,13 +674,7 @@ def main():
         wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, "form-check")))
         sleep(.5)
         filter_table(driver)
-        # vaccine_info, vaccine_hyperlink = find_vaccines(driver)
-        vax_list = find_vaccines(driver)
-        if len(vax_list) == 1:
-            vaccine_info = vax_list[0]
-        else:
-            vaccine_info = vax_list[0]
-            vaccine_hyperlink = vax_list[1]
+        vaccine_info, vaccine_hyperlink = find_vaccines(driver)
         list_of_vaccines_index = check_vaccines(driver, vaccine_info)
         if len(list_of_vaccines_index) > 0:
             vaccine_found = True
