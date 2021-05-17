@@ -1,5 +1,4 @@
-1. Install dependencies "pip install selenium" and "pip install playsound"
-1. Put chromedriver from "dependencies" folder in PATH
+1. Install dependencies by executing "pip install -r requirments.txt" by changing folder to "src".
 1. Before doing anything, install google messages on your android or ios device
 1. Make it your default messaging application
 1. Go to the 3 dots and select messages for Web

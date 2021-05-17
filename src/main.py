@@ -301,7 +301,7 @@ def open_messages(driver):
         toggle = WebDriverWait(driver, 30).until(
             ec.presence_of_element_located((By.CLASS_NAME, "mat-slide-toggle-thumb")))
         toggle.click()
-
+    sleep(15)
     while driver.current_url != r"https://messages.google.com/web/conversations":
         driver.get(r"https://messages.google.com/web/conversations")
         sleep(3)
