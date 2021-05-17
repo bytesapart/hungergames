@@ -204,7 +204,7 @@ def find_vaccines(driver):
 
         vaccine_rows = driver.find_elements_by_xpath(query)
 
-        vaccine_hyperlink = None
+        vaccine_hyperlink = ''
         for vaccine_row in vaccine_rows:
             vaccine_center = vaccine_row
             vaccine_center_name = vaccine_center.find_element_by_xpath(".//h5[@class='center-name-title']").get_attribute(
@@ -217,7 +217,7 @@ def find_vaccines(driver):
             vaccine_slot_li = vaccine_slot_avail_ul.find_elements_by_tag_name("li")
             for vaccine_slot in vaccine_slot_li:
                 vaccine_info_about_slots.append(vaccine_slot.find_element_by_tag_name("a").get_attribute('textContent'))
-                sleep(.1)
+                # sleep(.1)
                 if vaccine_slot.find_element_by_tag_name("a").get_attribute('textContent').strip().isnumeric():
                     vaccine_hyperlink = vaccine_slot.find_element_by_tag_name("a")
             final_info_grabbed = f"      >>> Vaccine Centre: {vaccine_center_name} -> Info(+7) "
@@ -626,6 +626,7 @@ def main():
                 login(driver)
         elif MODE.lower() == 'ultra':
             if int(minutes) > 13:
+                counting_entries = 0
                 logout(driver)
                 sleep(1.5)
             if driver.current_url != "https://selfregistration.cowin.gov.in/appointment":
