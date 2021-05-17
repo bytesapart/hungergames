@@ -30,3 +30,9 @@ Slot: The time slot to book at. Numerical value between 1 and 4. 1 corresponds t
 Mode: "Ultra" or "Normal". Ultra is fast refreshes in case if the slot is in a
 heavily occupied territory, and "Normal" is slower, and refreshes the page after
 each check
+
+Another way to automate without the automated logging-in and out is:
+https://chrome.google.com/webstore/detail/cowin-bot/ipdhilmkmmbfeilncgchfdabkpnhbeog
+
+You can run my automation in one session and this in another for maximizing chances
+because auto-login takes around 30 seconds to re-login every 15 minutes.
