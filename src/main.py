@@ -49,7 +49,7 @@ def setup():
     global PIN_CODE
     global SLOT
     global MODE
-    settings = os.path.join(os.path.dirname(os.getcwd()), "settings.txt")
+    settings = os.path.join(os.getcwd(), "settings.txt")
     if os.path.exists(settings):
         with open(settings, 'r') as the_file:
             lines = the_file.readlines()
