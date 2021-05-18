@@ -46,6 +46,7 @@ jobs:
     - name: Archive Content
       uses: thedoctor0/zip-release@master
       with:
+        directory: src/dist
         filename: hungergames.zip
     - name: Create Github Release
       id: create-new-release
