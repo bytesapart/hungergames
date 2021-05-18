@@ -596,6 +596,7 @@ def book_vaccine(driver):
         else:
             time_to_pick = time_slots[-1]
         time_to_pick.click()
+        sleep(.5)
         data = driver.find_element_by_id("captchaImage").get_attribute('src')
         captcha = svg_decode.crack_captcha(data)
         box = driver.find_element_by_xpath("//input[@placeholder='Enter Security Code']")
@@ -696,6 +697,7 @@ def main():
             play_alarm(vaccine_info)
             vaccine_hyperlink.click()
             book_vaccine(driver)
+            sleep(20)
         else:
             print(f"Vaccine not found!     " + f"Retrying in {check_in_x_seconds} seconds..\n")
             # sleep(1)
