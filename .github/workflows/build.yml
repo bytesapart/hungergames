@@ -42,7 +42,7 @@ jobs:
     - name: Download content
       uses: actions/download-artifact@v2
       with:
-        name: static-site
+        name: hungergames
     - name: Archive Content
       uses: thedoctor0/zip-release@master
       with:
