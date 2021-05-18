@@ -304,11 +304,15 @@ def open_messages(driver):
         toggle = WebDriverWait(driver, 30).until(
             ec.presence_of_element_located((By.CLASS_NAME, "mat-slide-toggle-thumb")))
         toggle.click()
-    sleep(15)
+    sleep(1)
     while driver.current_url != r"https://messages.google.com/web/conversations":
         driver.get(r"https://messages.google.com/web/conversations")
-        sleep(3)
-        pass
+        sleep(2)
+        if driver.current_url == "https://messages.google.com/web/authentication":
+            toggle = WebDriverWait(driver, 30).until(
+                ec.presence_of_element_located((By.CLASS_NAME, "mat-slide-toggle-thumb")))
+            toggle.click()
+        sleep(10)
 
 
 def get_otp(driver):
