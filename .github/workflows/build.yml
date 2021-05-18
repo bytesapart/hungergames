@@ -39,6 +39,14 @@ jobs:
       with:
         name: hungergames
         path: src/dist/windows # or path/to/artifact
+    - name: Download content
+      uses: actions/download-artifact@v2
+      with:
+        name: static-site
+    - name: Archive Content
+      uses: thedoctor0/zip-release@master
+      with:
+        filename: hungergames.zip
     - name: Create Github Release
       id: create-new-release
       uses: actions/create-release@v1
@@ -53,6 +61,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create-new-release.outputs.upload_url }}
-        asset_path: src/dist/windows/hungergames.zip
+        asset_path: ./hungergames.zip
         asset_name: hungergames-v${{ github.run_number }}.zip
         asset_content_type: application/zip
