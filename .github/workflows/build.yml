@@ -17,11 +17,13 @@ jobs:
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
         path: src
-    - name: copy settings file
+    - name: Copy settings file
       uses: canastro/copy-file-action@master
       with:
         source: "src/settings.txt"
         target: "src/dist/windows/settings.txt"
+    - name: Create "dependencies" directory
+      run: mkdir -p src/dist/windows/dependencies
     - name: Copy Chrome Driver
       uses: canastro/copy-file-action@master
       with:
