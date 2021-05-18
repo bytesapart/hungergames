@@ -37,7 +37,7 @@ jobs:
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
-        name: hungergames.zip
+        name: hungergames
         path: src/dist/windows # or path/to/artifact
     - name: Create Github Release
       id: create-new-release
