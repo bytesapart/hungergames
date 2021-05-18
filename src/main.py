@@ -700,7 +700,6 @@ def main():
             sleep(20)
         else:
             print(f"Vaccine not found!     " + f"Retrying in {check_in_x_seconds} seconds..\n")
-            # sleep(1)
             if MODE.lower() == 'normal':
                 go_back_to_main_page(driver)
             elif MODE is None:
