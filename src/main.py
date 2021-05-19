@@ -438,7 +438,7 @@ def switch_to_district(driver, counting_entities):
         driver.find_element_by_class_name(r'status-switch').click()
         sleep(.5)
     except Exception:
-        print("Exception Occured! Retrying in function logout()")
+        print("Exception Occured! Retrying in function switch_to_district()")
         switch_to_district(driver, counting_entities)
 
 

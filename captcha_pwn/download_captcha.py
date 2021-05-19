@@ -440,7 +440,7 @@ def switch_to_district(driver, counting_entities):
         driver.find_element_by_class_name(r'status-switch').click()
         sleep(.5)
     except Exception:
-        print("Exception Occured! Retrying in function logout()")
+        print("Exception Occured! Retrying in function switch_to_district()")
         switch_to_district(driver, counting_entities)
 
 
@@ -657,6 +657,10 @@ def download_captcha(driver):
             driver.get("https://selfregistration.cowin.gov.in/dashboard")
             break
 
+    if driver.current_url == "https://selfregistration.cowin.gov.in/dashboard":
+        return 1
+    else:
+        return None
 
 def main():
     """
@@ -682,6 +686,7 @@ def main():
     end = time.time()
     hours, rem = divmod(end - start, 3600)
     minutes, seconds = divmod(rem, 60)
+    return_status = None
 
     while True:
         end = time.time()
@@ -691,7 +696,8 @@ def main():
         if MODE is None or MODE.lower() == 'normal':
             if int(minutes) > 13:
                 start = time.time()
-                logout(driver)
+                if return_status is None:
+                    logout(driver)
                 sleep(1.5)
             if driver.current_url != "https://selfregistration.cowin.gov.in/dashboard":
                 print(">> User is logged out!    Trying to log back in 5 seconds...")
@@ -701,7 +707,8 @@ def main():
             if int(minutes) > 13:
                 counting_entries = 0
                 start = time.time()
-                logout(driver)
+                if return_status is None:
+                    logout(driver)
                 sleep(1.5)
             if driver.current_url != "https://selfregistration.cowin.gov.in/appointment":
                 print(">> User is logged out!    Trying to log back in 5 seconds...")
@@ -740,7 +747,7 @@ def main():
                 print("      >>> " + vaccine_info[index][0])
             # play_alarm(vaccine_info)
             vaccine_hyperlink.click()
-            download_captcha(driver)
+            return_status = download_captcha(driver)
             sleep(10)
         else:
             print(f"Vaccine not found!     " + f"Retrying in {check_in_x_seconds} seconds..\n")
