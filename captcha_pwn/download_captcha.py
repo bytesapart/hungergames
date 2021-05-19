@@ -684,7 +684,7 @@ def main():
     setup()
 
     # ===== Step 2: Launch chrome and the websites =====
-    driver = launch_chrome()
+    # driver = launch_chrome()
 
     # ===== Step 3: Do your Thang! =====
     vaccine_found = False
@@ -698,6 +698,7 @@ def main():
     return_status = None
 
     while True:
+        driver = launch_chrome()
         end = time.time()
         hours, rem = divmod(end - start, 3600)
         minutes, seconds = divmod(rem, 60)
@@ -757,6 +758,7 @@ def main():
             # play_alarm(vaccine_info)
             vaccine_hyperlink.click()
             return_status = download_captcha(driver)
+            driver.quit()
             sleep(10)
         else:
             print(f"Vaccine not found!     " + f"Retrying in {check_in_x_seconds} seconds..\n")
