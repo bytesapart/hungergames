@@ -655,6 +655,7 @@ def download_captcha(driver):
             refresh_button.click()
         except Exception:
             driver.get("https://selfregistration.cowin.gov.in/dashboard")
+            break
 
 
 def main():
