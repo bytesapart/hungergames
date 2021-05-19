@@ -654,7 +654,6 @@ def download_captcha(driver):
             # Hit Refresh
             refresh_button = driver.find_element_by_xpath("//div[@class='img-wrap']/p/a")
             refresh_button.click()
-            raise Exception
         except Exception:
             try:
                 logout_button = driver.find_element_by_xpath(
