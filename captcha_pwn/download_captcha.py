@@ -654,10 +654,10 @@ def download_captcha(driver):
             refresh_button = driver.find_element_by_xpath("//div[@class='img-wrap']/p/a")
             refresh_button.click()
         except Exception:
-            driver.get("https://selfregistration.cowin.gov.in/dashboard")
+            driver.get('https://messages.google.com/web/authentication')
             break
 
-    if driver.current_url == "https://selfregistration.cowin.gov.in/dashboard":
+    if driver.current_url != "https://selfregistration.cowin.gov.in/appointment":
         return 1
     else:
         return None
