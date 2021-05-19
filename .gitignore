@@ -217,3 +217,4 @@ captcha_pwn/captcha_images_v2/*
 
 # Ignore the cd folder
 src/cd
+captcha_pwn/cd
