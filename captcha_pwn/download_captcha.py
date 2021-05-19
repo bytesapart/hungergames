@@ -288,7 +288,8 @@ def launch_chrome():
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     script_directory = Path().absolute()
     options.add_argument(f"--user-data-dir={script_directory}\\cd")
-    driver = webdriver.Chrome(os.path.join(os.getcwd(), '..', 'src', 'dependencies', 'chromedriver.exe'), options=options)
+    driver = webdriver.Chrome(os.path.join(os.getcwd(), '..', 'src', 'dependencies', 'chromedriver.exe'),
+                              options=options)
     driver.maximize_window()
     driver.get(r'https://www.cowin.gov.in/')
     driver.execute_script("window.open('" + "https://messages.google.com/web/authentication" + "', '_blank')")
@@ -653,14 +654,23 @@ def download_captcha(driver):
             # Hit Refresh
             refresh_button = driver.find_element_by_xpath("//div[@class='img-wrap']/p/a")
             refresh_button.click()
+            raise Exception
         except Exception:
-            driver.get('https://messages.google.com/web/authentication')
-            break
+            try:
+                logout_button = driver.find_element_by_xpath(
+                    "//ul[contains(@class, 'navigation') and contains(@class, 'logout-text')]/li")
+                logout_button.click()
+                sleep(1)
+                break
+            except Exception:
+                sleep(1)
+                break
 
-    if driver.current_url != "https://selfregistration.cowin.gov.in/appointment":
+    if driver.current_url == 'https://selfregistration.cowin.gov.in/':
         return 1
     else:
         return None
+
 
 def main():
     """
