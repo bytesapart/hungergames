@@ -1,5 +1,6 @@
 ### If you are executing using the Python File:
-
+1. **Please make sure that your laptop/computer does not switch off display or go to sleep. Change settings to never
+   got to sleep!**
 1. Install dependencies by executing "pip install -r requirements.txt" by changing folder to "src".
 1. Before doing anything, install google messages on your android or ios device
 1. Make it your default messaging application
@@ -12,6 +13,8 @@
 
 ### If you are executing using the EXE:
 
+1. **Please make sure that your laptop/computer does not switch off display or go to sleep. Change settings to never
+   got to sleep!**
 1. Before doing anything, install google messages on your android or ios device
 1. Make it your default messaging application
 1. Go to the 3 dots and select messages for Web

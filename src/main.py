@@ -244,13 +244,11 @@ def find_vaccines(driver):
         return vaccine_info, vaccine_hyperlink
 
 
-def check_vaccines(driver, vaccine_info):
+def check_vaccines(vaccine_info):
     """
 
     Parameters
     ----------
-    driver : Seleneium Webdriver
-             The chromewebdriver handlebar
     vaccine_info : list
                    A list of vaccine information
 
@@ -305,11 +303,6 @@ def launch_chrome():
 def open_messages(driver):
     driver.switch_to.window(driver.window_handles[2])
     print("\n>> Waiting for authentication from Google Messages")
-    sleep(2)
-    if driver.current_url == "https://messages.google.com/web/authentication":
-        toggle = WebDriverWait(driver, 30).until(
-            ec.presence_of_element_located((By.CLASS_NAME, "mat-slide-toggle-thumb")))
-        toggle.click()
     sleep(1)
     while driver.current_url != r"https://messages.google.com/web/conversations":
         driver.get(r"https://messages.google.com/web/conversations")
@@ -318,7 +311,7 @@ def open_messages(driver):
             toggle = WebDriverWait(driver, 30).until(
                 ec.presence_of_element_located((By.CLASS_NAME, "mat-slide-toggle-thumb")))
             toggle.click()
-        sleep(10)
+        sleep(40)
 
 
 def get_otp(driver):
@@ -677,7 +670,6 @@ def main():
             counting_entries += 1
             wait.until(ec.presence_of_element_located((By.CLASS_NAME, "btnlist")))
 
-
             if MODE.lower() == 'ultra' and counting_entries == 1:
                 schedule_for_candidate(driver)
             elif MODE.lower() == 'normal':
@@ -697,13 +689,13 @@ def main():
             sleep(.5)
             filter_table(driver)
             vaccine_info, vaccine_hyperlink = find_vaccines(driver)
-            list_of_vaccines_index = check_vaccines(driver, vaccine_info)
+            list_of_vaccines_index = check_vaccines(vaccine_info)
             if len(list_of_vaccines_index) > 0:
                 vaccine_found = True
                 print("\n\n\nFound vaccine(s)!!!!")
                 for index in list_of_vaccines_index:
                     print("      >>> " + vaccine_info[index][0])
-                play_alarm(vaccine_info)
+                # play_alarm(vaccine_info)
                 vaccine_hyperlink.click()
                 book_vaccine(driver)
                 sleep(20)
