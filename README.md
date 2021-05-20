@@ -43,6 +43,7 @@ Slot: The time slot to book at. Numerical value between 1 and 4. 1 corresponds t
 Mode: "Ultra" or "Normal". Ultra is fast refreshes in case if the slot is in a
 heavily occupied territory, and "Normal" is slower, and refreshes the page after
 each check <br>
+Dose: The dose number. Has to be either 1 or 2. Defaults to 1. <br>
 
 Another way to automate without the automated logging-in and out is:
 https://chrome.google.com/webstore/detail/cowin-bot/ipdhilmkmmbfeilncgchfdabkpnhbeog
