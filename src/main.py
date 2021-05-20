@@ -677,19 +677,14 @@ def main():
             counting_entries += 1
             wait.until(ec.presence_of_element_located((By.CLASS_NAME, "btnlist")))
 
-            # button_appointment_schedule = driver.find_element_by_class_name("btnlist").find_element_by_xpath("//li/a")
-            # button_appointment_schedule.click()
+
             if MODE.lower() == 'ultra' and counting_entries == 1:
                 schedule_for_candidate(driver)
             elif MODE.lower() == 'normal':
                 schedule_for_candidate(driver)
             elif MODE is None:
                 schedule_for_candidate(driver)
-            # query_1 = "//ion-button[contains(@class, 'register-btn') and contains(@class, 'schedule-appointment') and contains(@class, 'md') and contains(@class, 'button') and contains(@class, 'button-solid') and contains(@class, 'ion-activatable') and contains(@class, 'ion-focusable') and contains(@class, 'hydrated')]"
-            # wait.until(ec.presence_of_element_located((By.XPATH, query_1)))
-            # button_appointment_schedule1 = driver.find_element_by_xpath(query_1)
-            # button_appointment_schedule1.click()
-            # Search via pin code if it is not None
+
             if PIN_CODE is not None:
                 search_using_pin(driver)
             else:
