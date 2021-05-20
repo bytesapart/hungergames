@@ -115,9 +115,6 @@ def setup():
         if PIN_CODE == '':
             PIN_CODE = None
 
-    if HOSPITAL is not None and PIN_CODE is None:
-        raise ValueError("Please make sure that Hospital Name AND Pin BOTH are entered")
-
 
 def select_state(driver):
     """
@@ -207,7 +204,8 @@ def find_vaccines(driver):
         vaccine_hyperlink = None
         for vaccine_row in vaccine_rows:
             vaccine_center = vaccine_row
-            vaccine_center_name = vaccine_center.find_element_by_xpath(".//h5[@class='center-name-title']").get_attribute(
+            vaccine_center_name = vaccine_center.find_element_by_xpath(
+                ".//h5[@class='center-name-title']").get_attribute(
                 'textContent')
             if HOSPITAL is not None:
                 if HOSPITAL.lower() not in vaccine_center_name.lower():
@@ -463,7 +461,8 @@ def logout(driver):
         wait = WebDriverWait(driver, 10)
         wait.until(ec.presence_of_element_located(
             (By.XPATH, "//ul[contains(@class, 'navigation') and contains(@class, 'logout-text')]")))
-        driver.find_element_by_xpath("//ul[contains(@class, 'navigation') and contains(@class, 'logout-text')]/li").click()
+        driver.find_element_by_xpath(
+            "//ul[contains(@class, 'navigation') and contains(@class, 'logout-text')]/li").click()
         driver.get('https://messages.google.com/web/authentication')
         return None
     except Exception:

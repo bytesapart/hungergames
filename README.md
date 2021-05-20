@@ -37,7 +37,7 @@ Sputnik: Whether to filter on Sputnik <br>
 Paid: Whether to filter on Paid <br>
 Free: Whether to filter on Free <br>
 Hospital: A part of the hospital name. For example, "Nanavati" or "Kokilaben" <br>
-Pin: The pin code to filter by. **Note** --> If Hospital configuration is set, Pin is mandatory <br>
+Pin: The pin code to filter by. <br>
 Slot: The time slot to book at. Numerical value between 1 and 4. 1 corresponds to 9am to 11am, 2 corresponds to 11am to 1pm,
 3 corresponds to 1pm to 3pm and 4 corresponds to 3pm to 5pm <br>
 Mode: "Ultra" or "Normal". Ultra is fast refreshes in case if the slot is in a

@@ -224,7 +224,7 @@ model.summary()
 ## Training
 """
 
-epochs = 100
+epochs = 10
 early_stopping_patience = 10
 # Add early stopping
 early_stopping = keras.callbacks.EarlyStopping(
