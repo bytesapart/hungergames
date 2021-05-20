@@ -111,7 +111,7 @@ def setup():
         if HOSPITAL == '':
             HOSPITAL = None
         PIN_CODE = input(
-            "Pin Code? (Press Enter to leave blank. If you have entered a hospital, this is mandatory to enter): ").lower()
+            "Pin Code? (Press Enter to leave blank): ").lower()
         if PIN_CODE == '':
             PIN_CODE = None
 
