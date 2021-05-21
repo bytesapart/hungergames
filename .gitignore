@@ -214,6 +214,8 @@ fabric.properties
 # Ignore captchas_main folder
 captcha_pwn/captchas_main/*
 captcha_pwn/captcha_images_v2/*
+captcha_pwn/captchas_main.zip
+captcha_pwn/captchas_main
 
 # Ignore the cd folder
 src/cd
