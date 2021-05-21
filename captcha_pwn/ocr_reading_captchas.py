@@ -128,7 +128,7 @@ for batch in train_dataset.take(1):
         ax[i // 4, i % 4].imshow(img[:, :, 0].T, cmap="gray")
         ax[i // 4, i % 4].set_title(label)
         ax[i // 4, i % 4].axis("off")
-plt.show()
+# plt.show()
 
 """
 ## Model
@@ -224,8 +224,8 @@ model.summary()
 ## Training
 """
 
-epochs = 10
-early_stopping_patience = 10
+epochs = 5
+early_stopping_patience = 5
 # Add early stopping
 early_stopping = keras.callbacks.EarlyStopping(
     monitor="val_loss", patience=early_stopping_patience, restore_best_weights=True
