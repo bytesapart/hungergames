@@ -23,6 +23,21 @@ print("Number of labels found: ", len(labels))
 print("Number of unique characters: ", len(characters))
 print("Characters present: ", characters)
 
+gpu_devices = tf.config.experimental.list_physical_devices("GPU")
+for device in gpu_devices:
+    tf.config.experimental.set_memory_growth(device, True)
+
+# gpus = tf.config.list_physical_devices('GPU')
+# if gpus:
+#   # Restrict TensorFlow to only use the first GPU
+#   try:
+#     tf.config.experimental.set_visible_devices(gpus[0], 'GPU')
+#     logical_gpus = tf.config.experimental.list_logical_devices('GPU')
+#     print(len(gpus), "Physical GPUs,", len(logical_gpus), "Logical GPU")
+#   except RuntimeError as e:
+#     # Visible devices must be set before GPUs have been initialized
+#     print(e)
+
 # Batch size for training and validation
 batch_size = 16
 
@@ -224,7 +239,7 @@ model.summary()
 ## Training
 """
 
-epochs = 5
+epochs = 10
 early_stopping_patience = 5
 # Add early stopping
 early_stopping = keras.callbacks.EarlyStopping(
@@ -238,6 +253,7 @@ history = model.fit(
     epochs=epochs,
     callbacks=[early_stopping],
 )
+model.save("captcha_model")
 
 """
 ## Inference
