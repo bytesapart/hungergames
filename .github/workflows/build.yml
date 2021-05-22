@@ -17,11 +17,6 @@ jobs:
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
         path: src
-    - uses: actions/checkout@v2
-    - name: PyInstaller Linux
-      uses: JackMcKew/pyinstaller-action-linux@main
-      with:
-        path: src
     - name: Copy settings file Windows
       uses: canastro/copy-file-action@master
       with:
@@ -40,6 +35,11 @@ jobs:
         source: "src/dependencies/windows/chromedriver.exe"
         target: "src/dist/windows/dependencies/windows/chromedriver.exe"
 
+    - uses: actions/checkout@v2
+    - name: PyInstaller Linux
+      uses: JackMcKew/pyinstaller-action-linux@main
+      with:
+        path: src
     - name: Copy settings file Linux
       uses: canastro/copy-file-action@master
       with:
