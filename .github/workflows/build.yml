@@ -7,7 +7,7 @@ on:
     branches: [ main ]
 
 jobs:
-  build-windows:
+  build:
 
     runs-on: ubuntu-latest
 
@@ -17,28 +17,52 @@ jobs:
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
         path: src
-    - name: Copy settings file
+    - name: Copy settings file Windows
       uses: canastro/copy-file-action@master
       with:
         source: "src/settings.txt"
         target: "src/dist/windows/settings.txt"
-    - name: Copy README.md file
+    - name: Copy README.md file Windows
       uses: canastro/copy-file-action@master
       with:
         source: "src/README.md"
         target: "src/dist/windows/README.txt"
-    - name: Create "dependencies" directory
+    - name: Create "dependencies" directory Windows
       run: mkdir -p src/dist/windows/dependencies/windows
     - name: Copy Chrome Driver
       uses: canastro/copy-file-action@master
       with:
         source: "src/dependencies/windows/chromedriver.exe"
         target: "src/dist/windows/dependencies/windows/chromedriver.exe"
+
+    - uses: actions/checkout@v2
+    - name: PyInstaller Linux
+      uses: JackMcKew/pyinstaller-action-linux@main
+      with:
+        path: src
+    - name: Copy settings file Linux
+      uses: canastro/copy-file-action@master
+      with:
+        source: "src/settings.txt"
+        target: "src/dist/linux/settings.txt"
+      - name: Copy README.md file Linux
+        uses: canastro/copy-file-action@master
+        with:
+          source: "src/README.md"
+          target: "src/dist/linux/README.txt"
+      - name: Create "dependencies" directory Linux
+        run: mkdir -p src/dist/linux/dependencies/linux
+      - name: Copy Chrome Driver Linux
+        uses: canastro/copy-file-action@master
+        with:
+          source: "src/dependencies/linux/chromedriver"
+          target: "src/dist/linux/dependencies/linux/chromedriver"
+
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
       with:
         name: hungergames
-        path: src/dist/windows # or path/to/artifact
+        path: src/dist # or path/to/artifact
     - name: Download content
       uses: actions/download-artifact@v2
       with:
@@ -63,64 +87,5 @@ jobs:
       with:
         upload_url: ${{ steps.create-new-release.outputs.upload_url }}
         asset_path: src/dist/hungergames.zip
-        asset_name: hungergames-v${{ github.run_number }}-windows.zip
+        asset_name: hungergames-v${{ github.run_number }}.zip
         asset_content_type: application/zip
-
-  build-linux:
-
-    runs-on: ubuntu-latest
-
-    steps:
-      - uses: actions/checkout@v2
-      - name: PyInstaller Linux
-        uses: JackMcKew/pyinstaller-action-linux@main
-        with:
-          path: src
-      - name: Copy settings file
-        uses: canastro/copy-file-action@master
-        with:
-          source: "src/settings.txt"
-          target: "src/dist/linux/settings.txt"
-      - name: Copy README.md file
-        uses: canastro/copy-file-action@master
-        with:
-          source: "src/README.md"
-          target: "src/dist/linux/README.txt"
-      - name: Create "dependencies" directory
-        run: mkdir -p src/dist/linux/dependencies/linux
-      - name: Copy Chrome Driver
-        uses: canastro/copy-file-action@master
-        with:
-          source: "src/dependencies/linux/chromedriver"
-          target: "src/dist/linux/dependencies/linux/chromedriver"
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: hungergames
-          path: src/dist/linux # or path/to/artifact
-      - name: Download content
-        uses: actions/download-artifact@v2
-        with:
-          name: hungergames
-      - name: Archive Content
-        uses: thedoctor0/zip-release@master
-        with:
-          directory: src/dist
-          filename: hungergames.zip
-      - name: Create Github Release
-        id: create-new-release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: v${{ github.run_number }}
-          release_name: Release v${{ github.run_number }}
-      - name: Upload asset to github Release
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create-new-release.outputs.upload_url }}
-          asset_path: src/dist/hungergames.zip
-          asset_name: hungergames-v${{ github.run_number }}-linux.zip
-          asset_content_type: application/zip
