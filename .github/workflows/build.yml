@@ -45,18 +45,18 @@ jobs:
       with:
         source: "src/settings.txt"
         target: "src/dist/linux/settings.txt"
-      - name: Copy README.md file Linux
-        uses: canastro/copy-file-action@master
-        with:
-          source: "src/README.md"
-          target: "src/dist/linux/README.txt"
-      - name: Create "dependencies" directory Linux
-        run: mkdir -p src/dist/linux/dependencies/linux
-      - name: Copy Chrome Driver Linux
-        uses: canastro/copy-file-action@master
-        with:
-          source: "src/dependencies/linux/chromedriver"
-          target: "src/dist/linux/dependencies/linux/chromedriver"
+    - name: Copy README.md file Linux
+      uses: canastro/copy-file-action@master
+      with:
+        source: "src/README.md"
+        target: "src/dist/linux/README.txt"
+    - name: Create "dependencies" directory Linux
+      run: mkdir -p src/dist/linux/dependencies/linux
+    - name: Copy Chrome Driver Linux
+      uses: canastro/copy-file-action@master
+      with:
+        source: "src/dependencies/linux/chromedriver"
+        target: "src/dist/linux/dependencies/linux/chromedriver"
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v2
