@@ -148,7 +148,7 @@ def select_state(driver):
                 state.click()
                 break
     except Exception:
-        print('Exception occured in select_state() function! Retrying...')
+        print('Exception occurred in select_state() function! Retrying...')
         select_state(driver)
 
 
@@ -176,7 +176,7 @@ def select_district(driver):
                 district.click()
                 break
     except Exception:
-        print("Exception Occured! Retrying in function select_district()")
+        print("Exception occurred! Retrying in function select_district()")
         select_district(driver)
 
 
@@ -239,7 +239,7 @@ def find_vaccines(driver):
 
         return all_vaccine_info, vaccine_hyperlink
     except Exception:
-        print("Exception Occured! Retrying in function find_vaccines()")
+        print("Exception occurred! Retrying in function find_vaccines()")
         vaccine_info, vaccine_hyperlink = find_vaccines(driver)
         return vaccine_info, vaccine_hyperlink
 
@@ -289,8 +289,18 @@ def launch_chrome():
     options = webdriver.ChromeOptions()
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     script_directory = Path().absolute()
-    options.add_argument(f"--user-data-dir={script_directory}\\cd")
-    driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'chromedriver.exe'), options=options)
+    options.add_argument(os.path.join(f"--user-data-dir={script_directory}", "cd"))
+    if 'win' in sys.platform:
+        driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'windows', 'chromedriver.exe'),
+                                  options=options)
+    elif 'linux' in sys.platform:
+        driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'linux', 'chromedriver'),
+                                  options=options)
+    elif 'darwin' in sys.platform:
+        driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'mac', 'chromedriver'),
+                                  options=options)
+    else:
+        raise Exception("Unsupported Platform! Please use either a Windows, Linux or Mac OS system!")
     driver.maximize_window()
     driver.get(r'https://www.cowin.gov.in/')
     driver.execute_script("window.open('" + "https://messages.google.com/web/authentication" + "', '_blank')")
@@ -437,7 +447,7 @@ def switch_to_district(driver, counting_entities):
         driver.find_element_by_class_name(r'status-switch').click()
         sleep(.5)
     except Exception:
-        print("Exception Occured! Retrying in function switch_to_district()")
+        print("Exception occurred! Retrying in function switch_to_district()")
         switch_to_district(driver, counting_entities)
 
 
@@ -467,7 +477,7 @@ def logout(driver):
         driver.get('https://messages.google.com/web/authentication')
         return None
     except Exception:
-        print("Exception Occured! Retrying in function logout()")
+        print("Exception occurred! Retrying in function logout()")
         logout(driver)
 
 
@@ -547,7 +557,7 @@ def schedule_for_candidate(driver):
                 1]
         schedule_button.click()
     except Exception:
-        print("Exception Occured! Retrying in function schedule_for_candidate()")
+        print("Exception occurred! Retrying in function schedule_for_candidate()")
         schedule_for_candidate(driver)
 
 
@@ -575,7 +585,7 @@ def search_using_pin(driver):
         # button = driver.find_element_by_tag_name("ion-button")
         # button.click()
     except Exception:
-        print("Exception Occured! Retrying in function search_using_pin()")
+        print("Exception occurred! Retrying in function search_using_pin()")
         search_using_pin(driver)
 
 
@@ -613,7 +623,7 @@ def book_vaccine(driver):
         wait.until(ec.presence_of_element_located((By.XPATH, "//ion-button[@type='submit']")))
         driver.find_element_by_xpath("//ion-button[@type='submit']").click()
     except Exception:
-        print("Exception Occured! Retrying in function book_vaccine()")
+        print("Exception occurred! Retrying in function book_vaccine()")
         book_vaccine(driver)
 
 
