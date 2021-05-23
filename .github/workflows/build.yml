@@ -68,8 +68,8 @@ jobs:
             CMD_BUILD: >
               pyinstaller -F -w -n hungergames -i resources/hungergames.ico src/main.py &&
               cd dist/ &&
-              mkdir -p dependencies/mac &&
-              cp ../src/dependencies/mac/chromedriver dependencies/linux/chromedriver &&
+              mkdir -p dependencies/linux &&
+              cp ../src/dependencies/linux/chromedriver dependencies/linux/chromedriver &&
               cp ../src/README.md README.txt &&
               cp ../src/settings.txt settings.txt &&
               cp ../src/alarm.mp3 alarm.mp3 &&
