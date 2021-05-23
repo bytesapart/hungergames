@@ -705,7 +705,7 @@ def main():
                 print("\n\n\nFound vaccine(s)!!!!")
                 for index in list_of_vaccines_index:
                     print("      >>> " + vaccine_info[index][0])
-                # play_alarm(vaccine_info)
+                play_alarm(vaccine_info)
                 vaccine_hyperlink.click()
                 book_vaccine(driver)
                 sleep(20)
