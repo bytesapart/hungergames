@@ -7,4 +7,5 @@ Covishield: Yes
 Slot: 3
 Hospital: AKKALKUWA
 Pin: 425415
+Device: Android
 Mode: Ultra

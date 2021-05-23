@@ -1,6 +1,8 @@
 # FUCKING HUNGER GAMES WHEN SUPREME LEADER ENJOYS WATCHING PEOPLE BATTLE IT OUT FOR VACCINE.
 
 # Selenium imports
+import cgi
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -10,9 +12,13 @@ from selenium.webdriver.support import expected_conditions as ec
 from time import sleep
 from pathlib import Path
 from playsound import playsound
+from http.server import BaseHTTPRequestHandler, HTTPServer
+import _thread
 import os
 import sys
 import time
+import socket
+import json
 import svg_decode
 
 PHONE_NUMBER = None
@@ -30,6 +36,10 @@ PIN_CODE = None
 SLOT = None
 MODE = None
 DOSE = 1
+DEVICE = "Android"
+# ===== iOS Specefic Configs =====
+_IOS_PREVIOUS_IP = ''
+_IOS_OTP = ''
 
 
 def setup():
@@ -51,6 +61,7 @@ def setup():
     global SLOT
     global MODE
     global DOSE
+    global DEVICE
     settings = os.path.join(os.getcwd(), "settings.txt")
     if os.path.exists(settings):
         with open(settings, 'r') as the_file:
@@ -89,6 +100,8 @@ def setup():
                     MODE = line.split(':')[1].strip()
                 if line.split(':')[0].lower() == 'dose':
                     DOSE = int(line.split(':')[1].strip())
+                if line.split(':')[0].lower() == 'device':
+                    DEVICE = line.split(':')[1].strip()
 
     else:
         PHONE_NUMBER = input("Your Number: ")
@@ -118,10 +131,75 @@ def setup():
             "Pin Code? (Press Enter to leave blank): ").lower()
         if PIN_CODE == '':
             PIN_CODE = None
-        PIN_CODE = input(
-            "Enter Dose Number. It is either 1 or 2. (Press Enter to leave blank): ").lower()
+        DOSE = int(input(
+            "Enter Dose Number. It is either 1 or 2. (Press Enter to leave blank): ").lower())
         if DOSE == '':
             DOSE = 1
+        DEVICE = input(
+            "Enter Enter Mobile Device. It is either Android or iOS. (Press Enter to leave blank, default is Android): ").lower()
+        if DEVICE == '':
+            DEVICE = "Android"
+
+
+def get_ip():
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    try:
+        # doesn't even have to be reachable
+        sock.connect(('10.255.255.255', 1))
+        ip = sock.getsockname()[0]
+    except Exception:
+        ip = '127.0.0.1'
+    finally:
+        sock.close()
+    return ip
+
+
+class RequestHandler(BaseHTTPRequestHandler):
+
+    def _set_response(self):
+        self.send_response(200)
+        self.send_header('Content-type', 'text/html')
+        self.end_headers()
+
+    def do_GET(self):
+        global _IOS_OTP
+        # print("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
+        self._set_response()
+        output = ''
+        output += '<html><body>'
+        output += '<h1>IP Address is </h1>'
+        output += '<h3>' + str(get_ip()) + '</h3>' + '</br>'
+        output += '</body></html>'
+        self.wfile.write(output.encode())
+
+        # self.wfile.write("GET request for {}".format(self.path).encode('utf-8'))
+
+    def do_POST(self):
+        global _IOS_OTP
+        if self.path.endswith('/' + PHONE_NUMBER):
+            ctype, pdict = cgi.parse_header(self.headers.get('content-type'))
+            if ctype != 'application/json':
+                self.send_response(400)
+                self.end_headers()
+
+            length = int(self.headers.get('content-length'))
+            body = json.loads(self.rfile.read(length))
+            _IOS_OTP = body['message'].split(' ')[6].strip('.')
+
+            self._set_response()
+            raise KeyboardInterrupt
+            # self.send_response(301)
+            # self.send_header('content-type', 'text/html')
+            # self.send_header('Location', '/' + PHONE_NUMBER)
+            # self.end_headers()
+
+            # content_length = int(self.headers['Content-Length'])  # <--- Gets the size of data
+            # post_data = self.rfile.read(content_length)  # <--- Gets the data itself
+            # print("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
+            #       str(self.path), str(self.headers), post_data.decode('utf-8'))
+            # self._otp = post_data.decode('utf-8')
+            # self._set_response()
+            # self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 
 
 def select_state(driver):
@@ -180,14 +258,15 @@ def select_district(driver):
         select_district(driver)
 
 
-def find_vaccines(driver):
+def find_vaccines(driver, retries=0):
     """
 
     Parameters
     ----------
     driver : WebDriver
              The Selenium ChromeDriver handlebar
-
+    retries: int
+             Number of retries before exiting since no table was found
     Returns
     -------
     list
@@ -197,7 +276,7 @@ def find_vaccines(driver):
     try:
         sleep(.5)
         driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
-        wait = WebDriverWait(driver, 20)
+        wait = WebDriverWait(driver, 1)
         query = "//div[contains(@class, 'mat-main-field') and contains(@class, 'center-main-field')]/mat-selection-list/div[contains(@class, 'ng-star-inserted')]"
         wait.until(ec.presence_of_all_elements_located((By.XPATH, query)))
         all_vaccine_info = []
@@ -238,9 +317,11 @@ def find_vaccines(driver):
                 break
 
         return all_vaccine_info, vaccine_hyperlink
-    except Exception:
+    except Exception as e:
         print("Exception occurred! Retrying in function find_vaccines()")
-        vaccine_info, vaccine_hyperlink = find_vaccines(driver)
+        if retries == 1:
+            return [], ''
+        vaccine_info, vaccine_hyperlink = find_vaccines(driver, retries=retries+1)
         return vaccine_info, vaccine_hyperlink
 
 
@@ -286,6 +367,7 @@ def launch_chrome():
         Returns the Selenium Chrome Webdriver Handler
 
     """
+    global _IOS_PREVIOUS_IP
     options = webdriver.ChromeOptions()
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     script_directory = Path().absolute()
@@ -303,7 +385,17 @@ def launch_chrome():
         raise Exception("Unsupported Platform! Please use either a Windows, Linux or Mac OS system!")
     driver.maximize_window()
     driver.get(r'https://www.cowin.gov.in/')
-    driver.execute_script("window.open('" + "https://messages.google.com/web/authentication" + "', '_blank')")
+    if DEVICE.lower() == "android":
+        driver.execute_script("window.open('" + "https://messages.google.com/web/authentication" + "', '_blank')")
+    elif DEVICE.lower() == 'ios':
+        ip = get_ip()
+        if _IOS_PREVIOUS_IP != ip:
+            print(
+                'Your IP Address is --> ' + str(ip) + '. Please enter this IP in your iPhone, as shown in the Manual.')
+            input('After you have entered this IP address, press any key to continue')
+            driver.execute_script("window.open('" + "https://localhost:1337" + "', '_blank')")
+    else:
+        raise Exception("Device should be either iOS or Android!")
     sleep(1)
     driver.execute_script("window.open('" + "https://selfregistration.cowin.gov.in/" + "', '_blank')")
     sleep(1)
@@ -311,17 +403,22 @@ def launch_chrome():
 
 
 def open_messages(driver):
-    driver.switch_to.window(driver.window_handles[2])
-    print("\n>> Waiting for authentication from Google Messages")
-    sleep(1)
-    while driver.current_url != r"https://messages.google.com/web/conversations":
-        driver.get(r"https://messages.google.com/web/conversations")
-        sleep(2)
-        if driver.current_url == "https://messages.google.com/web/authentication":
-            toggle = WebDriverWait(driver, 30).until(
-                ec.presence_of_element_located((By.CLASS_NAME, "mat-slide-toggle-thumb")))
-            toggle.click()
-        sleep(40)
+    if DEVICE.lower() == 'android':
+        driver.switch_to.window(driver.window_handles[2])
+        print("\n>> Waiting for authentication from Google Messages")
+        sleep(1)
+        while driver.current_url != r"https://messages.google.com/web/conversations":
+            driver.get(r"https://messages.google.com/web/conversations")
+            sleep(2)
+            if driver.current_url == "https://messages.google.com/web/authentication":
+                toggle = WebDriverWait(driver, 30).until(
+                    ec.presence_of_element_located((By.CLASS_NAME, "mat-slide-toggle-thumb")))
+                toggle.click()
+            sleep(40)
+    elif DEVICE.lower() == 'ios':
+        pass
+    else:
+        raise Exception("Device should be either iOS or Android!")
 
 
 def get_otp(driver):
@@ -338,30 +435,36 @@ def get_otp(driver):
         Returns the OTP in the form of a list
 
     """
-    driver.switch_to.window(driver.window_handles[2])
-    driver.get('https://messages.google.com/web/conversations')
-    sleep(7)
-    wait = WebDriverWait(driver, 15)
-    wait.until(ec.presence_of_all_elements_located((By.TAG_NAME, r"mws-conversation-list-item")))
-    msg_container = driver.find_elements_by_tag_name(r"mws-conversation-list-item")[0]
-    msg_container.find_element_by_tag_name("a").click()
-    query = "//div[contains(@class, 'text-msg') and contains(@class, 'ng-star-inserted')]"
-    print(">> Found OTP!")
-    driver.get('https://messages.google.com/web/conversations')
-    wait.until(ec.presence_of_all_elements_located((By.TAG_NAME, r"mws-conversation-list-item")))
-    msg_container = driver.find_elements_by_tag_name(r"mws-conversation-list-item")[0]
-    msg_container.find_element_by_tag_name("a").click()
-    wait.until(ec.presence_of_all_elements_located((By.XPATH, query)))
-    all_msg_txt = driver.find_elements_by_xpath(query)
+    if DEVICE.lower() == 'android':
+        driver.switch_to.window(driver.window_handles[2])
+        driver.get('https://messages.google.com/web/conversations')
+        sleep(7)
+        wait = WebDriverWait(driver, 15)
+        wait.until(ec.presence_of_all_elements_located((By.TAG_NAME, r"mws-conversation-list-item")))
+        msg_container = driver.find_elements_by_tag_name(r"mws-conversation-list-item")[0]
+        msg_container.find_element_by_tag_name("a").click()
+        query = "//div[contains(@class, 'text-msg') and contains(@class, 'ng-star-inserted')]"
+        print(">> Found OTP!")
+        driver.get('https://messages.google.com/web/conversations')
+        wait.until(ec.presence_of_all_elements_located((By.TAG_NAME, r"mws-conversation-list-item")))
+        msg_container = driver.find_elements_by_tag_name(r"mws-conversation-list-item")[0]
+        msg_container.find_element_by_tag_name("a").click()
+        wait.until(ec.presence_of_all_elements_located((By.XPATH, query)))
+        all_msg_txt = driver.find_elements_by_xpath(query)
 
-    unfiltered_otp = all_msg_txt[len(all_msg_txt) - 1].text
-    otp = []
-    for word in unfiltered_otp:
-        if word.isdigit():
-            otp.append(int(word))
-    otp.pop()
-    print(">> Received OTP")
-    return otp
+        unfiltered_otp = all_msg_txt[len(all_msg_txt) - 1].text
+        otp = []
+        for word in unfiltered_otp:
+            if word.isdigit():
+                otp.append(int(word))
+        otp.pop()
+        print(">> Received OTP")
+        return otp
+    elif DEVICE.lower() == 'ios':
+        run()
+        return [int(num) for num in _IOS_OTP]
+    else:
+        raise Exception("Device should be either iOS or Android!")
 
 
 def send_otp(driver):
@@ -502,6 +605,25 @@ def login(driver):
     sleep(1)
 
 
+def run(server_class=HTTPServer, handler_class=RequestHandler, port=1337):
+    """
+    Launches server
+
+    Returns
+    -------
+    None
+    """
+    server_address = ('', port)
+    httpd = server_class(server_address, handler_class)
+    print('Starting httpd...\n')
+    try:
+        httpd.serve_forever()
+    except KeyboardInterrupt:
+        pass
+    httpd.server_close()
+    print('Stopping httpd...\n')
+
+
 def filter_table(driver):
     """
 
@@ -621,7 +743,8 @@ def book_vaccine(driver):
         for char in captcha:
             box.send_keys(char)
         wait.until(ec.presence_of_element_located((By.XPATH, "//ion-button[@type='submit']")))
-        driver.find_element_by_xpath("//ion-button[@type='submit']").click()
+        # driver.find_element_by_xpath("//ion-button[@type='submit']").click()
+        driver.find_element_by_xpath("//ion-button[@type='submit']")
     except Exception:
         print("Exception occurred! Retrying in function book_vaccine()")
         book_vaccine(driver)
@@ -699,7 +822,7 @@ def main():
             sleep(.5)
             filter_table(driver)
             vaccine_info, vaccine_hyperlink = find_vaccines(driver)
-            list_of_vaccines_index = check_vaccines(vaccine_info)
+            list_of_vaccines_index = check_vaccines(vaccine_info) if len(vaccine_info) > 0 else []
             if len(list_of_vaccines_index) > 0:
                 vaccine_found = True
                 print("\n\n\nFound vaccine(s)!!!!")
