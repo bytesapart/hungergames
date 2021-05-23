@@ -188,18 +188,6 @@ class RequestHandler(BaseHTTPRequestHandler):
 
             self._set_response()
             raise KeyboardInterrupt
-            # self.send_response(301)
-            # self.send_header('content-type', 'text/html')
-            # self.send_header('Location', '/' + PHONE_NUMBER)
-            # self.end_headers()
-
-            # content_length = int(self.headers['Content-Length'])  # <--- Gets the size of data
-            # post_data = self.rfile.read(content_length)  # <--- Gets the data itself
-            # print("POST request,\nPath: %s\nHeaders:\n%s\n\nBody:\n%s\n",
-            #       str(self.path), str(self.headers), post_data.decode('utf-8'))
-            # self._otp = post_data.decode('utf-8')
-            # self._set_response()
-            # self.wfile.write("POST request for {}".format(self.path).encode('utf-8'))
 
 
 def select_state(driver):
@@ -321,7 +309,7 @@ def find_vaccines(driver, retries=0):
         print("Exception occurred! Retrying in function find_vaccines()")
         if retries == 1:
             return [], ''
-        vaccine_info, vaccine_hyperlink = find_vaccines(driver, retries=retries+1)
+        vaccine_info, vaccine_hyperlink = find_vaccines(driver, retries=retries + 1)
         return vaccine_info, vaccine_hyperlink
 
 
@@ -743,8 +731,8 @@ def book_vaccine(driver):
         for char in captcha:
             box.send_keys(char)
         wait.until(ec.presence_of_element_located((By.XPATH, "//ion-button[@type='submit']")))
-        # driver.find_element_by_xpath("//ion-button[@type='submit']").click()
-        driver.find_element_by_xpath("//ion-button[@type='submit']")
+        driver.find_element_by_xpath("//ion-button[@type='submit']").click()
+        # driver.find_element_by_xpath("//i.on-button[@type='submit']")
     except Exception:
         print("Exception occurred! Retrying in function book_vaccine()")
         book_vaccine(driver)
