@@ -13,7 +13,6 @@ from time import sleep
 from pathlib import Path
 from playsound import playsound
 from http.server import BaseHTTPRequestHandler, HTTPServer
-import _thread
 import os
 import sys
 import time
