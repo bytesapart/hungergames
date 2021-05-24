@@ -47,8 +47,7 @@ jobs:
               cp ../src/settings.txt settings.txt &&
               cp ../src/alarm.mp3 alarm.mp3 &&
               cp ../src/Setup_iOS.pdf Setup_iOS.pdf &&
-              zip -r9 hungergames-mac.zip . &&
-              zip -d hungergames-mac.zip hungergames
+              zip -r9 hungergames-mac.zip .
             OUT_FILE_NAME: hungergames-mac.zip
             ASSET_MIME: application/zip
           - os: windows-latest
