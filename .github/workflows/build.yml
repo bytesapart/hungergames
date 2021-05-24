@@ -39,7 +39,7 @@ jobs:
           - os: macos-latest
             TARGET: macos
             CMD_BUILD: >
-              pyinstaller -F -w -n hungergames -i resources/hungergames.ico src/main.py &&
+              pyinstaller -F -c -n hungergames -i resources/hungergames.ico src/main.py &&
               cd dist/ &&
               mkdir -p dependencies/mac &&
               cp ../src/dependencies/mac/chromedriver dependencies/mac/chromedriver &&
@@ -53,7 +53,7 @@ jobs:
           - os: windows-latest
             TARGET: windows
             CMD_BUILD: >
-              pyinstaller -F -w -n hungergames -i resources/hungergames.ico src/main.py &&
+              pyinstaller -F -c -n hungergames -i resources/hungergames.ico src/main.py &&
               cd dist/ &&
               mkdir -p dependencies/windows &&
               cp ../src/dependencies/windows/chromedriver.exe dependencies/windows/chromedriver.exe &&
@@ -66,7 +66,7 @@ jobs:
           - os: ubuntu-latest
             TARGET: linux
             CMD_BUILD: >
-              pyinstaller -F -w -n hungergames -i resources/hungergames.ico src/main.py &&
+              pyinstaller -F -c -n hungergames -i resources/hungergames.ico src/main.py &&
               cd dist/ &&
               mkdir -p dependencies/linux &&
               cp ../src/dependencies/linux/chromedriver dependencies/linux/chromedriver &&
