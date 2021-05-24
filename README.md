@@ -2,7 +2,7 @@
 1. **Please make sure that your laptop/computer does not switch off display or go to sleep. Change settings to never
    got to sleep!**
 1. Install dependencies by executing "pip install -r requirements.txt" by changing folder to "src".
-1. Before doing anything, install google messages on your android or ios device
+1. Before doing anything, install google messages on your android (For iOS device, follow Setup_iOS.pdf)
 1. Make it your default messaging application
 1. Go to the 3 dots and select messages for Web
 1. Go to terminal and run "python.exe main.py". You can also have a "settings.txt" in the same folder to run the
@@ -11,11 +11,11 @@
 1. When running for the first time, the Google messages window will open from a Google Chrome window, scan the QR code there from your phone google messages application
 1. Yenjoy!
 
-### If you are executing using the EXE:
+### If you are executing using the EXE or .APP or Linux Binary:
 
 1. **Please make sure that your laptop/computer does not switch off display or go to sleep. Change settings to never
    got to sleep!**
-1. Before doing anything, install google messages on your android or ios device
+1. Before doing anything, install google messages on your android (For iOS device, follow Setup_iOS.pdf)
 1. Make it your default messaging application
 1. Go to the 3 dots and select messages for Web
 1. Go to command prompt and run "main.exe". You can also have a "settings.txt" in the same folder to run the
@@ -47,6 +47,7 @@ Mode: "Ultra" or "Normal". Ultra is fast refreshes in case if the slot is in a
 heavily occupied territory, and "Normal" is slower, and refreshes the page after
 each check <br>
 Dose: The dose number. Has to be either 1 or 2. Defaults to 1. <br>
+Device: You mobile device, whether it is "iOS" or "Android". Any other value will lead to an error <br>
 
 Another way to automate without the automated logging-in and out is:
 https://chrome.google.com/webstore/detail/cowin-bot/ipdhilmkmmbfeilncgchfdabkpnhbeog
