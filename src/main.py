@@ -359,14 +359,14 @@ def launch_chrome():
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     script_directory = Path().absolute()
     options.add_argument(os.path.join(f"--user-data-dir={script_directory}", "cd"))
-    if 'win' in sys.platform:
+    if sys.platform == 'win32':
         driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'windows', 'chromedriver.exe'),
+                                  options=options)
+    elif sys.platform == 'darwin':
+        driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'mac', 'chromedriver'),
                                   options=options)
     elif 'linux' in sys.platform:
         driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'linux', 'chromedriver'),
-                                  options=options)
-    elif 'darwin' in sys.platform:
-        driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'mac', 'chromedriver'),
                                   options=options)
     else:
         raise Exception("Unsupported Platform! Please use either a Windows, Linux or Mac OS system!")
