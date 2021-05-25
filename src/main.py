@@ -755,7 +755,7 @@ def main():
     # ===== Step 3: Do your Thang! =====
     vaccine_found = False
     counting_entries = 0
-    check_in_x_seconds = 1
+    check_in_x_seconds = 0
 
     start = time.time()
 
