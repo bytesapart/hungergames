@@ -54,6 +54,13 @@ Refresh: The time before a "Refresh" is done to check slots. If not provided, de
 floating point value, such as 0.25. <br>
 Browser: The browser you want to use. Either "Chrome" or "Firefox". Defaults to Chrome.<br>
 OTP: Either to manually enter the OTP or to automate it. Values are "Auto" or "Manual" Defaults to "Auto". <br>
+Proxy: Whether to use Proxy or not. <br>
+
+Please Note: The portal rate limits if there are way too many searches in a short duration. The ideal time is
+5 seconds per search. This can lead to slots being booked, therefore, even with the bot there is a chance
+that you may not get the slot.
+
+If you know the timing when the slots will open, the below Chrome extension is the best bet.
 
 Another way to automate without the automated logging-in and out is:
 https://chrome.google.com/webstore/detail/cowin-bot/ipdhilmkmmbfeilncgchfdabkpnhbeog
