@@ -52,6 +52,8 @@ Dose: The dose number. Has to be either 1 or 2. Defaults to 1. <br>
 Device: You mobile device, whether it is "iOS" or "Android". Any other value will lead to an error <br>
 Refresh: The time before a "Refresh" is done to check slots. If not provided, defaults to 1. Can even be a 
 floating point value, such as 0.25. <br>
+Browser: The browser you want to use. Either "Chrome" or "Firefox". Defaults to Chrome.<br>
+OTP: Either to manually enter the OTP or to automate it. Values are "Auto" or "Manual" Defaults to "Auto". <br>
 
 Another way to automate without the automated logging-in and out is:
 https://chrome.google.com/webstore/detail/cowin-bot/ipdhilmkmmbfeilncgchfdabkpnhbeog

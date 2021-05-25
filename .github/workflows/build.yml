@@ -43,10 +43,12 @@ jobs:
               cd dist/ &&
               mkdir -p dependencies/mac &&
               cp ../src/dependencies/mac/chromedriver dependencies/mac/chromedriver &&
+              cp ../src/dependencies/mac/geckodriver dependencies/mac/geckodriver &&
               cp ../src/README.md README.txt &&
               cp ../src/settings.txt settings.txt &&
               cp ../src/alarm.mp3 alarm.mp3 &&
               cp ../src/Setup_iOS.pdf Setup_iOS.pdf &&
+              git describe --abbrev=0 --tags > version.txt &&
               zip -r9 hungergames-mac.zip .
             OUT_FILE_NAME: hungergames-mac.zip
             ASSET_MIME: application/zip
@@ -57,10 +59,12 @@ jobs:
               cd dist/ &&
               mkdir -p dependencies/windows &&
               cp ../src/dependencies/windows/chromedriver.exe dependencies/windows/chromedriver.exe &&
+              cp ../src/dependencies/windows/geckodriver.exe dependencies/windows/geckodriver.exe &&
               cp ../src/README.md README.txt &&
               cp ../src/settings.txt settings.txt &&
               cp ../src/alarm.mp3 alarm.mp3 &&
               cp ../src/Setup_iOS.pdf Setup_iOS.pdf &&
+              git describe --abbrev=0 --tags > version.txt &&
               7z a -tzip hungergames-windows.zip .
             OUT_FILE_NAME: hungergames-windows.zip
             ASSET_MIME: application/zip
@@ -71,10 +75,12 @@ jobs:
               cd dist/ &&
               mkdir -p dependencies/linux &&
               cp ../src/dependencies/linux/chromedriver dependencies/linux/chromedriver &&
+              cp ../src/dependencies/linux/geckodriver dependencies/linux/geckodriver &&
               cp ../src/README.md README.txt &&
               cp ../src/settings.txt settings.txt &&
               cp ../src/alarm.mp3 alarm.mp3 &&
               cp ../src/Setup_iOS.pdf Setup_iOS.pdf &&
+              git describe --abbrev=0 --tags > version.txt &&
               zip -r9 hungergames-linux.zip .
             OUT_FILE_NAME: hungergames-linux.zip
             ASSET_MIME: application/zip

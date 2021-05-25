@@ -3,6 +3,7 @@
 # Selenium imports
 import cgi
 
+import selenium.common.exceptions
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
@@ -36,7 +37,9 @@ SLOT = None
 MODE = None
 DOSE = 1
 DEVICE = "Android"
-REFRESH_TIMES = 1
+REFRESH_TIMES = 5
+BROWSER = 'Chrome'
+OTP = 'Auto'
 # ===== iOS Specefic Configs =====
 _IOS_PREVIOUS_IP = ''
 _IOS_OTP = ''
@@ -63,6 +66,8 @@ def setup():
     global DOSE
     global DEVICE
     global REFRESH_TIMES
+    global BROWSER
+    global OTP
     settings = os.path.join(os.getcwd(), "settings.txt")
     if os.path.exists(settings):
         with open(settings, 'r') as the_file:
@@ -105,6 +110,10 @@ def setup():
                     DEVICE = line.split(':')[1].strip()
                 if line.split(':')[0].lower() == 'refresh':
                     REFRESH_TIMES = float(line.split(':')[1].strip())
+                if line.split(':')[0].lower() == 'browser':
+                    BROWSER = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'otp':
+                    OTP = line.split(':')[1].strip()
 
     else:
         PHONE_NUMBER = input("Your Number: ")
@@ -149,6 +158,12 @@ def setup():
             REFRESH_TIMES = 1
         else:
             REFRESH_TIMES = int(REFRESH_TIMES)
+        BROWSER = input("Enter Browser (Values are Chrome or Firefox, defaults to Chrome): ").lower()
+        if BROWSER == '':
+            BROWSER = 'Chrome'
+        OTP = input("Enter OTP Mode (Values are Auto or Manual, defaults to Auto): ").lower()
+        if BROWSER == '':
+            OTP = 'Auto'
 
 
 def get_ip():
@@ -365,19 +380,39 @@ def launch_chrome():
 
     """
     global _IOS_PREVIOUS_IP
-    options = webdriver.ChromeOptions()
-    options.add_experimental_option('excludeSwitches', ['enable-logging'])
+    global BROWSER
+    if BROWSER.lower() == 'firefox':
+        options = webdriver.FirefoxOptions()
+    else:
+        options = webdriver.ChromeOptions()
+        options.add_experimental_option('excludeSwitches', ['enable-logging'])
+
     script_directory = Path().absolute()
     options.add_argument(os.path.join(f"--user-data-dir={script_directory}", "cd"))
     if sys.platform == 'win32':
-        driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'windows', 'chromedriver.exe'),
-                                  options=options)
+        if BROWSER.lower() == 'firefox':
+            driver = webdriver.Firefox(
+                executable_path=os.path.join(os.getcwd(), 'dependencies', 'windows', 'geckodriver.exe'),
+                options=options)
+        else:
+            driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'windows', 'chromedriver.exe'),
+                                      options=options)
     elif sys.platform == 'darwin':
-        driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'mac', 'chromedriver'),
-                                  options=options)
+        if BROWSER.lower() == 'firefox':
+            driver = webdriver.Firefox(
+                executable_path=os.path.join(os.getcwd(), 'dependencies', 'mac', 'geckodriver'),
+                options=options)
+        else:
+            driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'mac', 'chromedriver'),
+                                      options=options)
     elif 'linux' in sys.platform:
-        driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'linux', 'chromedriver'),
-                                  options=options)
+        if BROWSER.lower() == 'firefox':
+            driver = webdriver.Firefox(
+                executable_path=os.path.join(os.getcwd(), 'dependencies', 'linux', 'geckodriver'),
+                options=options)
+        else:
+            driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'linux', 'chromedriver'),
+                                      options=options)
     else:
         raise Exception("Unsupported Platform! Please use either a Windows, Linux or Mac OS system!")
     driver.maximize_window()
@@ -581,6 +616,23 @@ def logout(driver):
         logout(driver)
 
 
+def otp_manual_wait(driver):
+    """
+
+    Parameters
+    ----------
+    driver : WebDriver
+             The Selenium ChromeDriver handlebar
+
+    Returns
+    -------
+    None
+
+    """
+    wait = WebDriverWait(driver, 20)
+    wait.until(ec.presence_of_element_located((By.CLASS_NAME, "btnlist")))
+
+
 def login(driver):
     """
 
@@ -594,11 +646,16 @@ def login(driver):
     None
 
     """
-    open_messages(driver)
-    driver.switch_to.window(driver.window_handles[2])
-    send_otp(driver)
-    otp = get_otp(driver)
-    try_putting_otp(driver, otp)
+    global OTP
+    if OTP.lower() == 'auto':
+        open_messages(driver)
+        driver.switch_to.window(driver.window_handles[2])
+        send_otp(driver)
+        otp = get_otp(driver)
+        try_putting_otp(driver, otp)
+    elif OTP.lower() == 'manual':
+        send_otp(driver)
+        otp_manual_wait(driver)
     sleep(1)
 
 
@@ -747,6 +804,28 @@ def book_vaccine(driver):
         book_vaccine(driver)
 
 
+def check_if_something_went_wrong_error(driver):
+    """
+
+    Parameters
+    ----------
+    driver : WebDriver
+             The Selenium ChromeDriver handlebar
+
+    Returns
+    -------
+    None
+
+    """
+    try:
+        if driver.find_element_by_id("toast-container"):
+            if driver.current_url != "https://selfregistration.cowin.gov.in":
+                driver.get("https://selfregistration.cowin.gov.in")
+                login(driver)
+    except selenium.common.exceptions.NoSuchElementException:
+        return None
+
+
 def main():
     """
 
@@ -765,12 +844,15 @@ def main():
     # ===== Step 3: Do your Thang! =====
     vaccine_found = False
     counting_entries = 0
+    # while_count = 0
     check_in_x_seconds = REFRESH_TIMES
 
     start = time.time()
 
     while vaccine_found is False:
         try:
+            # while_count += 1
+            # print(f"WHILE COUNT IS: {while_count}")
             end = time.time()
             hours, rem = divmod(end - start, 3600)
             minutes, seconds = divmod(rem, 60)
@@ -813,6 +895,8 @@ def main():
                 switch_to_district(driver, counting_entries)
                 select_state(driver)
                 select_district(driver)
+            # sleep(.1)
+            check_if_something_went_wrong_error(driver)
             driver.find_elements_by_tag_name("ion-button")[0].click()
             wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, "form-check")))
             filter_table(driver)
