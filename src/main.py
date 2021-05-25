@@ -8,6 +8,7 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.common.proxy import Proxy, ProxyType
 
 # Other imports
 from time import sleep
@@ -40,6 +41,7 @@ DEVICE = "Android"
 REFRESH_TIMES = 5
 BROWSER = 'Chrome'
 OTP = 'Auto'
+PROXY = None
 # ===== iOS Specefic Configs =====
 _IOS_PREVIOUS_IP = ''
 _IOS_OTP = ''
@@ -68,6 +70,7 @@ def setup():
     global REFRESH_TIMES
     global BROWSER
     global OTP
+    global PROXY
     settings = os.path.join(os.getcwd(), "settings.txt")
     if os.path.exists(settings):
         with open(settings, 'r') as the_file:
@@ -114,6 +117,8 @@ def setup():
                     BROWSER = line.split(':')[1].strip()
                 if line.split(':')[0].lower() == 'otp':
                     OTP = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'proxy':
+                    PROXY = line.split(':')[1].strip()
 
     else:
         PHONE_NUMBER = input("Your Number: ")
@@ -162,8 +167,11 @@ def setup():
         if BROWSER == '':
             BROWSER = 'Chrome'
         OTP = input("Enter OTP Mode (Values are Auto or Manual, defaults to Auto): ").lower()
-        if BROWSER == '':
+        if OTP == '':
             OTP = 'Auto'
+        PROXY = input("Whether to use Proxy or not?: ").lower()
+        if PROXY == '':
+            PROXY = None
 
 
 def get_ip():
@@ -370,7 +378,7 @@ def play_alarm(vaccine_found):
             playsound(os.path.join(os.path.dirname(os.getcwd()), "alarm.mp3"))
 
 
-def launch_chrome():
+def launch_browser():
     """
 
     Returns
@@ -381,11 +389,40 @@ def launch_chrome():
     """
     global _IOS_PREVIOUS_IP
     global BROWSER
+    global PROXY
+    if PROXY is not None:
+        from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
+        import random
+        import logging
+        logger = logging.getLogger('selenium.webdriver.remote.remote_connection')
+        logger.setLevel(logging.WARNING)
+
+        req_proxy = RequestProxy()  # you may get different number of proxy when  you run this at each time
+        proxies = req_proxy.get_proxy_list()  # this will create proxy list
+        ind = []  # int is list of Indian proxy
+        for proxy in proxies:
+            if proxy.country == 'India':
+                ind.append(proxy)
+        px = ind[random.choice(range(len(ind)))].get_address()
+        prox = Proxy()
+        prox.proxy_type = ProxyType.MANUAL
+        prox.http_proxy = px
+        prox.socks_proxy = px
+        prox.ssl_proxy = px
+
     if BROWSER.lower() == 'firefox':
         options = webdriver.FirefoxOptions()
+        if PROXY is not None:
+            capabilities = webdriver.DesiredCapabilities.FIREFOX
+        else:
+            capabilities = None
     else:
         options = webdriver.ChromeOptions()
         options.add_experimental_option('excludeSwitches', ['enable-logging'])
+        if PROXY is not None:
+            capabilities = webdriver.DesiredCapabilities.CHROME
+        else:
+            capabilities = None
 
     script_directory = Path().absolute()
     options.add_argument(os.path.join(f"--user-data-dir={script_directory}", "cd"))
@@ -393,26 +430,26 @@ def launch_chrome():
         if BROWSER.lower() == 'firefox':
             driver = webdriver.Firefox(
                 executable_path=os.path.join(os.getcwd(), 'dependencies', 'windows', 'geckodriver.exe'),
-                options=options)
+                options=options, desired_capabilities=capabilities)
         else:
             driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'windows', 'chromedriver.exe'),
-                                      options=options)
+                                      options=options, desired_capabilities=capabilities)
     elif sys.platform == 'darwin':
         if BROWSER.lower() == 'firefox':
             driver = webdriver.Firefox(
                 executable_path=os.path.join(os.getcwd(), 'dependencies', 'mac', 'geckodriver'),
-                options=options)
+                options=options, desired_capabilities=capabilities)
         else:
             driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'mac', 'chromedriver'),
-                                      options=options)
+                                      options=options, desired_capabilities=capabilities)
     elif 'linux' in sys.platform:
         if BROWSER.lower() == 'firefox':
             driver = webdriver.Firefox(
                 executable_path=os.path.join(os.getcwd(), 'dependencies', 'linux', 'geckodriver'),
-                options=options)
+                options=options, desired_capabilities=capabilities)
         else:
             driver = webdriver.Chrome(os.path.join(os.getcwd(), 'dependencies', 'linux', 'chromedriver'),
-                                      options=options)
+                                      options=options, desired_capabilities=capabilities)
     else:
         raise Exception("Unsupported Platform! Please use either a Windows, Linux or Mac OS system!")
     driver.maximize_window()
@@ -629,7 +666,7 @@ def otp_manual_wait(driver):
     None
 
     """
-    wait = WebDriverWait(driver, 20)
+    wait = WebDriverWait(driver, 25)
     wait.until(ec.presence_of_element_located((By.CLASS_NAME, "btnlist")))
 
 
@@ -820,8 +857,7 @@ def check_if_something_went_wrong_error(driver):
     try:
         if driver.find_element_by_id("toast-container"):
             if driver.current_url != "https://selfregistration.cowin.gov.in":
-                driver.get("https://selfregistration.cowin.gov.in")
-                login(driver)
+                raise Exception  # Restart the browser if we get banned? Maybe 5 seconds refresh is the best way?
     except selenium.common.exceptions.NoSuchElementException:
         return None
 
@@ -836,10 +872,11 @@ def main():
 
     """
     # ===== Step 1: Read the configuration file =====
+    global REFRESH_TIMES
     setup()
 
     # ===== Step 2: Launch chrome and the websites =====
-    driver = launch_chrome()
+    driver = launch_browser()
 
     # ===== Step 3: Do your Thang! =====
     vaccine_found = False
@@ -920,12 +957,12 @@ def main():
                 sleep(check_in_x_seconds)
         except Exception:
             driver.quit()
-            driver = launch_chrome()
+            driver = launch_browser()
 
             # ===== Step 3: Do your Thang! =====
             vaccine_found = False
             counting_entries = 0
-            check_in_x_seconds = 1
+            check_in_x_seconds = REFRESH_TIMES
 
             start = time.time()
             continue

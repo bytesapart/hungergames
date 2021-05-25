@@ -1,4 +1,4 @@
-Phone: 1234567890
+Phone: 9867143600
 State: Maharashtra
 District: Mumbai
 Age: 18+
@@ -9,6 +9,6 @@ Hospital: Nanavati
 Pin: 400056
 Device: Android
 Mode: Ultra
-Refresh: 5
-Browser: Firefox
-Otp: Manual
+Refresh: 3
+Browser: Chrome
+Otp: Auto
