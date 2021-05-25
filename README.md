@@ -50,6 +50,8 @@ heavily occupied territory, and "Normal" is slower, and refreshes the page after
 each check <br>
 Dose: The dose number. Has to be either 1 or 2. Defaults to 1. <br>
 Device: You mobile device, whether it is "iOS" or "Android". Any other value will lead to an error <br>
+Refresh: The time before a "Refresh" is done to check slots. If not provided, defaults to 1. Can even be a 
+floating point value, such as 0.25. <br>
 
 Another way to automate without the automated logging-in and out is:
 https://chrome.google.com/webstore/detail/cowin-bot/ipdhilmkmmbfeilncgchfdabkpnhbeog

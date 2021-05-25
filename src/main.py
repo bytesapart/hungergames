@@ -36,6 +36,7 @@ SLOT = None
 MODE = None
 DOSE = 1
 DEVICE = "Android"
+REFRESH_TIMES = 1
 # ===== iOS Specefic Configs =====
 _IOS_PREVIOUS_IP = ''
 _IOS_OTP = ''
@@ -61,6 +62,7 @@ def setup():
     global MODE
     global DOSE
     global DEVICE
+    global REFRESH_TIMES
     settings = os.path.join(os.getcwd(), "settings.txt")
     if os.path.exists(settings):
         with open(settings, 'r') as the_file:
@@ -101,6 +103,8 @@ def setup():
                     DOSE = int(line.split(':')[1].strip())
                 if line.split(':')[0].lower() == 'device':
                     DEVICE = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'refresh':
+                    REFRESH_TIMES = float(line.split(':')[1].strip())
 
     else:
         PHONE_NUMBER = input("Your Number: ")
@@ -130,14 +134,21 @@ def setup():
             "Pin Code? (Press Enter to leave blank): ").lower()
         if PIN_CODE == '':
             PIN_CODE = None
-        DOSE = int(input(
-            "Enter Dose Number. It is either 1 or 2. (Press Enter to leave blank): ").lower())
+        DOSE = input(
+            "Enter Dose Number. It is either 1 or 2. (Press Enter to leave blank): ").lower()
         if DOSE == '':
             DOSE = 1
+        else:
+            DOSE = int(DOSE)
         DEVICE = input(
             "Enter Enter Mobile Device. It is either Android or iOS. (Press Enter to leave blank, default is Android): ").lower()
         if DEVICE == '':
             DEVICE = "Android"
+        REFRESH_TIMES = input("Enter Refresh Times: ").lower()
+        if REFRESH_TIMES == '':
+            REFRESH_TIMES = 1
+        else:
+            REFRESH_TIMES = int(REFRESH_TIMES)
 
 
 def get_ip():
@@ -289,7 +300,6 @@ def find_vaccines(driver, retries=0):
             vaccine_slot_li = vaccine_slot_avail_ul.find_elements_by_tag_name("li")
             for vaccine_slot in vaccine_slot_li:
                 vaccine_info_about_slots.append(vaccine_slot.find_element_by_tag_name("a").get_attribute('textContent'))
-                # sleep(.1)
                 if vaccine_slot.find_element_by_tag_name("a").get_attribute('textContent').strip().isnumeric():
                     vaccine_hyperlink = vaccine_slot.find_element_by_tag_name("a")
                     break
@@ -383,9 +393,9 @@ def launch_chrome():
             driver.execute_script("window.open('" + "https://localhost:1337" + "', '_blank')")
     else:
         raise Exception("Device should be either iOS or Android!")
-    sleep(1)
+    sleep(.5)
     driver.execute_script("window.open('" + "https://selfregistration.cowin.gov.in/" + "', '_blank')")
-    sleep(1)
+    sleep(.5)
     return driver
 
 
@@ -393,10 +403,10 @@ def open_messages(driver):
     if DEVICE.lower() == 'android':
         driver.switch_to.window(driver.window_handles[2])
         print("\n>> Waiting for authentication from Google Messages")
-        sleep(1)
+        sleep(.5)
         while driver.current_url != r"https://messages.google.com/web/conversations":
             driver.get(r"https://messages.google.com/web/conversations")
-            sleep(2)
+            sleep(1)
             if driver.current_url == "https://messages.google.com/web/authentication":
                 toggle = WebDriverWait(driver, 30).until(
                     ec.presence_of_element_located((By.CLASS_NAME, "mat-slide-toggle-thumb")))
@@ -425,7 +435,7 @@ def get_otp(driver):
     if DEVICE.lower() == 'android':
         driver.switch_to.window(driver.window_handles[2])
         driver.get('https://messages.google.com/web/conversations')
-        sleep(7)
+        sleep(5)
         wait = WebDriverWait(driver, 15)
         wait.until(ec.presence_of_all_elements_located((By.TAG_NAME, r"mws-conversation-list-item")))
         msg_container = driver.find_elements_by_tag_name(r"mws-conversation-list-item")[0]
@@ -468,7 +478,7 @@ def send_otp(driver):
     """
     driver.switch_to.window(driver.window_handles[1])
     driver.get('https://selfregistration.cowin.gov.in/')
-    sleep(3)
+    sleep(1.5)
     wait = WebDriverWait(driver, 15)
     wait.until(ec.presence_of_element_located((By.ID, "mat-input-0")))
     box = driver.find_element_by_id("mat-input-0")
@@ -479,7 +489,7 @@ def send_otp(driver):
     button = driver.find_element_by_tag_name("ion-button")
     button.click()
     wait.until(ec.presence_of_element_located((By.ID, "mat-input-1")))
-    sleep(5)
+    sleep(2.5)
     print(">> Waiting for OTP")
 
 
@@ -500,7 +510,7 @@ def try_putting_otp(driver, otp):
     """
     print(">> Now trying to put OTP")
     driver.switch_to.window(driver.window_handles[1])
-    sleep(3)
+    sleep(1.5)
     wait = WebDriverWait(driver, 30)
     wait.until(ec.presence_of_element_located((By.ID, "mat-input-1")))
     box = driver.find_element_by_id("mat-input-1")
@@ -755,7 +765,7 @@ def main():
     # ===== Step 3: Do your Thang! =====
     vaccine_found = False
     counting_entries = 0
-    check_in_x_seconds = 0
+    check_in_x_seconds = REFRESH_TIMES
 
     start = time.time()
 
@@ -802,11 +812,9 @@ def main():
             else:
                 switch_to_district(driver, counting_entries)
                 select_state(driver)
-                sleep(.5)
                 select_district(driver)
             driver.find_elements_by_tag_name("ion-button")[0].click()
             wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, "form-check")))
-            sleep(.5)
             filter_table(driver)
             vaccine_info, vaccine_hyperlink = find_vaccines(driver)
             list_of_vaccines_index = check_vaccines(vaccine_info) if len(vaccine_info) > 0 else []
@@ -815,7 +823,7 @@ def main():
                 print("\n\n\nFound vaccine(s)!!!!")
                 for index in list_of_vaccines_index:
                     print("      >>> " + vaccine_info[index][0])
-                play_alarm(vaccine_info)
+                # play_alarm(vaccine_info)
                 vaccine_hyperlink.click()
                 book_vaccine(driver)
                 sleep(20)
