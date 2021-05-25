@@ -220,3 +220,6 @@ captcha_pwn/captchas_main
 # Ignore the cd folder
 src/cd
 captcha_pwn/cd
+
+# geckodriver log
+src/geckodriver.log
