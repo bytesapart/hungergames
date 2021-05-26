@@ -424,10 +424,13 @@ def find_vaccines(centers):
 
 
 def book_vaccine(session_id, slot, bearer_token):
+    beneficiary_id = []
     beneficiaries = api.get_all_beneficiaries(bearer_token).json()
     for beneficiary in beneficiaries['beneficiaries']:
-        if beneficiary['name'].lower() in NAME.lower():
-            beneficiary_id = beneficiary['beneficiary_reference_id']
+        if NAME.lower() == 'all':
+            beneficiary_id.append(beneficiary['beneficiary_reference_id'])
+        elif beneficiary['name'].lower() in NAME.lower():
+            beneficiary_id.append(beneficiary['beneficiary_reference_id'])
 
     captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha'])
     api.schedule_appointment(DOSE, session_id, slot, beneficiary_id, captcha, bearer_token)

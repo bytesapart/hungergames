@@ -135,7 +135,7 @@ def schedule_appointment(dose, session_id, slot, beneficiary_id, captcha, bearer
         "session_id": session_id,
         "slot": slot,
         "captcha": captcha,
-        "beneficiaries": [beneficiary_id]
+        "beneficiaries": beneficiary_id
     })
 
 
