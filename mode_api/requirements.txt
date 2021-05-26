@@ -1,4 +1,4 @@
-lxml==4.6.1
+lxml==4.6.3
 playsound==1.2.2
 selenium==3.141.0
 requests==2.24.0
