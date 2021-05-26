@@ -411,9 +411,12 @@ def find_vaccines(centers):
             if HOSPITAL.lower() not in center['name'].lower():
                 continue
         for session in sessions:
+            print(center['name'])
             if AGE != session['min_age_limit']:
                 continue
-            if session['available_capacity_dose'+str(DOSE)] > 0:  # Bingo, we have a hit!
+            if session['available_capacity_dose'+str(DOSE)] > 0:
+                # Bingo, we have a hit!
+                print(f'Available capacity: {session["available_capacity_dose"+str(DOSE)]}')
                 if session['vaccine'] in vaccines:
                     if session.get('vaccine_fees', None) is not None and 'PAID' not in payment:  # Want only free
                         continue
@@ -433,8 +436,9 @@ def book_vaccine(session_id, slot, bearer_token):
             beneficiary_id.append(beneficiary['beneficiary_reference_id'])
 
     captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha'])
-    api.schedule_appointment(DOSE, session_id, slot, beneficiary_id, captcha, bearer_token)
-    print()
+    final = api.schedule_appointment(DOSE, session_id, slot, beneficiary_id, captcha, bearer_token)
+    print(final)
+    return True
 
 
 def main():
@@ -504,9 +508,15 @@ def main():
             sleep(1)
             continue
 
+        print('Prepping Find Vaccines')
         session_id_and_slot = find_vaccines(centers['centers'])
+        print(f"session_id_and_slot is {session_id_and_slot}")
         if session_id_and_slot is not None:
-            book_vaccine(session_id_and_slot[0], session_id_and_slot[1], bearer_token)
+            print('Prepping to book vaccine')
+            vaccine_booking = book_vaccine(session_id_and_slot[0], session_id_and_slot[1], bearer_token)
+            if vaccine_booking is True:
+                print("WooHooo!")
+                break
         print()
         sleep(1)
         # except Exception:

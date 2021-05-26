@@ -128,7 +128,7 @@ def get_district_id(state_id, district):
 
 
 def schedule_appointment(dose, session_id, slot, beneficiary_id, captcha, bearer_token):
-    response = _get_response("schedule", header_append={
+    return _get_response("schedule", header_append={
         "authorization": "Bearer {}".format(bearer_token)
     }, json={
         "dose": dose,
