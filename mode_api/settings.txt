@@ -1,0 +1,13 @@
+Phone: 9867143600
+State: Maharashtra
+District: Nandurbar
+Age: 45
+Name: MI
+Covishield: Yes
+Slot: 3
+Hospital: AKKALKUWA
+Device: Android
+Refresh: 1
+Browser: Chrome
+Otp: Auto
+Refresh: 0

@@ -1,0 +1,1246 @@
+{
+  "centers": [
+    {
+      "center_id": 63953,
+      "name": "Akkalkuwa RH",
+      "address": "Akkalkuwa RH Village Akkalkuwa",
+      "state_name": "Maharashtra",
+      "district_name": "Nandurbar",
+      "block_name": "Akkalkuwa",
+      "pincode": 425415,
+      "lat": 21,
+      "long": 74,
+      "from": "09:00:00",
+      "to": "17:00:00",
+      "fee_type": "Free",
+      "sessions": [
+        {
+          "session_id": "037ef3f4-fb97-40c2-8134-78613acabb50",
+          "date": "27-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "1fee612a-f918-4b62-b558-32bb8e65824a",
+          "date": "28-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "f27888b0-8cb1-4699-a353-7a0990c7773b",
+          "date": "29-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "1f79451d-ade5-4a43-b59b-5ba9830218f9",
+          "date": "30-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "23639ff1-3239-40e7-8fdc-6cbff1677815",
+          "date": "31-05-2021",
+          "available_capacity": 49,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 24,
+          "available_capacity_dose2": 25
+        }
+      ]
+    },
+    {
+      "center_id": 696561,
+      "name": "Pimpalkhuta PHC",
+      "address": "Pimpalkhuta PHC Village Pimpalkhuta",
+      "state_name": "Maharashtra",
+      "district_name": "Nandurbar",
+      "block_name": "Akkalkuwa",
+      "pincode": 425452,
+      "lat": 21,
+      "long": 73,
+      "from": "09:00:00",
+      "to": "17:00:00",
+      "fee_type": "Free",
+      "sessions": [
+        {
+          "session_id": "57d9f9b1-18d5-48c2-bb84-f07cc21cb816",
+          "date": "27-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "3479c5a0-6040-45fb-8bb4-ad92207cc395",
+          "date": "28-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "822ef937-1c4d-4351-b378-4a2a24b76c5c",
+          "date": "29-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "74037336-a774-4e6a-866e-6960a1d70549",
+          "date": "30-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        }
+      ]
+    },
+    {
+      "center_id": 696596,
+      "name": "Ohawa PHC",
+      "address": "Ohawa PHC Village Ohawa",
+      "state_name": "Maharashtra",
+      "district_name": "Nandurbar",
+      "block_name": "Akkalkuwa",
+      "pincode": 425452,
+      "lat": 21,
+      "long": 73,
+      "from": "09:00:00",
+      "to": "17:00:00",
+      "fee_type": "Free",
+      "sessions": [
+        {
+          "session_id": "8581e7f1-2fd5-4931-b4a4-01364ac7f982",
+          "date": "27-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "acc5fed5-45d3-471e-b8c1-af0b6fae222d",
+          "date": "28-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "9acc3990-78c7-4e77-9641-1f4125586188",
+          "date": "29-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "fb064fba-cce4-4b44-b9b7-fa11e76c4c0e",
+          "date": "30-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "12f00535-ce14-442d-9024-6aa53e4764f1",
+          "date": "31-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        }
+      ]
+    },
+    {
+      "center_id": 632398,
+      "name": "Molgi RH",
+      "address": "Molgi RH Village Molgi",
+      "state_name": "Maharashtra",
+      "district_name": "Nandurbar",
+      "block_name": "Akkalkuwa",
+      "pincode": 425452,
+      "lat": 21,
+      "long": 74,
+      "from": "09:00:00",
+      "to": "17:00:00",
+      "fee_type": "Free",
+      "sessions": [
+        {
+          "session_id": "83111bcd-7c6f-4cb4-8cf6-acf3145c7efa",
+          "date": "27-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVAXIN",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "16ef7dc3-6c29-4274-a7f1-b2e434960536",
+          "date": "28-05-2021",
+          "available_capacity": 49,
+          "min_age_limit": 45,
+          "vaccine": "COVAXIN",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 24,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "f52ebad5-907f-407d-86d5-5ac99962ca37",
+          "date": "29-05-2021",
+          "available_capacity": 48,
+          "min_age_limit": 45,
+          "vaccine": "COVAXIN",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 24,
+          "available_capacity_dose2": 24
+        },
+        {
+          "session_id": "5ba91f5f-6d52-4751-a154-f71a34f1dea7",
+          "date": "30-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVAXIN",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "91f81e1e-dfd5-44e7-9d4f-cf1f4f53abc7",
+          "date": "31-05-2021",
+          "available_capacity": 47,
+          "min_age_limit": 45,
+          "vaccine": "COVAXIN",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 23,
+          "available_capacity_dose2": 24
+        }
+      ]
+    },
+    {
+      "center_id": 696667,
+      "name": "Kathi PHC",
+      "address": "Kathi PHC Village Kathi Akkalkuwa",
+      "state_name": "Maharashtra",
+      "district_name": "Nandurbar",
+      "block_name": "Akkalkuwa",
+      "pincode": 425452,
+      "lat": 21,
+      "long": 74,
+      "from": "09:00:00",
+      "to": "17:00:00",
+      "fee_type": "Free",
+      "sessions": [
+        {
+          "session_id": "a010fd6d-8962-4a7e-bb30-3c187a0ec97d",
+          "date": "27-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "da57458f-95c6-4cd5-a093-320078001a3f",
+          "date": "28-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "f83e974f-43c0-41cb-99cb-8bcfe607c1d7",
+          "date": "29-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "a5636d07-1590-4805-8b6c-d234115f2429",
+          "date": "30-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "8c895288-0932-482d-bb04-76ed993c9ecd",
+          "date": "31-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        }
+      ]
+    },
+    {
+      "center_id": 696570,
+      "name": "Horafali PHC",
+      "address": "Horafali PHC Village Horafali",
+      "state_name": "Maharashtra",
+      "district_name": "Nandurbar",
+      "block_name": "Akkalkuwa",
+      "pincode": 425414,
+      "lat": 21,
+      "long": 73,
+      "from": "09:00:00",
+      "to": "17:00:00",
+      "fee_type": "Free",
+      "sessions": [
+        {
+          "session_id": "d5677026-c21b-4ad2-92d5-aedc9aba972c",
+          "date": "27-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "6ca61bca-b00d-4312-bfba-293bf9fb5951",
+          "date": "28-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "84c9c228-e165-47e5-8666-f860112b3dcb",
+          "date": "29-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "e1f98808-6029-47be-b8e2-f2407c0fed5d",
+          "date": "30-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "443bb379-4905-4497-bbf1-2d15364dff96",
+          "date": "31-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        }
+      ]
+    },
+    {
+      "center_id": 696617,
+      "name": "Urmilamal PHC",
+      "address": "Urmilamal PHC Village Urmilamal",
+      "state_name": "Maharashtra",
+      "district_name": "Nandurbar",
+      "block_name": "Akkalkuwa",
+      "pincode": 425452,
+      "lat": 21,
+      "long": 73,
+      "from": "09:00:00",
+      "to": "17:00:00",
+      "fee_type": "Free",
+      "sessions": [
+        {
+          "session_id": "bdeed673-6edb-4b23-960b-793e528149f6",
+          "date": "27-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "ccc1a4b1-db03-40dc-9f83-798ff0476692",
+          "date": "28-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "b6713987-7de2-411d-82d5-34dbe8f8d0bf",
+          "date": "29-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "7c6bdf41-75a0-42bf-ac17-cb02658ff593",
+          "date": "30-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "172a57e4-493c-4941-9c90-64e702178ae7",
+          "date": "31-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        }
+      ]
+    },
+    {
+      "center_id": 664673,
+      "name": "Moramba PHC",
+      "address": "Moramba PHC Village Moramba",
+      "state_name": "Maharashtra",
+      "district_name": "Nandurbar",
+      "block_name": "Akkalkuwa",
+      "pincode": 425419,
+      "lat": 21,
+      "long": 73,
+      "from": "09:00:00",
+      "to": "17:00:00",
+      "fee_type": "Free",
+      "sessions": [
+        {
+          "session_id": "d6eda46b-858a-4a4c-a351-ae1110dc874d",
+          "date": "27-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "37db549e-d0bb-41cc-9b50-0288cd94db6c",
+          "date": "28-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "a924cc9c-ca2a-4258-9800-10cf97e65b95",
+          "date": "29-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "93c113cd-9659-4a2c-94c0-aabeed1036cf",
+          "date": "30-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "850f7c1f-0fc4-4a9f-8a73-f4e5a2f6aec0",
+          "date": "31-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        }
+      ]
+    },
+    {
+      "center_id": 696653,
+      "name": "Veli PHC Akkalkuwa",
+      "address": "Veli PHC Akkalkuwa",
+      "state_name": "Maharashtra",
+      "district_name": "Nandurbar",
+      "block_name": "Akkalkuwa",
+      "pincode": 425452,
+      "lat": 21,
+      "long": 74,
+      "from": "09:00:00",
+      "to": "17:00:00",
+      "fee_type": "Free",
+      "sessions": [
+        {
+          "session_id": "2be402e7-f209-4099-a161-c4fb5d51e8f2",
+          "date": "27-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "bb7d03e7-d0e4-482c-ac30-b3514d02b27c",
+          "date": "28-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "cf8051ff-5a8a-41b6-8ec8-f8c42d3d7fe5",
+          "date": "29-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "34be5c9a-0ce5-4fb6-bf54-f601ee342854",
+          "date": "30-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "f37e2e0a-d79e-4318-9212-5f9995667f9d",
+          "date": "31-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        }
+      ]
+    },
+    {
+      "center_id": 696600,
+      "name": "Jangthi PHC",
+      "address": "Jangthi PHC Village Jangthi",
+      "state_name": "Maharashtra",
+      "district_name": "Nandurbar",
+      "block_name": "Akkalkuwa",
+      "pincode": 425419,
+      "lat": 21,
+      "long": 73,
+      "from": "09:00:00",
+      "to": "17:00:00",
+      "fee_type": "Free",
+      "sessions": [
+        {
+          "session_id": "5cf49059-86f3-40d8-ba5b-ffc96c9ae66b",
+          "date": "27-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "e26dbd79-7fb7-48ec-b5a5-111354558c3f",
+          "date": "28-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "4ef4b0be-d01c-43d5-901f-7f2f9c240e5a",
+          "date": "29-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "40fb6dab-57c2-421b-8a35-23487ddc378d",
+          "date": "30-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "eff57fea-a542-4c68-9c7e-466acb0901ef",
+          "date": "31-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        }
+      ]
+    },
+    {
+      "center_id": 696589,
+      "name": "Mandawa PHC",
+      "address": "Mandava PHC Village Mandava",
+      "state_name": "Maharashtra",
+      "district_name": "Nandurbar",
+      "block_name": "Akkalkuwa",
+      "pincode": 425411,
+      "lat": 21,
+      "long": 74,
+      "from": "09:00:00",
+      "to": "17:00:00",
+      "fee_type": "Free",
+      "sessions": [
+        {
+          "session_id": "5904ce76-6005-47b0-ac1b-2873451f8474",
+          "date": "27-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "a896b147-eac0-4d3c-bd29-420ced017c7f",
+          "date": "28-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "b1c6cbf0-015b-4f08-b6ad-e50758596937",
+          "date": "29-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "eb05ef4a-f8d6-4047-97e9-224f1da534fa",
+          "date": "30-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "92621971-074e-45cc-a8b8-cd524a4097a7",
+          "date": "31-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        }
+      ]
+    },
+    {
+      "center_id": 696644,
+      "name": "Dab PHC",
+      "address": "Daab PHC Village Dab Akkalkuwa",
+      "state_name": "Maharashtra",
+      "district_name": "Nandurbar",
+      "block_name": "Akkalkuwa",
+      "pincode": 425415,
+      "lat": 0,
+      "long": 0,
+      "from": "09:00:00",
+      "to": "17:00:00",
+      "fee_type": "Free",
+      "sessions": [
+        {
+          "session_id": "8f23c898-15ff-49f2-b996-d20d2a7669d7",
+          "date": "27-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "c660ffb5-2dac-480f-8736-6587d7af7a99",
+          "date": "28-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "4431a820-3c0e-4af5-a2dc-fbbf85348ed8",
+          "date": "29-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "505b17bc-d958-4f8f-a115-29d254f50ea3",
+          "date": "30-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "8cc2aea3-bd4e-4816-b707-3c68329d2fa4",
+          "date": "31-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        }
+      ]
+    },
+    {
+      "center_id": 664600,
+      "name": "Khapar PHC",
+      "address": "Khapar PHC Village Khapar",
+      "state_name": "Maharashtra",
+      "district_name": "Nandurbar",
+      "block_name": "Akkalkuwa",
+      "pincode": 425419,
+      "lat": 21,
+      "long": 73,
+      "from": "09:00:00",
+      "to": "17:00:00",
+      "fee_type": "Free",
+      "sessions": [
+        {
+          "session_id": "15e763d6-b545-4d5b-87ed-24396b164ed2",
+          "date": "27-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "13e6bcb8-1ad5-4817-b1e4-d6e23a907758",
+          "date": "28-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "47a1fd87-0b40-4a92-b6f0-83dd7cf6578b",
+          "date": "29-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "cf1ae4df-9b6c-42b9-bcde-e7fe2bb1569e",
+          "date": "30-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "2f806678-a7ba-427f-b7f3-0a9be5a41f51",
+          "date": "31-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        }
+      ]
+    },
+    {
+      "center_id": 664585,
+      "name": "British Ankush Vihir PHC",
+      "address": "British Ankush Vihir PHC Village British Ankush Akkalkuwa",
+      "state_name": "Maharashtra",
+      "district_name": "Nandurbar",
+      "block_name": "Akkalkuwa",
+      "pincode": 425415,
+      "lat": 21,
+      "long": 74,
+      "from": "09:00:00",
+      "to": "17:00:00",
+      "fee_type": "Free",
+      "sessions": [
+        {
+          "session_id": "fe06eb51-3b3a-4648-a3fa-7245b6b4e31b",
+          "date": "27-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "c9b563eb-d4b2-4164-88be-c53372f9cfcd",
+          "date": "28-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "2d443c87-f7a4-42fa-8715-3ca5260014da",
+          "date": "29-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "5ab2e3d6-8ce1-4528-ba6c-4e668823c7dd",
+          "date": "30-05-2021",
+          "available_capacity": 50,
+          "min_age_limit": 45,
+          "vaccine": "COVISHIELD",
+          "slots": [
+            "09:00AM-11:00AM",
+            "11:00AM-01:00PM",
+            "01:00PM-03:00PM",
+            "03:00PM-05:00PM"
+          ],
+          "available_capacity_dose1": 25,
+          "available_capacity_dose2": 25
+        },
+        {
+          "session_id": "62bf0197-af6f-48fc-a33c-86353f002c5f"
