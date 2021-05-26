@@ -219,7 +219,9 @@ captcha_pwn/captchas_main
 
 # Ignore the cd folder
 src/cd
+mode_api/cd
 captcha_pwn/cd
 
 # geckodriver log
 src/geckodriver.log
+mode_api/geckodriver.log
