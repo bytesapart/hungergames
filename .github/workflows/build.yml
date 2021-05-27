@@ -53,21 +53,21 @@ jobs:
             OUT_FILE_NAME: hungergames-mac.zip
             ASSET_MIME: application/zip
           - os: macos-latest
-              TARGET: macos
-              CMD_BUILD: >
-                pyinstaller -F -c -n hungergames -i resources/hungergames.ico mode_api/main.py &&
-                cd dist/ &&
-                mkdir -p dependencies/mac &&
-                cp ../mode_api/dependencies/mac/chromedriver dependencies/mac/chromedriver &&
-                cp ../mode_api/dependencies/mac/geckodriver dependencies/mac/geckodriver &&
-                cp ../mode_api/README.md README.txt &&
-                cp ../mode_api/settings.txt settings.txt &&
-                cp ../mode_api/apis.json apis.json &&
-                cp ../mode_api/Setup_iOS.pdf Setup_iOS.pdf &&
-                git describe --abbrev=0 --tags > version.txt &&
-                zip -r9 hungergames-mode-api-mac.zip .
-              OUT_FILE_NAME: hungergames-mode-api-mac.zip
-              ASSET_MIME: application/zip
+            TARGET: macos
+            CMD_BUILD: >
+              pyinstaller -F -c -n hungergames -i resources/hungergames.ico mode_api/main.py &&
+              cd dist/ &&
+              mkdir -p dependencies/mac &&
+              cp ../mode_api/dependencies/mac/chromedriver dependencies/mac/chromedriver &&
+              cp ../mode_api/dependencies/mac/geckodriver dependencies/mac/geckodriver &&
+              cp ../mode_api/README.md README.txt &&
+              cp ../mode_api/settings.txt settings.txt &&
+              cp ../mode_api/apis.json apis.json &&
+              cp ../mode_api/Setup_iOS.pdf Setup_iOS.pdf &&
+              git describe --abbrev=0 --tags > version.txt &&
+              zip -r9 hungergames-mode-api-mac.zip .
+            OUT_FILE_NAME: hungergames-mode-api-mac.zip
+            ASSET_MIME: application/zip
           - os: windows-latest
             TARGET: windows
             CMD_BUILD: >
@@ -85,21 +85,21 @@ jobs:
             OUT_FILE_NAME: hungergames-windows.zip
             ASSET_MIME: application/zip
           - os: windows-latest
-              TARGET: windows
-              CMD_BUILD: >
-                pyinstaller -F -c -n hungergames -i resources/hungergames.ico mode_api/main.py &&
-                cd dist/ &&
-                mkdir -p dependencies/windows &&
-                cp ../mode_api/dependencies/windows/chromedriver.exe dependencies/windows/chromedriver.exe &&
-                cp ../mode_api/dependencies/windows/geckodriver.exe dependencies/windows/geckodriver.exe &&
-                cp ../mode_api/README.md README.txt &&
-                cp ../mode_api/settings.txt settings.txt &&
-                cp ../mode_api/apis.json apis.json &&
-                cp ../mode_api/Setup_iOS.pdf Setup_iOS.pdf &&
-                git describe --abbrev=0 --tags > version.txt &&
-                7z a -tzip hungergames-mode-api-windows.zip .
-              OUT_FILE_NAME: hungergames-mode-api-windows.zip
-              ASSET_MIME: application/zip
+            TARGET: windows
+            CMD_BUILD: >
+              pyinstaller -F -c -n hungergames -i resources/hungergames.ico mode_api/main.py &&
+              cd dist/ &&
+              mkdir -p dependencies/windows &&
+              cp ../mode_api/dependencies/windows/chromedriver.exe dependencies/windows/chromedriver.exe &&
+              cp ../mode_api/dependencies/windows/geckodriver.exe dependencies/windows/geckodriver.exe &&
+              cp ../mode_api/README.md README.txt &&
+              cp ../mode_api/settings.txt settings.txt &&
+              cp ../mode_api/apis.json apis.json &&
+              cp ../mode_api/Setup_iOS.pdf Setup_iOS.pdf &&
+              git describe --abbrev=0 --tags > version.txt &&
+              7z a -tzip hungergames-mode-api-windows.zip .
+            OUT_FILE_NAME: hungergames-mode-api-windows.zip
+            ASSET_MIME: application/zip
           - os: ubuntu-latest
             TARGET: linux
             CMD_BUILD: >
@@ -117,21 +117,21 @@ jobs:
             OUT_FILE_NAME: hungergames-linux.zip
             ASSET_MIME: application/zip
           - os: ubuntu-latest
-              TARGET: linux
-              CMD_BUILD: >
-                pyinstaller -F -c -n hungergames -i resources/hungergames.ico mode_api/main.py &&
-                cd dist/ &&
-                mkdir -p dependencies/linux &&
-                cp ../mode_api/dependencies/linux/chromedriver dependencies/linux/chromedriver &&
-                cp ../mode_api/dependencies/linux/geckodriver dependencies/linux/geckodriver &&
-                cp ../mode_api/README.md README.txt &&
-                cp ../mode_api/settings.txt settings.txt &&
-                cp ../mode_api/apis.json apis.json &&
-                cp ../mode_api/Setup_iOS.pdf Setup_iOS.pdf &&
-                git describe --abbrev=0 --tags > version.txt &&
-                zip -r9 hungergames-mode-api-linux.zip .
-              OUT_FILE_NAME: hungergames-mode-api-linux.zip
-              ASSET_MIME: application/zip
+            TARGET: linux
+            CMD_BUILD: >
+              pyinstaller -F -c -n hungergames -i resources/hungergames.ico mode_api/main.py &&
+              cd dist/ &&
+              mkdir -p dependencies/linux &&
+              cp ../mode_api/dependencies/linux/chromedriver dependencies/linux/chromedriver &&
+              cp ../mode_api/dependencies/linux/geckodriver dependencies/linux/geckodriver &&
+              cp ../mode_api/README.md README.txt &&
+              cp ../mode_api/settings.txt settings.txt &&
+              cp ../mode_api/apis.json apis.json &&
+              cp ../mode_api/Setup_iOS.pdf Setup_iOS.pdf &&
+              git describe --abbrev=0 --tags > version.txt &&
+              zip -r9 hungergames-mode-api-linux.zip .
+            OUT_FILE_NAME: hungergames-mode-api-linux.zip
+            ASSET_MIME: application/zip
     steps:
       - uses: actions/checkout@v1
       - name: Set up Python 3.8
