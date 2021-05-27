@@ -456,6 +456,17 @@ def book_vaccine(session_id, slot, bearer_token):
     return True
 
 
+def check_beneficiary(bearer_token):
+    beneficiaries = api.get_all_beneficiaries(bearer_token).json()
+    for beneficiary in beneficiaries['beneficiaries']:
+        if NAME.lower() == 'all':
+            print(f"Using Beneficiary: {beneficiary['name']}")
+            print(f"Beneficiary ID: {beneficiary['beneficiary_reference_id']}")
+        elif beneficiary['name'].lower() in [name.lower().strip() for name in NAME.split(',')]:
+            print(f"Using Beneficiary: {beneficiary['name']}")
+            print(f"Beneficiary ID: {beneficiary['beneficiary_reference_id']}")
+
+
 def main():
     """
 
@@ -510,6 +521,10 @@ def main():
         end = time.time()
         hours, rem = divmod(end - start, 3600)
         minutes, seconds = divmod(rem, 60)
+
+        # Check beneficiary before hand because people put wrong names!
+        if proxy_counter == 0:
+            check_beneficiary(bearer_token)
 
         if proxy_counter % 100 == 0:
             print('Switching proxy!')
