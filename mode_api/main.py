@@ -411,23 +411,31 @@ def find_vaccines(centers):
             if HOSPITAL.lower() not in center['name'].lower():
                 continue
         for session in sessions:
+            print('==================================================================')
             print(f"Center name is: {center['name']}")
+            print(f"Center Date is: {session['date']}")
             if AGE != session['min_age_limit']:
                 print(f"Age is {AGE}. Center {center['name']} minimum age is {session['min_age_limit']}")
+                print('==================================================================')
                 continue
-            print(f'Available capacity: {session["available_capacity_dose" + str(DOSE)]}')
+            if session['vaccine'] not in vaccines:
+                print(f"Center vaccine is {session['vaccine']}. Filter is {vaccines}")
+                print('==================================================================')
+                continue
+            if session.get('vaccine_fees', None) is not None and 'PAID' not in payment:  # Want only free
+                print(f"No FREE vaccine at {center['name']}. Filter is {payment}")
+                print('==================================================================')
+                continue
+            if session.get('vaccine_fees', None) is None and 'FREE' not in payment:  # Want only paid
+                print(f"No PAID vaccine at {center['name']}. Filter is {payment}")
+                print('==================================================================')
+                continue
+            print(f'Available capacity for Dose {DOSE}: {session["available_capacity_dose" + str(DOSE)]}')
+            print('==================================================================')
             if session['available_capacity_dose' + str(DOSE)] > 0:
                 print("Bingo, we have a hit!")
-                if session['vaccine'] in vaccines:
-                    if session.get('vaccine_fees', None) is not None and 'PAID' not in payment:  # Want only free
-                        print(f"No FREE vaccine at {center['name']}")
-                        continue
-                    if session.get('vaccine_fees', None) is None and 'FREE' not in payment:  # Want only paid
-                        print(f"No PAID vaccine at {center['name']}")
-                        continue
-
-                    print('Everything matches! Returning!')
-                    return session['session_id'], session['slots'][int(SLOT) - 1]
+                print('==================================================================')
+                return session['session_id'], session['slots'][int(SLOT) - 1]
 
 
 def book_vaccine(session_id, slot, bearer_token):
