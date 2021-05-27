@@ -34,8 +34,10 @@ Those in bold are **Mandatory**
 **Phone**: Valid, numeric phone number that will receive OTP <br>
 **State**: The state to filter upon <br>
 **District**: The district to filter upon <br>
-**Age**:  Only 2 values, "18+" or "45+" (Yes, add the plus sign too) <br>
-**Name**:  Exact character matched name, that is there on the schedule page <br>
+**Age**:  Only 2 values, "18" or "45" <br>
+**Name**:  Exact character matched name, that is there on the schedule page. This can be multiple names,
+separated by a comma. Add the value "All" if you want to book all. **PLEASE NOTE: The candidates scheduled should
+have the same age, that is, either 18 or 45. You cannot mix and match 18+ and 45+ booking in an aggregation.**<br>
 Covishield: Whether to filter on Covishield <br>
 Covaxin: Whether to filter on Covaxin <br>
 Sputnik: Whether to filter on Sputnik <br>
