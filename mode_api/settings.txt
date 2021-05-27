@@ -1,12 +1,12 @@
 Phone: 1234567890
 State: Maharashtra
-District: Nandurbar
-Age: 45
-Name: CDP, ABM
-Covishield: Yes
-Slot: 3
-Hospital: PIMPALKHUTA
-Pin: 425452
+District: Mumbai
+Age: 18
+Name: CDP
+Covaxin: Yes
+Slot: 1
+Pin: 400614
+Hospital: Apollo
 Device: Android
 Mode: Ultra
 Refresh: 3

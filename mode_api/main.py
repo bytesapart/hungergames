@@ -481,6 +481,7 @@ def main():
     setup()
 
     # ===== Step 2: Launch chrome and the websites =====
+    # if OTP.lower() != 'manual'""
     driver = launch_browser()
 
     # ===== Step 3: Do your Thang! =====
@@ -505,11 +506,26 @@ def main():
             "65.0.55.234:1234",
             "13.233.143.1:1234",
             "65.1.136.54:1234",
-            "15.206.159.42:1234"
+            "3.6.94.132:1234"
+        ],
+        "proxies3": [
+            "65.0.98.72:1234",
+            "13.232.200.167:1234",
+            "13.232.118.72:1234",
+            "13.233.195.82:1234",
+            "13.232.213.152:1234"
+
+        ],
+        "proxies4": [
+            "13.127.76.202:1234",
+            "13.232.112.90:1234",
+            "65.0.204.169:1234",
+            "13.234.217.154:1234",
+            "13.127.27.222:1234"
         ]
     }
 
-    proxies = proxies['proxies']
+    proxies = proxies['proxies2']
     proxy_index = 0
     api.http_proxy = proxies[-1]
     api.https_proxy = proxies[-1]

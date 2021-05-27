@@ -162,7 +162,7 @@ def get_district_id(state_id, district):
 
 
 def schedule_appointment(dose, session_id, slot, beneficiary_id, captcha, bearer_token):
-    return _get_response("schedule", header_append={
+    response = _get_response("schedule", header_append={
         "authorization": "Bearer {}".format(bearer_token)
     }, json={
         "dose": dose,
@@ -171,6 +171,12 @@ def schedule_appointment(dose, session_id, slot, beneficiary_id, captcha, bearer
         "captcha": captcha,
         "beneficiaries": beneficiary_id
     })
+
+    if response.status_code != 200:
+        raise Exception(
+            f'Response Exception occurred in schedule_appointment! The response code was {response.status_code}.'
+            f' The content is {response.content}')
+    return response
 
 
 def get_captcha(bearer_token):
