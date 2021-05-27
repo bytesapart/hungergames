@@ -16,6 +16,18 @@ http_proxy = ''
 https_proxy = ''
 
 
+def _today():
+    return "{}-{}-{}".format(datetime.date.today().day, datetime.date.today().month, datetime.date.today().year)
+
+
+def _tomorrow():
+    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
+    return "{}-{}-{}".format(tomorrow.day, tomorrow.month, tomorrow.year)
+
+
+_function_to_call = _today()
+
+
 def _get_response(method, header_append={}, **kwargs):
     with open("apis.json", "r") as f:
         api_json = json.load(f)[_api_mode]
@@ -41,20 +53,15 @@ def _get_response(method, header_append={}, **kwargs):
         return requests.get(url=request['url'], headers=request['header'], proxies=request['proxies'])
 
 
-def _today():
-    return "{}-{}-{}".format(datetime.date.today().day, datetime.date.today().month, datetime.date.today().year)
-
-
-def _tomorrow():
-    tomorrow = datetime.date.today() + datetime.timedelta(days=1)
-    return "{}-{}-{}".format(tomorrow.day, tomorrow.month, tomorrow.year)
-
-
 def generate_otp(mobile):
-    return _get_response("generateMobileOTP", json={
+    response = _get_response("generateMobileOTP", json={
         "mobile": mobile,
         "secret": _secret
     })
+    if response.status_code != 200:
+        raise Exception(f'Response Exception occurred in generate_otp! The response code was {response.status_code}.'
+                        f' The content is {response.content}')
+    return response
 
 
 def validate_otp(otp, trxn_resp):
@@ -66,51 +73,78 @@ def validate_otp(otp, trxn_resp):
         "txnId": trxn_resp.json()['txnId']
     })
 
+    if response.status_code != 200:
+        raise Exception(f'Response Exception occurred in validate_otp! The response code was {response.status_code}.'
+                        f' The content is {response.content}')
     bearer_token = response.json()['token']
-
     return bearer_token
 
 
 def calendar_by_district(district_id, bearer_token):
-    return _get_response("calendarByDistrict", header_append={
+    response = _get_response("calendarByDistrict", header_append={
         "authorization": "Bearer {}".format(bearer_token)
     }, url={
         "district_id": district_id,
-        "date": _tomorrow()
+        "date": _function_to_call
     })
+    if response.status_code != 200:
+        raise Exception(
+            f'Response Exception occurred in calendar_by_district! The response code was {response.status_code}.'
+            f' The content is {response.content}')
+    return response
 
 
 def find_by_district(district_id, bearer_token):
-    return _get_response("findByDistrict", header_append={
+    response = _get_response("findByDistrict", header_append={
         "authorization": "Bearer {}".format(bearer_token)
     }, url={
         "district_id": district_id,
-        "date": _tomorrow()
+        "date": _function_to_call
     })
+    if response.status_code != 200:
+        raise Exception(
+            f'Response Exception occurred in find_by_district! The response code was {response.status_code}.'
+            f' The content is {response.content}')
+    return response
 
 
 def calendar_by_pin(pin, bearer_token):
-    return _get_response("calendarByPIN", header_append={
+    response = _get_response("calendarByPIN", header_append={
         "authorization": "Bearer {}".format(bearer_token)
     }, url={
         "pincode": pin,
-        "date": _tomorrow()
+        "date": _function_to_call
     })
+    if response.status_code != 200:
+        raise Exception(
+            f'Response Exception occurred in calendar_by_pin! The response code was {response.status_code}.'
+            f' The content is {response.content}')
+    return response
 
 
 def find_by_pin(pin, bearer_token):
-    return _get_response("findByPIN", header_append={
+    response = _get_response("findByPIN", header_append={
         "authorization": "Bearer {}".format(bearer_token)
     }, url={
         "pincode": pin,
-        "date": _tomorrow()
+        "date": _function_to_call
     })
+    if response.status_code != 200:
+        raise Exception(
+            f'Response Exception occurred in find_by_pin! The response code was {response.status_code}.'
+            f' The content is {response.content}')
+    return response
 
 
 def get_all_beneficiaries(bearer_token):
-    return _get_response("beneficiaries", header_append={
+    response = _get_response("beneficiaries", header_append={
         "authorization": "Bearer {}".format(bearer_token)
     })
+    if response.status_code != 200:
+        raise Exception(
+            f'Response Exception occurred in get_all_beneficiaries! The response code was {response.status_code}.'
+            f' The content is {response.content}')
+    return response
 
 
 def get_state_id(state):

@@ -8,19 +8,18 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.common.proxy import Proxy, ProxyType
 
 # Other imports
 import api
 from time import sleep
 from pathlib import Path
-from playsound import playsound
 from http.server import BaseHTTPRequestHandler, HTTPServer
 import os
 import sys
 import time
 import socket
 import json
+from tabulate import tabulate
 import svg_decode
 
 PHONE_NUMBER = None
@@ -381,7 +380,7 @@ def login(driver):
         open_messages(driver)
         driver.switch_to.window(driver.window_handles[2])
         trxn_resp = api.generate_otp(PHONE_NUMBER)
-        sleep(5)
+        sleep(1)
         otp = get_otp(driver)
         bearer_token = api.validate_otp(otp, trxn_resp)
     elif OTP.lower() == 'manual':
@@ -405,24 +404,29 @@ def find_vaccines(centers):
     if all([payment_type is None for payment_type in payment]) is True:
         payment = ['FREE', 'PAID']
 
+    print(f'Filters are {vaccines} and {payment}')
     for center in centers:
         sessions = center['sessions']
         if HOSPITAL is not None:
             if HOSPITAL.lower() not in center['name'].lower():
                 continue
         for session in sessions:
-            print(center['name'])
+            print(f"Center name is: {center['name']}")
             if AGE != session['min_age_limit']:
+                print(f"Age is {AGE}. Center {center['name']} minimum age is {session['min_age_limit']}")
                 continue
-            if session['available_capacity_dose'+str(DOSE)] > 0:
-                # Bingo, we have a hit!
-                print(f'Available capacity: {session["available_capacity_dose"+str(DOSE)]}')
+            print(f'Available capacity: {session["available_capacity_dose" + str(DOSE)]}')
+            if session['available_capacity_dose' + str(DOSE)] > 0:
+                print("Bingo, we have a hit!")
                 if session['vaccine'] in vaccines:
                     if session.get('vaccine_fees', None) is not None and 'PAID' not in payment:  # Want only free
+                        print(f"No FREE vaccine at {center['name']}")
                         continue
                     if session.get('vaccine_fees', None) is None and 'FREE' not in payment:  # Want only paid
+                        print(f"No PAID vaccine at {center['name']}")
                         continue
 
+                    print('Everything matches! Returning!')
                     return session['session_id'], session['slots'][int(SLOT) - 1]
 
 
@@ -431,13 +435,16 @@ def book_vaccine(session_id, slot, bearer_token):
     beneficiaries = api.get_all_beneficiaries(bearer_token).json()
     for beneficiary in beneficiaries['beneficiaries']:
         if NAME.lower() == 'all':
+            print(f"Using Beneficiary: {beneficiary['name']}")
             beneficiary_id.append(beneficiary['beneficiary_reference_id'])
         elif beneficiary['name'].lower() in NAME.lower():
+            print(f"Using Beneficiary: {beneficiary['name']}")
             beneficiary_id.append(beneficiary['beneficiary_reference_id'])
-
     captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha'])
+    print(tabulate([['Dose', 1], ['session_id', session_id], ['slot', slot], ['beneficiary_id', beneficiary_id],
+                    ['captcha', captcha], ['bearer_token', bearer_token]]))
     final = api.schedule_appointment(DOSE, session_id, slot, beneficiary_id, captcha, bearer_token)
-    print(final)
+    print("Final Response is: {final}")
     return True
 
 
@@ -463,7 +470,7 @@ def main():
 
     start = time.time()
 
-    with open('proxies.json', 'r') as proxy_file:
+    with open('proxies2.json', 'r') as proxy_file:
         proxies = json.load(proxy_file)
 
     proxies = proxies['proxies']
@@ -508,6 +515,7 @@ def main():
             sleep(1)
             continue
 
+        print('Centers found!')
         print('Prepping Find Vaccines')
         session_id_and_slot = find_vaccines(centers['centers'])
         print(f"session_id_and_slot is {session_id_and_slot}")
@@ -517,19 +525,7 @@ def main():
             if vaccine_booking is True:
                 print("WooHooo!")
                 break
-        print()
         sleep(1)
-        # except Exception:
-        #     driver.quit()
-        #     driver = launch_browser()
-        #
-        #     # ===== Step 3: Do your Thang! =====
-        #     vaccine_found = False
-        #     counting_entries = 0
-        #     check_in_x_seconds = REFRESH_TIMES
-        #
-        #     start = time.time()
-        #     continue
 
 
 if __name__ == '__main__':
