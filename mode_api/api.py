@@ -25,7 +25,7 @@ def _tomorrow():
     return "{}-{}-{}".format(tomorrow.day, tomorrow.month, tomorrow.year)
 
 
-_function_to_call = _today()
+_function_to_call = _tomorrow()
 
 
 def _get_response(method, header_append={}, **kwargs):
