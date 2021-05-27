@@ -445,14 +445,14 @@ def book_vaccine(session_id, slot, bearer_token):
         if NAME.lower() == 'all':
             print(f"Using Beneficiary: {beneficiary['name']}")
             beneficiary_id.append(beneficiary['beneficiary_reference_id'])
-        elif beneficiary['name'].lower() in NAME.lower():
+        elif beneficiary['name'].lower() in [name.lower().strip() for name in NAME.split(',')]:
             print(f"Using Beneficiary: {beneficiary['name']}")
             beneficiary_id.append(beneficiary['beneficiary_reference_id'])
     captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha'])
     print(tabulate([['Dose', 1], ['session_id', session_id], ['slot', slot], ['beneficiary_id', beneficiary_id],
                     ['captcha', captcha], ['bearer_token', bearer_token]]))
     final = api.schedule_appointment(DOSE, session_id, slot, beneficiary_id, captcha, bearer_token)
-    print("Final Response is: {final}")
+    print(f"Final Response is: {final}")
     return True
 
 
@@ -478,8 +478,25 @@ def main():
 
     start = time.time()
 
-    with open('proxies2.json', 'r') as proxy_file:
-        proxies = json.load(proxy_file)
+    # with open('proxies2.json', 'r') as proxy_file:
+    #     proxies = json.load(proxy_file)
+
+    proxies = {
+        "proxies": [
+            "65.0.80.131:1234",
+            "65.2.38.55:1234",
+            "13.126.232.239:1234",
+            "13.233.93.178:1234",
+            "65.2.143.123:1234"
+        ],
+        "proxies2": [
+            "35.154.93.191:1234",
+            "65.0.55.234:1234",
+            "13.233.143.1:1234",
+            "65.1.136.54:1234",
+            "15.206.159.42:1234"
+        ]
+    }
 
     proxies = proxies['proxies']
     proxy_index = 0
