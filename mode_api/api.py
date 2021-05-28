@@ -25,7 +25,17 @@ def _tomorrow():
     return "{}-{}-{}".format(tomorrow.day, tomorrow.month, tomorrow.year)
 
 
-_function_to_call = _tomorrow()
+def days_past(number_of_days):
+    tomorrow = datetime.date.today() - datetime.timedelta(days=number_of_days)
+    return "{}-{}-{}".format(tomorrow.day, tomorrow.month, tomorrow.year)
+
+
+def days_future(number_of_days):
+    tomorrow = datetime.date.today() + datetime.timedelta(days=number_of_days)
+    return "{}-{}-{}".format(tomorrow.day, tomorrow.month, tomorrow.year)
+
+
+function_to_call = _tomorrow()
 
 
 def _get_response(method, header_append={}, **kwargs):
@@ -85,7 +95,7 @@ def calendar_by_district(district_id, bearer_token):
         "authorization": "Bearer {}".format(bearer_token)
     }, url={
         "district_id": district_id,
-        "date": _function_to_call
+        "date": function_to_call
     })
     if response.status_code != 200:
         raise Exception(
@@ -99,7 +109,7 @@ def find_by_district(district_id, bearer_token):
         "authorization": "Bearer {}".format(bearer_token)
     }, url={
         "district_id": district_id,
-        "date": _function_to_call
+        "date": function_to_call
     })
     if response.status_code != 200:
         raise Exception(
@@ -113,7 +123,7 @@ def calendar_by_pin(pin, bearer_token):
         "authorization": "Bearer {}".format(bearer_token)
     }, url={
         "pincode": pin,
-        "date": _function_to_call
+        "date": function_to_call
     })
     if response.status_code != 200:
         raise Exception(
@@ -127,7 +137,7 @@ def find_by_pin(pin, bearer_token):
         "authorization": "Bearer {}".format(bearer_token)
     }, url={
         "pincode": pin,
-        "date": _function_to_call
+        "date": function_to_call
     })
     if response.status_code != 200:
         raise Exception(

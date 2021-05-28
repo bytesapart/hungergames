@@ -37,6 +37,7 @@ HOSPITAL = None
 PIN_CODE = None
 SLOT = None
 DOSE = 1
+MODE = 'Normal'
 DEVICE = "Android"
 REFRESH_TIMES = 1
 BROWSER = 'Chrome'
@@ -117,6 +118,8 @@ def setup():
                     OTP = line.split(':')[1].strip()
                 if line.split(':')[0].lower() == 'dry':
                     DRY = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'mode':
+                    MODE = line.split(':')[1].strip()
     else:
         PHONE_NUMBER = input("Your Number: ")
         USER_STATE = input("Your State: ").lower()
@@ -166,6 +169,9 @@ def setup():
         OTP = input("Enter OTP Mode (Values are Auto or Manual, defaults to Auto): ").lower()
         if OTP == '':
             OTP = 'Auto'
+        MODE = input("Enter Mode (Values are Normal or Ultra, defaults to Normal): ").lower()
+        if MODE == '':
+            MODE = 'Normal'
 
 
 def get_ip():
@@ -400,6 +406,7 @@ def login(driver):
 
 
 def find_vaccines(centers):
+    global SLOT
     vaccines = ['COVISHIELD' if COVISHIELD is not None else None,
                 'COVAXIN' if COVAXIN is not None else COVAXIN,
                 'SPUTNIK' if SPUTNIK is not None else SPUTNIK]
@@ -447,6 +454,8 @@ def find_vaccines(centers):
             if session['available_capacity_dose' + str(DOSE)] > 0:
                 print("Bingo, we have a hit!")
                 print('==================================================================')
+                if int(SLOT) > len(session['slots']):
+                    SLOT = 1
                 return session['session_id'], session['slots'][int(SLOT) - 1]
 
 
@@ -496,6 +505,7 @@ def main():
     """
     # ===== Step 1: Read the configuration file =====
     global REFRESH_TIMES
+    global MODE
     setup()
 
     # ===== Step 2: Launch chrome and the websites =====
@@ -530,14 +540,24 @@ def main():
             "3.6.94.132:1234"
         ],
         "proxies3": [
-            "65.0.98.72:1234",
-            "13.232.200.167:1234",
-            "13.232.118.72:1234",
-            "13.233.195.82:1234",
-            "13.232.213.152:1234"
+            "65.0.80.131:1234",
+            "65.2.38.55:1234",
+            "13.126.232.239:1234",
+            "13.233.93.178:1234",
+            "65.2.143.123:1234",
+            "13.233.82.253:1234",
+            "13.232.78.108:1234",
+            "13.235.50.203:1234",
+            "65.0.74.84:1234",
+            "65.1.114.120:1234"
 
         ],
         "proxies4": [
+            "35.154.93.191:1234",
+            "65.0.55.234:1234",
+            "13.233.143.1:1234",
+            "65.1.136.54:1234",
+            "3.6.94.132:1234",
             "13.127.76.202:1234",
             "13.232.112.90:1234",
             "65.0.204.169:1234",
@@ -546,7 +566,7 @@ def main():
         ]
     }
 
-    proxies = proxies['proxies']
+    proxies = proxies['proxies3']
     proxy_index = 0
     api.http_proxy = proxies[-1]
     api.https_proxy = proxies[-1]
@@ -563,18 +583,18 @@ def main():
         if proxy_counter == 0:
             check_beneficiary(bearer_token)
 
-        if proxy_counter % 100 == 0:
-            print('Switching proxy!')
-            previous_proxy_index = proxy_index
-            if previous_proxy_index == len(proxies) - 1:
-                proxy_index = 0
-            else:
-                proxy_index = previous_proxy_index + 1
+        # if proxy_counter % 100 == 0:
+        print('Switching proxy!')
+        previous_proxy_index = proxy_index
+        if previous_proxy_index == len(proxies) - 1:
+            proxy_index = 0
+        else:
+            proxy_index = previous_proxy_index + 1
 
-            api.http_proxy = proxies[proxy_index]
-            api.https_proxy = proxies[proxy_index]
-            print(f"Proxy: {proxies[proxy_index]}")
-            print(f"Proxy Index: {proxy_index}")
+        api.http_proxy = proxies[proxy_index]
+        api.https_proxy = proxies[proxy_index]
+        print(f"Proxy: {proxies[proxy_index]}")
+        print(f"Proxy Index: {proxy_index}")
 
         if minutes > 10:
             start = time.time()
