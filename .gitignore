@@ -225,3 +225,12 @@ captcha_pwn/cd
 # geckodriver log
 src/geckodriver.log
 mode_api/geckodriver.log
+
+# Ignore all log.json files
+mode_api/*.log.json
+
+# Ignore build files
+*.spec
+dist
+src/dist
+mode_api/dist
