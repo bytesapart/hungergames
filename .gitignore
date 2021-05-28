@@ -234,3 +234,4 @@ mode_api/*.log.json
 dist
 src/dist
 mode_api/dist
+dist.zip
