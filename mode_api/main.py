@@ -2,6 +2,7 @@
 
 # Selenium imports
 import cgi
+import datetime
 
 import selenium.common.exceptions
 from selenium import webdriver
@@ -40,6 +41,7 @@ DEVICE = "Android"
 REFRESH_TIMES = 1
 BROWSER = 'Chrome'
 OTP = 'Auto'
+DRY = None
 # ===== iOS Specefic Configs =====
 _IOS_PREVIOUS_IP = ''
 _IOS_OTP = ''
@@ -68,6 +70,7 @@ def setup():
     global BROWSER
     global OTP
     global PROXY
+    global DRY
     settings = os.path.join(os.getcwd(), "settings.txt")
     if os.path.exists(settings):
         with open(settings, 'r') as the_file:
@@ -112,6 +115,8 @@ def setup():
                     BROWSER = line.split(':')[1].strip()
                 if line.split(':')[0].lower() == 'otp':
                     OTP = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'dry':
+                    DRY = line.split(':')[1].strip()
     else:
         PHONE_NUMBER = input("Your Number: ")
         USER_STATE = input("Your State: ").lower()
@@ -257,6 +262,10 @@ def launch_browser():
                                       options=options)
     else:
         raise Exception("Unsupported Platform! Please use either a Windows, Linux or Mac OS system!")
+    return driver
+
+
+def open_website(driver):
     driver.maximize_window()
     driver.get(r'https://www.cowin.gov.in/')
     if DEVICE.lower() == "android":
@@ -273,7 +282,6 @@ def launch_browser():
     sleep(.5)
     driver.execute_script("window.open('" + "https://selfregistration.cowin.gov.in/" + "', '_blank')")
     sleep(.5)
-    return driver
 
 
 def open_messages(driver):
@@ -404,6 +412,8 @@ def find_vaccines(centers):
     if all([payment_type is None for payment_type in payment]) is True:
         payment = ['FREE', 'PAID']
 
+    age_range = range(AGE, AGE + 27)
+
     print(f'Filters are {vaccines} and {payment}')
     for center in centers:
         sessions = center['sessions']
@@ -411,10 +421,12 @@ def find_vaccines(centers):
             if HOSPITAL.lower() not in center['name'].lower():
                 continue
         for session in sessions:
+            with open(f"{datetime.datetime.now().strftime('%Y%m%d')}_{os.getpid()}.log.json", 'w') as outfile:
+                json.dump(center, outfile, indent=4)
             print('==================================================================')
             print(f"Center name is: {center['name']}")
             print(f"Center Date is: {session['date']}")
-            if AGE != session['min_age_limit']:
+            if session['min_age_limit'] not in age_range:
                 print(f"Age is {AGE}. Center {center['name']} minimum age is {session['min_age_limit']}")
                 print('==================================================================')
                 continue
@@ -448,12 +460,18 @@ def book_vaccine(session_id, slot, bearer_token):
         elif beneficiary['name'].lower() in [name.lower().strip() for name in NAME.split(',')]:
             print(f"Using Beneficiary: {beneficiary['name']}")
             beneficiary_id.append(beneficiary['beneficiary_reference_id'])
-    captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha'])
+    if DRY is None:
+        captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha'])
+    else:
+        captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha']) + 'SPARTA'
     print(tabulate([['Dose', 1], ['session_id', session_id], ['slot', slot], ['beneficiary_id', beneficiary_id],
                     ['captcha', captcha], ['bearer_token', bearer_token]]))
     final = api.schedule_appointment(DOSE, session_id, slot, beneficiary_id, captcha, bearer_token)
     print(f"Final Response is: {final}")
-    return True
+    if final.content == 200:
+        return True
+    else:
+        return False
 
 
 def check_beneficiary(bearer_token):
@@ -481,8 +499,11 @@ def main():
     setup()
 
     # ===== Step 2: Launch chrome and the websites =====
-    # if OTP.lower() != 'manual'""
-    driver = launch_browser()
+    if OTP.lower() != 'manual':
+        driver = launch_browser()
+        open_website(driver)
+    else:
+        driver = None
 
     # ===== Step 3: Do your Thang! =====
     vaccine_found = False
@@ -525,7 +546,7 @@ def main():
         ]
     }
 
-    proxies = proxies['proxies2']
+    proxies = proxies['proxies']
     proxy_index = 0
     api.http_proxy = proxies[-1]
     api.https_proxy = proxies[-1]
@@ -577,10 +598,17 @@ def main():
         print(f"session_id_and_slot is {session_id_and_slot}")
         if session_id_and_slot is not None:
             print('Prepping to book vaccine')
-            vaccine_booking = book_vaccine(session_id_and_slot[0], session_id_and_slot[1], bearer_token)
-            if vaccine_booking is True:
-                print("WooHooo!")
-                break
+            try:
+                vaccine_booking = book_vaccine(session_id_and_slot[0], session_id_and_slot[1], bearer_token)
+                if vaccine_booking is True:
+                    print("WooHooo!")
+                    break
+                else:
+                    print('Response code was not 200 while booking vaccine! Something went wrong! Retrying!')
+                    continue
+            except Exception as e:
+                print(e)
+                continue
         sleep(1)
 
 
