@@ -1,0 +1,15 @@
+Phone: 9773580134
+State: Maharashtra
+District: Thane
+Age: 18
+Name: Prachi Kamalakar Pawar, Prashant Tukaram Bhosale
+Covishield: Yes
+Slot: 3
+Pin: 400710
+Hospital: HIRANANDANI
+Device: Android
+Mode: Ultra
+Refresh: 3
+Browser: Chrome
+Otp: Manual
+Refresh: 1

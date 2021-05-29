@@ -3,6 +3,7 @@ import json
 import hashlib
 import datetime
 from secret import encrypt
+import requests_random_user_agent
 
 # For states - https://cdn-api.co-vin.in/api/v2/admin/location/states
 # For distrcits - https://cdn-api.co-vin.in/api/v2/admin/location/districts/21
@@ -54,8 +55,6 @@ def _get_response(method, header_append={}, **kwargs):
     if request["type"] == "POST":
         request["json"] = kwargs["json"]
 
-    # print(json.dumps(request, indent=2))
-
     if request["type"] == "POST":
         return requests.post(url=request['url'], json=request['json'], headers=request['header'],
                              proxies=request['proxies'])
@@ -68,6 +67,8 @@ def generate_otp(mobile):
         "mobile": mobile,
         "secret": _secret
     })
+    if response.status_code == 401:
+        raise ConnectionError("Session Expired, logging in again!")
     if response.status_code != 200:
         raise Exception(f'Response Exception occurred in generate_otp! The response code was {response.status_code}.'
                         f' The content is {response.content}')
@@ -82,7 +83,8 @@ def validate_otp(otp, trxn_resp):
         "otp": otp_hash,
         "txnId": trxn_resp.json()['txnId']
     })
-
+    if response.status_code == 401:
+        raise ConnectionError("Session Expired, logging in again!")
     if response.status_code != 200:
         raise Exception(f'Response Exception occurred in validate_otp! The response code was {response.status_code}.'
                         f' The content is {response.content}')
@@ -97,6 +99,8 @@ def calendar_by_district(district_id, bearer_token):
         "district_id": district_id,
         "date": function_to_call
     })
+    if response.status_code == 401:
+        raise ConnectionError("Session Expired, logging in again!")
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in calendar_by_district! The response code was {response.status_code}.'
@@ -111,6 +115,8 @@ def find_by_district(district_id, bearer_token):
         "district_id": district_id,
         "date": function_to_call
     })
+    if response.status_code == 401:
+        raise ConnectionError("Session Expired, logging in again!")
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in find_by_district! The response code was {response.status_code}.'
@@ -125,6 +131,8 @@ def calendar_by_pin(pin, bearer_token):
         "pincode": pin,
         "date": function_to_call
     })
+    if response.status_code == 401:
+        raise ConnectionError("Session Expired, logging in again!")
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in calendar_by_pin! The response code was {response.status_code}.'
@@ -139,6 +147,8 @@ def find_by_pin(pin, bearer_token):
         "pincode": pin,
         "date": function_to_call
     })
+    if response.status_code == 401:
+        raise ConnectionError("Session Expired, logging in again!")
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in find_by_pin! The response code was {response.status_code}.'
@@ -150,6 +160,8 @@ def get_all_beneficiaries(bearer_token):
     response = _get_response("beneficiaries", header_append={
         "authorization": "Bearer {}".format(bearer_token)
     })
+    if response.status_code == 401:
+        raise ConnectionError("Session Expired, logging in again!")
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in get_all_beneficiaries! The response code was {response.status_code}.'
@@ -158,14 +170,28 @@ def get_all_beneficiaries(bearer_token):
 
 
 def get_state_id(state):
-    states = _get_response('getAllStates').json()['states']
+    response = _get_response('getAllStates')
+    if response.status_code == 401:
+        raise ConnectionError("Session Expired, logging in again!")
+    if response.status_code != 200:
+        raise Exception(
+            f'Response Exception occurred in get_state_id! The response code was {response.status_code}.'
+            f' The content is {response.content}')
+    states = response.json()['states']
     for the_state in states:
         if state.title() == the_state['state_name']:
             return the_state['state_id']
 
 
 def get_district_id(state_id, district):
-    districts = _get_response('getAllDistricts', url={'state_id': state_id}).json()['districts']
+    response = _get_response('getAllDistricts', url={'state_id': state_id})
+    if response.status_code == 401:
+        raise ConnectionError("Session Expired, logging in again!")
+    if response.status_code != 200:
+        raise Exception(
+            f'Response Exception occurred in get_district_id! The response code was {response.status_code}.'
+            f' The content is {response.content}')
+    districts = response.json()['districts']
     for the_districts in districts:
         if district.title() == the_districts['district_name']:
             return the_districts['district_id']
@@ -181,7 +207,8 @@ def schedule_appointment(dose, session_id, slot, beneficiary_id, captcha, bearer
         "captcha": captcha,
         "beneficiaries": beneficiary_id
     })
-
+    if response.status_code == 401:
+        raise ConnectionError("Session Expired, logging in again!")
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in schedule_appointment! The response code was {response.status_code}.'
@@ -190,6 +217,13 @@ def schedule_appointment(dose, session_id, slot, beneficiary_id, captcha, bearer
 
 
 def get_captcha(bearer_token):
-    return _get_response("getRecaptcha", header_append={
+    response = _get_response("getRecaptcha", header_append={
         "authorization": "Bearer {}".format(bearer_token)
     }, json={})
+    if response.status_code == 401:
+        raise ConnectionError("Session Expired, logging in again!")
+    if response.status_code != 200:
+        raise Exception(
+            f'Response Exception occurred in get_captcha! The response code was {response.status_code}.'
+            f' The content is {response.content}')
+    return response

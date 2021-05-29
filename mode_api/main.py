@@ -19,6 +19,7 @@ import os
 import sys
 import time
 import socket
+import logging
 import json
 from tabulate import tabulate
 import svg_decode
@@ -47,10 +48,27 @@ DRY = None
 _IOS_PREVIOUS_IP = ''
 _IOS_OTP = ''
 
+# create logger
+logger = logging.getLogger('hungergames')
+logger.setLevel(logging.DEBUG)
+
+# create console handler and set level to debug
+ch = logging.StreamHandler()
+ch.setLevel(logging.DEBUG)
+
+# create formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# add formatter to ch
+ch.setFormatter(formatter)
+
+# add ch to logger
+logger.addHandler(ch)
+
 
 def setup():
-    print("Warning: Application is still in beta, has pointed edges. Very stabby. Much wow.")
-    print(
+    logger.info("Warning: Application is still in beta, has pointed edges. Very stabby. Much wow.")
+    logger.info(
         "\nWelcome to Hunger Games!\nOnly technologists who can code can get the vaccine, therfore, leading to a selection bias in the population! Wohoo!\n\n")
     global PHONE_NUMBER
     global USER_STATE
@@ -72,6 +90,7 @@ def setup():
     global OTP
     global PROXY
     global DRY
+    global MODE
     settings = os.path.join(os.getcwd(), "settings.txt")
     if os.path.exists(settings):
         with open(settings, 'r') as the_file:
@@ -196,7 +215,7 @@ class RequestHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         global _IOS_OTP
-        # print("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
+        # logger.info("GET request,\nPath: %s\nHeaders:\n%s\n", str(self.path), str(self.headers))
         self._set_response()
         output = ''
         output += '<html><body>'
@@ -279,7 +298,7 @@ def open_website(driver):
     elif DEVICE.lower() == 'ios':
         ip = get_ip()
         if _IOS_PREVIOUS_IP != ip:
-            print(
+            logger.info(
                 'Your IP Address is --> ' + str(ip) + '. Please enter this IP in your iPhone, as shown in the Manual.')
             input('After you have entered this IP address, press any key to continue')
             driver.execute_script("window.open('" + "https://localhost:1337" + "', '_blank')")
@@ -293,7 +312,7 @@ def open_website(driver):
 def open_messages(driver):
     if DEVICE.lower() == 'android':
         driver.switch_to.window(driver.window_handles[2])
-        print("\n>> Waiting for authentication from Google Messages")
+        logger.info("\n>> Waiting for authentication from Google Messages")
         sleep(.5)
         while driver.current_url != r"https://messages.google.com/web/conversations":
             driver.get(r"https://messages.google.com/web/conversations")
@@ -332,7 +351,7 @@ def get_otp(driver):
         msg_container = driver.find_elements_by_tag_name(r"mws-conversation-list-item")[0]
         msg_container.find_element_by_tag_name("a").click()
         query = "//div[contains(@class, 'text-msg') and contains(@class, 'ng-star-inserted')]"
-        print(">> Found OTP!")
+        logger.info(">> Found OTP!")
         driver.get('https://messages.google.com/web/conversations')
         wait.until(ec.presence_of_all_elements_located((By.TAG_NAME, r"mws-conversation-list-item")))
         msg_container = driver.find_elements_by_tag_name(r"mws-conversation-list-item")[0]
@@ -346,7 +365,7 @@ def get_otp(driver):
             if word.isdigit():
                 otp.append(word)
         otp.pop()
-        print(">> Received OTP")
+        logger.info(">> Received OTP")
         return ''.join(otp)
     elif DEVICE.lower() == 'ios':
         run()
@@ -365,13 +384,13 @@ def run(server_class=HTTPServer, handler_class=RequestHandler, port=1337):
     """
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
-    print('Starting httpd...\n')
+    logger.info('Starting httpd...\n')
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
         pass
     httpd.server_close()
-    print('Stopping httpd...\n')
+    logger.info('Stopping httpd...\n')
 
 
 def login(driver):
@@ -405,7 +424,7 @@ def login(driver):
     return bearer_token
 
 
-def find_vaccines(centers):
+def find_vaccines(sessions):
     global SLOT
     vaccines = ['COVISHIELD' if COVISHIELD is not None else None,
                 'COVAXIN' if COVAXIN is not None else COVAXIN,
@@ -421,42 +440,41 @@ def find_vaccines(centers):
 
     age_range = range(AGE, AGE + 27)
 
-    print(f'Filters are {vaccines} and {payment}')
-    for center in centers:
-        sessions = center['sessions']
+    logger.info(f'Filters are {vaccines} and {payment}')
+    for session in sessions:
         if HOSPITAL is not None:
-            if HOSPITAL.lower() not in center['name'].lower():
+            if HOSPITAL.lower() not in session['name'].lower():
                 continue
-        for session in sessions:
-            with open(f"{datetime.datetime.now().strftime('%Y%m%d')}_{os.getpid()}.log.json", 'w') as outfile:
-                json.dump(center, outfile, indent=4)
-            print('==================================================================')
-            print(f"Center name is: {center['name']}")
-            print(f"Center Date is: {session['date']}")
-            if session['min_age_limit'] not in age_range:
-                print(f"Age is {AGE}. Center {center['name']} minimum age is {session['min_age_limit']}")
-                print('==================================================================')
-                continue
-            if session['vaccine'] not in vaccines:
-                print(f"Center vaccine is {session['vaccine']}. Filter is {vaccines}")
-                print('==================================================================')
-                continue
-            if session.get('vaccine_fees', None) is not None and 'PAID' not in payment:  # Want only free
-                print(f"No FREE vaccine at {center['name']}. Filter is {payment}")
-                print('==================================================================')
-                continue
-            if session.get('vaccine_fees', None) is None and 'FREE' not in payment:  # Want only paid
-                print(f"No PAID vaccine at {center['name']}. Filter is {payment}")
-                print('==================================================================')
-                continue
-            print(f'Available capacity for Dose {DOSE}: {session["available_capacity_dose" + str(DOSE)]}')
-            print('==================================================================')
-            if session['available_capacity_dose' + str(DOSE)] > 0:
-                print("Bingo, we have a hit!")
-                print('==================================================================')
-                if int(SLOT) > len(session['slots']):
-                    SLOT = 1
-                return session['session_id'], session['slots'][int(SLOT) - 1]
+
+        with open(f"{datetime.datetime.now().strftime('%Y%m%d')}_{os.getpid()}.log.json", 'w') as outfile:
+            json.dump(session, outfile, indent=4)
+        logger.info('==================================================================')
+        logger.info(f"Center name is: {session['name']}")
+        logger.info(f"Center Date is: {session['date']}")
+        if session['min_age_limit'] not in age_range:
+            logger.info(f"Age is {AGE}. Center {session['name']} minimum age is {session['min_age_limit']}")
+            logger.info('==================================================================')
+            continue
+        if session['vaccine'] not in vaccines:
+            logger.info(f"Center vaccine is {session['vaccine']}. Filter is {vaccines}")
+            logger.info('==================================================================')
+            continue
+        if session.get('vaccine_fees', None) is not None and 'PAID' not in payment:  # Want only free
+            logger.info(f"No FREE vaccine at {session['name']}. Filter is {payment}")
+            logger.info('==================================================================')
+            continue
+        if session.get('vaccine_fees', None) is None and 'FREE' not in payment:  # Want only paid
+            logger.info(f"No PAID vaccine at {session['name']}. Filter is {payment}")
+            logger.info('==================================================================')
+            continue
+        logger.info(f'Available capacity for Dose {DOSE}: {session["available_capacity_dose" + str(DOSE)]}')
+        logger.info('==================================================================')
+        if session['available_capacity_dose' + str(DOSE)] > 0:
+            logger.info("Bingo, we have a hit!")
+            logger.info('==================================================================')
+            if int(SLOT) > len(session['slots']):
+                SLOT = 1
+            return session['session_id'], session['slots'][int(SLOT) - 1]
 
 
 def book_vaccine(session_id, slot, bearer_token):
@@ -464,20 +482,20 @@ def book_vaccine(session_id, slot, bearer_token):
     beneficiaries = api.get_all_beneficiaries(bearer_token).json()
     for beneficiary in beneficiaries['beneficiaries']:
         if NAME.lower() == 'all':
-            print(f"Using Beneficiary: {beneficiary['name']}")
+            logger.info(f"Using Beneficiary: {beneficiary['name']}")
             beneficiary_id.append(beneficiary['beneficiary_reference_id'])
         elif beneficiary['name'].lower() in [name.lower().strip() for name in NAME.split(',')]:
-            print(f"Using Beneficiary: {beneficiary['name']}")
+            logger.info(f"Using Beneficiary: {beneficiary['name']}")
             beneficiary_id.append(beneficiary['beneficiary_reference_id'])
     if DRY is None:
         captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha'])
     else:
         captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha']) + 'SPARTA'
-    print(tabulate([['Dose', 1], ['session_id', session_id], ['slot', slot], ['beneficiary_id', beneficiary_id],
+    logger.info(tabulate([['Dose', 1], ['session_id', session_id], ['slot', slot], ['beneficiary_id', beneficiary_id],
                     ['captcha', captcha], ['bearer_token', bearer_token]]))
     final = api.schedule_appointment(DOSE, session_id, slot, beneficiary_id, captcha, bearer_token)
-    print(f"Final Response is: {final}")
-    if final.content == 200:
+    logger.info(f"Final Response is: {final}")
+    if final.status_code == 200:
         return True
     else:
         return False
@@ -487,11 +505,11 @@ def check_beneficiary(bearer_token):
     beneficiaries = api.get_all_beneficiaries(bearer_token).json()
     for beneficiary in beneficiaries['beneficiaries']:
         if NAME.lower() == 'all':
-            print(f"Using Beneficiary: {beneficiary['name']}")
-            print(f"Beneficiary ID: {beneficiary['beneficiary_reference_id']}")
+            logger.info(f"Using Beneficiary: {beneficiary['name']}")
+            logger.info(f"Beneficiary ID: {beneficiary['beneficiary_reference_id']}")
         elif beneficiary['name'].lower() in [name.lower().strip() for name in NAME.split(',')]:
-            print(f"Using Beneficiary: {beneficiary['name']}")
-            print(f"Beneficiary ID: {beneficiary['beneficiary_reference_id']}")
+            logger.info(f"Using Beneficiary: {beneficiary['name']}")
+            logger.info(f"Beneficiary ID: {beneficiary['beneficiary_reference_id']}")
 
 
 def main():
@@ -526,47 +544,39 @@ def main():
 
     proxies = {
         "proxies": [
-            "65.0.80.131:1234",
-            "65.2.38.55:1234",
-            "13.126.232.239:1234",
-            "13.233.93.178:1234",
-            "65.2.143.123:1234"
+            "13.232.190.195:1234",
+            "65.1.135.89:1234",
+            "15.206.169.114:1234",
+            "13.233.237.248:1234",
+            "3.108.61.77:1234"
+
         ],
         "proxies2": [
-            "35.154.93.191:1234",
-            "65.0.55.234:1234",
-            "13.233.143.1:1234",
-            "65.1.136.54:1234",
-            "3.6.94.132:1234"
+            "3.108.42.239:1234",
+            "15.206.145.158:1234",
+            "52.66.204.246:1234",
+            "13.233.113.252:1234",
+            "13.127.218.137:1234"
+
         ],
         "proxies3": [
-            "65.0.80.131:1234",
-            "65.2.38.55:1234",
-            "13.126.232.239:1234",
-            "13.233.93.178:1234",
-            "65.2.143.123:1234",
-            "13.233.82.253:1234",
-            "13.232.78.108:1234",
-            "13.235.50.203:1234",
-            "65.0.74.84:1234",
-            "65.1.114.120:1234"
+            "65.2.9.243:1234",
+            "13.233.167.94:1234",
+            "15.206.117.200:1234",
+            "13.126.226.62:1234",
+            "15.206.125.233:1234"
 
         ],
         "proxies4": [
-            "35.154.93.191:1234",
-            "65.0.55.234:1234",
-            "13.233.143.1:1234",
-            "65.1.136.54:1234",
-            "3.6.94.132:1234",
-            "13.127.76.202:1234",
-            "13.232.112.90:1234",
-            "65.0.204.169:1234",
-            "13.234.217.154:1234",
-            "13.127.27.222:1234"
+            "13.126.33.199:1234",
+            "3.6.92.15:1234",
+            "3.6.38.116:1234",
+            "13.235.246.134:1234",
+            "13.233.132.11:1234"
         ]
     }
 
-    proxies = proxies['proxies3']
+    proxies = proxies['proxies']
     proxy_index = 0
     api.http_proxy = proxies[-1]
     api.https_proxy = proxies[-1]
@@ -574,62 +584,81 @@ def main():
     bearer_token = login(driver)
 
     while vaccine_found is False:
-        # For logging out and killing session
-        end = time.time()
-        hours, rem = divmod(end - start, 3600)
-        minutes, seconds = divmod(rem, 60)
+        try:
+            # For logging out and killing session
+            # end = time.time()
+            # hours, rem = divmod(end - start, 3600)
+            # minutes, seconds = divmod(rem, 60)
 
-        # Check beneficiary before hand because people put wrong names!
-        if proxy_counter == 0:
-            check_beneficiary(bearer_token)
+            # Check beneficiary before hand because people put wrong names!
+            if proxy_counter == 0:
+                check_beneficiary(bearer_token)
 
-        # if proxy_counter % 100 == 0:
-        print('Switching proxy!')
-        previous_proxy_index = proxy_index
-        if previous_proxy_index == len(proxies) - 1:
-            proxy_index = 0
-        else:
-            proxy_index = previous_proxy_index + 1
-
-        api.http_proxy = proxies[proxy_index]
-        api.https_proxy = proxies[proxy_index]
-        print(f"Proxy: {proxies[proxy_index]}")
-        print(f"Proxy Index: {proxy_index}")
-
-        if minutes > 10:
-            start = time.time()
-            bearer_token = login(driver)
-        if PIN_CODE is not None:
-            proxy_counter += 1
-            print(f"while count: {proxy_counter}")
-            centers = api.calendar_by_pin(PIN_CODE, bearer_token).json()
-        else:
-            state_id = api.get_state_id(USER_STATE)
-            district_id = api.get_district_id(state_id, USER_DISTRICT)
-            centers = api.calendar_by_district(district_id, bearer_token).json()
-        if len(centers['centers']) == 0:
-            print('No centers found!')
-            sleep(1)
-            continue
-
-        print('Centers found!')
-        print('Prepping Find Vaccines')
-        session_id_and_slot = find_vaccines(centers['centers'])
-        print(f"session_id_and_slot is {session_id_and_slot}")
-        if session_id_and_slot is not None:
-            print('Prepping to book vaccine')
-            try:
-                vaccine_booking = book_vaccine(session_id_and_slot[0], session_id_and_slot[1], bearer_token)
-                if vaccine_booking is True:
-                    print("WooHooo!")
-                    break
+            if MODE.lower() == 'ultra':
+                logger.info('Switching proxy!')
+                previous_proxy_index = proxy_index
+                if previous_proxy_index == len(proxies) - 1:
+                    proxy_index = 0
                 else:
-                    print('Response code was not 200 while booking vaccine! Something went wrong! Retrying!')
-                    continue
-            except Exception as e:
-                print(e)
+                    proxy_index = previous_proxy_index + 1
+
+                api.http_proxy = proxies[proxy_index]
+                api.https_proxy = proxies[proxy_index]
+                logger.info(f"Proxy: {proxies[proxy_index]}")
+                logger.info(f"Proxy Index: {proxy_index}")
+            else:
+                if proxy_counter % 100 == 0:
+                    logger.info('Switching proxy!')
+                    previous_proxy_index = proxy_index
+                    if previous_proxy_index == len(proxies) - 1:
+                        proxy_index = 0
+                    else:
+                        proxy_index = previous_proxy_index + 1
+
+                    api.http_proxy = proxies[proxy_index]
+                    api.https_proxy = proxies[proxy_index]
+                    logger.info(f"Proxy: {proxies[proxy_index]}")
+                    logger.info(f"Proxy Index: {proxy_index}")
+
+            proxy_counter += 1
+            logger.info(f"while count: {proxy_counter}")
+
+            # if minutes > 10:
+            #     start = time.time()
+                # bearer_token = login(driver)
+            if PIN_CODE is not None:
+                centers = api.find_by_pin(PIN_CODE, bearer_token).json()
+            else:
+                state_id = api.get_state_id(USER_STATE)
+                district_id = api.get_district_id(state_id, USER_DISTRICT)
+                centers = api.find_by_district(district_id, bearer_token).json()
+            if len(centers['sessions']) == 0:
+                logger.info('No centers found!')
+                sleep(1)
                 continue
-        sleep(1)
+
+            logger.info('Centers found!')
+            logger.info('Prepping Find Vaccines')
+            session_id_and_slot = find_vaccines(centers['sessions'])
+            logger.info(f"session_id_and_slot is {session_id_and_slot}")
+            if session_id_and_slot is not None:
+                logger.info('Prepping to book vaccine')
+                try:
+                    vaccine_booking = book_vaccine(session_id_and_slot[0], session_id_and_slot[1], bearer_token)
+                    if vaccine_booking is True:
+                        logger.info("WooHooo!")
+                        break
+                    else:
+                        logger.info('Response code was not 200 while booking vaccine! Something went wrong! Retrying!')
+                        continue
+                except Exception as e:
+                    logger.info(e)
+                    continue
+            sleep(1)
+        except ConnectionError as ce:
+            logger.info(ce)
+            bearer_token = login(driver)
+            continue
 
 
 if __name__ == '__main__':
