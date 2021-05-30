@@ -1,12 +1,11 @@
-Phone: 9867143600
-State: Maharashtra
-District: Thane
+Phone: 1234567890
+State: Karnataka
+District: Bangalore Urban
 Age: 18
 Name: CDP
 Covishield: Yes
 Slot: 2
-Pin: 400710, 400703
-Hospital: RELIANCE, HIRANANDANI, APOLLO HOSPITAL MODERN SCHOOL
+Pin: 560035
 Device: Android
 Mode: Normal
 Browser: Chrome

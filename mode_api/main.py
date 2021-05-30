@@ -3,6 +3,7 @@
 # Selenium imports
 import cgi
 import datetime
+import requests
 
 import selenium.common.exceptions
 from selenium import webdriver
@@ -441,7 +442,8 @@ def find_vaccines(centers):
     if all([payment_type is None for payment_type in payment]) is True:
         payment = ['FREE', 'PAID']
     age_range = range(AGE, AGE + 27)
-    hospitals = [hospital.lower() for hospital in HOSPITAL]
+    if HOSPITAL is not None:
+        hospitals = [hospital.lower() for hospital in HOSPITAL]
     logger.info(f'Filters are {vaccines} and {payment}')
 
     for center in centers:
@@ -493,7 +495,8 @@ def find_vaccines_by_sessions(sessions):
     if all([payment_type is None for payment_type in payment]) is True:
         payment = ['FREE', 'PAID']
     age_range = range(AGE, AGE + 27)
-    hospitals = [hospital.lower() for hospital in HOSPITAL]
+    if HOSPITAL is not None:
+        hospitals = [hospital.lower() for hospital in HOSPITAL]
     logger.info(f'Filters are {vaccines} and {payment}')
 
     for session in sessions:
@@ -626,7 +629,7 @@ def main():
             "15.206.145.158:1234",
             "52.66.204.246:1234",
             "13.233.113.252:1234",
-            "13.127.218.137:1234"
+            "13.127.218.137:1234",
             "65.2.9.243:1234",
             "13.233.167.94:1234",
             "15.206.117.200:1234",
@@ -640,10 +643,12 @@ def main():
         ]
     }
 
-    proxies = proxies['proxies4']
+    proxies = proxies['proxies']
     proxy_index = 0
     api.http_proxy = proxies[-1]
     api.https_proxy = proxies[-1]
+
+    division_value = 120 if PIN_CODE is None else 120 / len(PIN_CODE)
 
     bearer_token = login(driver)
 
@@ -654,7 +659,7 @@ def main():
             if proxy_counter == 0:
                 check_beneficiary(bearer_token)
 
-            if proxy_counter % 100 == 0:
+            if proxy_counter % division_value == 0:
                 logger.info('Switching proxy!')
                 previous_proxy_index = proxy_index
                 if previous_proxy_index == len(proxies) - 1:
@@ -720,8 +725,21 @@ def main():
                     logger.info(e)
                     continue
             sleep(REFRESH_TIMES)
-        except ConnectionError as ce:
+        except (ConnectionError, requests.exceptions.ProxyError) as ce:
             logger.info(ce)
+
+            logger.info('Switching proxy!')
+            previous_proxy_index = proxy_index
+            if previous_proxy_index == len(proxies) - 1:
+                proxy_index = 0
+            else:
+                proxy_index = previous_proxy_index + 1
+
+            api.http_proxy = proxies[proxy_index]
+            api.https_proxy = proxies[proxy_index]
+            logger.info(f"Proxy: {proxies[proxy_index]}")
+            logger.info(f"Proxy Index: {proxy_index}")
+            proxy_counter = 1
             bearer_token = login(driver)
             continue
 
