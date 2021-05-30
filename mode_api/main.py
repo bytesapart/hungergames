@@ -88,7 +88,6 @@ def setup():
     global REFRESH_TIMES
     global BROWSER
     global OTP
-    global PROXY
     global DRY
     global MODE
     settings = os.path.join(os.getcwd(), "settings.txt")
@@ -191,6 +190,12 @@ def setup():
         MODE = input("Enter Mode (Values are Normal or Ultra, defaults to Normal): ").lower()
         if MODE == '':
             MODE = 'Normal'
+
+    if HOSPITAL is not None:
+        HOSPITAL = [hosp.strip() for hosp in HOSPITAL.split(',')]
+
+    if PIN_CODE is not None:
+        PIN_CODE = [pin.strip() for pin in PIN_CODE.split(',')]
 
 
 def get_ip():
@@ -424,28 +429,77 @@ def login(driver):
     return bearer_token
 
 
-def find_vaccines(sessions):
+def find_vaccines(centers):
     global SLOT
     vaccines = ['COVISHIELD' if COVISHIELD is not None else None,
                 'COVAXIN' if COVAXIN is not None else COVAXIN,
                 'SPUTNIK' if SPUTNIK is not None else SPUTNIK]
     if all([vaccine_type is None for vaccine_type in vaccines]) is True:
         vaccines = ['COVISHIELD', 'COVAXIN', 'SPUTNIK']
-
     payment = ['FREE' if FREE is not None else None,
                'PAID' if PAID is not None else None]
-
     if all([payment_type is None for payment_type in payment]) is True:
         payment = ['FREE', 'PAID']
-
     age_range = range(AGE, AGE + 27)
-
+    hospitals = [hospital.lower() for hospital in HOSPITAL]
     logger.info(f'Filters are {vaccines} and {payment}')
+
+    for center in centers:
+        sessions = center['sessions']
+        if HOSPITAL is not None:
+            if center['name'].lower() not in hospitals:
+                continue
+        for session in sessions:
+            with open(f"{datetime.datetime.now().strftime('%Y%m%d')}_{os.getpid()}.log.json", 'w') as outfile:
+                json.dump(center, outfile, indent=4)
+            logger.info('==================================================================')
+            logger.info(f"Center name is: {center['name']}")
+            logger.info(f"Center Date is: {session['date']}")
+            if session['min_age_limit'] not in age_range:
+                logger.info(f"Age is {AGE}. Center {center['name']} minimum age is {session['min_age_limit']}")
+                logger.info('==================================================================')
+                continue
+            if session['vaccine'] not in vaccines:
+                logger.info(f"Center vaccine is {session['vaccine']}. Filter is {vaccines}")
+                logger.info('==================================================================')
+                continue
+            if session.get('vaccine_fees', None) is not None and 'PAID' not in payment:  # Want only free
+                logger.info(f"No FREE vaccine at {center['name']}. Filter is {payment}")
+                logger.info('==================================================================')
+                continue
+            if session.get('vaccine_fees', None) is None and 'FREE' not in payment:  # Want only paid
+                logger.info(f"No PAID vaccine at {center['name']}. Filter is {payment}")
+                logger.info('==================================================================')
+                continue
+            logger.info(f'Available capacity for Dose {DOSE}: {session["available_capacity_dose" + str(DOSE)]}')
+            logger.info('==================================================================')
+            if session['available_capacity_dose' + str(DOSE)] > 0:
+                logger.info("Bingo, we have a hit!")
+                logger.info('==================================================================')
+                if int(SLOT) > len(session['slots']):
+                    SLOT = 1
+                return session['session_id'], session['slots'][int(SLOT) - 1]
+
+
+def find_vaccines_by_sessions(sessions):
+    global SLOT
+    vaccines = ['COVISHIELD' if COVISHIELD is not None else None,
+                'COVAXIN' if COVAXIN is not None else COVAXIN,
+                'SPUTNIK' if SPUTNIK is not None else SPUTNIK]
+    if all([vaccine_type is None for vaccine_type in vaccines]) is True:
+        vaccines = ['COVISHIELD', 'COVAXIN', 'SPUTNIK']
+    payment = ['FREE' if FREE is not None else None,
+               'PAID' if PAID is not None else None]
+    if all([payment_type is None for payment_type in payment]) is True:
+        payment = ['FREE', 'PAID']
+    age_range = range(AGE, AGE + 27)
+    hospitals = [hospital.lower() for hospital in HOSPITAL]
+    logger.info(f'Filters are {vaccines} and {payment}')
+
     for session in sessions:
         if HOSPITAL is not None:
-            if HOSPITAL.lower() not in session['name'].lower():
+            if session['name'].lower() not in hospitals:
                 continue
-
         with open(f"{datetime.datetime.now().strftime('%Y%m%d')}_{os.getpid()}.log.json", 'w') as outfile:
             json.dump(session, outfile, indent=4)
         logger.info('==================================================================')
@@ -492,7 +546,7 @@ def book_vaccine(session_id, slot, bearer_token):
     else:
         captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha']) + 'SPARTA'
     logger.info(tabulate([['Dose', 1], ['session_id', session_id], ['slot', slot], ['beneficiary_id', beneficiary_id],
-                    ['captcha', captcha], ['bearer_token', bearer_token]]))
+                          ['captcha', captcha], ['bearer_token', bearer_token]]))
     final = api.schedule_appointment(DOSE, session_id, slot, beneficiary_id, captcha, bearer_token)
     logger.info(f"Final Response is: {final}")
     if final.status_code == 200:
@@ -537,11 +591,6 @@ def main():
     vaccine_found = False
     proxy_counter = 0
 
-    start = time.time()
-
-    # with open('proxies2.json', 'r') as proxy_file:
-    #     proxies = json.load(proxy_file)
-
     proxies = {
         "proxies": [
             "13.232.190.195:1234",
@@ -568,6 +617,21 @@ def main():
 
         ],
         "proxies4": [
+            "13.232.190.195:1234",
+            "65.1.135.89:1234",
+            "15.206.169.114:1234",
+            "13.233.237.248:1234",
+            "3.108.61.77:1234",
+            "3.108.42.239:1234",
+            "15.206.145.158:1234",
+            "52.66.204.246:1234",
+            "13.233.113.252:1234",
+            "13.127.218.137:1234"
+            "65.2.9.243:1234",
+            "13.233.167.94:1234",
+            "15.206.117.200:1234",
+            "13.126.226.62:1234",
+            "15.206.125.233:1234",
             "13.126.33.199:1234",
             "3.6.92.15:1234",
             "3.6.38.116:1234",
@@ -576,7 +640,7 @@ def main():
         ]
     }
 
-    proxies = proxies['proxies']
+    proxies = proxies['proxies4']
     proxy_index = 0
     api.http_proxy = proxies[-1]
     api.https_proxy = proxies[-1]
@@ -585,16 +649,12 @@ def main():
 
     while vaccine_found is False:
         try:
-            # For logging out and killing session
-            # end = time.time()
-            # hours, rem = divmod(end - start, 3600)
-            # minutes, seconds = divmod(rem, 60)
 
             # Check beneficiary before hand because people put wrong names!
             if proxy_counter == 0:
                 check_beneficiary(bearer_token)
 
-            if MODE.lower() == 'ultra':
+            if proxy_counter % 100 == 0:
                 logger.info('Switching proxy!')
                 previous_proxy_index = proxy_index
                 if previous_proxy_index == len(proxies) - 1:
@@ -606,40 +666,45 @@ def main():
                 api.https_proxy = proxies[proxy_index]
                 logger.info(f"Proxy: {proxies[proxy_index]}")
                 logger.info(f"Proxy Index: {proxy_index}")
-            else:
-                if proxy_counter % 100 == 0:
-                    logger.info('Switching proxy!')
-                    previous_proxy_index = proxy_index
-                    if previous_proxy_index == len(proxies) - 1:
-                        proxy_index = 0
-                    else:
-                        proxy_index = previous_proxy_index + 1
-
-                    api.http_proxy = proxies[proxy_index]
-                    api.https_proxy = proxies[proxy_index]
-                    logger.info(f"Proxy: {proxies[proxy_index]}")
-                    logger.info(f"Proxy Index: {proxy_index}")
 
             proxy_counter += 1
             logger.info(f"while count: {proxy_counter}")
 
-            # if minutes > 10:
-            #     start = time.time()
-                # bearer_token = login(driver)
+            centers = {}
             if PIN_CODE is not None:
-                centers = api.find_by_pin(PIN_CODE, bearer_token).json()
+                if MODE.lower() == 'ultra':
+                    centers['sessions'] = []
+                    for pin in PIN_CODE:
+                        centers['sessions'].extend(api.find_by_pin(pin, bearer_token).json()['sessions'])
+                    centers['sessions'] = list(filter(None, centers['sessions']))
+                else:
+                    centers['centers'] = []
+                    for pin in PIN_CODE:
+                        centers['centers'].extend(api.calendar_by_pin(pin, bearer_token).json()['centers'])
+                    centers['centers'] = list(filter(None, centers['centers']))
             else:
                 state_id = api.get_state_id(USER_STATE)
                 district_id = api.get_district_id(state_id, USER_DISTRICT)
-                centers = api.find_by_district(district_id, bearer_token).json()
-            if len(centers['sessions']) == 0:
-                logger.info('No centers found!')
-                sleep(1)
-                continue
+                if MODE.lower() == 'ultra':
+                    centers = api.find_by_district(district_id, bearer_token).json()
+                else:
+                    centers = api.calendar_by_district(district_id, bearer_token).json()
+            if MODE.lower() == 'ultra':
+                if len(centers['sessions']) == 0:
+                    logger.info('No centers found!')
+                    continue
+            else:
+                if len(centers['centers']) == 0:
+                    logger.info('No centers found!')
+                    sleep(REFRESH_TIMES)
+                    continue
 
             logger.info('Centers found!')
             logger.info('Prepping Find Vaccines')
-            session_id_and_slot = find_vaccines(centers['sessions'])
+            if MODE.lower() == 'ultra':
+                session_id_and_slot = find_vaccines_by_sessions(centers['sessions'])
+            else:
+                session_id_and_slot = find_vaccines(centers['centers'])
             logger.info(f"session_id_and_slot is {session_id_and_slot}")
             if session_id_and_slot is not None:
                 logger.info('Prepping to book vaccine')
@@ -654,7 +719,7 @@ def main():
                 except Exception as e:
                     logger.info(e)
                     continue
-            sleep(1)
+            sleep(REFRESH_TIMES)
         except ConnectionError as ce:
             logger.info(ce)
             bearer_token = login(driver)

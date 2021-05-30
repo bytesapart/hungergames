@@ -1,15 +1,14 @@
-Phone: 1234567890
+Phone: 9867143600
 State: Maharashtra
-District: Nandurbar
-Age: 45
+District: Thane
+Age: 18
 Name: CDP
 Covishield: Yes
-Slot: 3
-Pin: 425415
-Hospital: AKKA
+Slot: 2
+Pin: 400710, 400703
+Hospital: RELIANCE, HIRANANDANI, APOLLO HOSPITAL MODERN SCHOOL
 Device: Android
-Mode: Ultra
+Mode: Normal
 Browser: Chrome
 Otp: Auto
 Refresh: 1
-Dry: Yes

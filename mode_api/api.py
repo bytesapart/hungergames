@@ -3,7 +3,6 @@ import json
 import hashlib
 import datetime
 from secret import encrypt
-import requests_random_user_agent
 
 # For states - https://cdn-api.co-vin.in/api/v2/admin/location/states
 # For distrcits - https://cdn-api.co-vin.in/api/v2/admin/location/districts/21
@@ -36,7 +35,11 @@ def days_future(number_of_days):
     return "{}-{}-{}".format(tomorrow.day, tomorrow.month, tomorrow.year)
 
 
-function_to_call = _tomorrow()
+is_saturday = True if datetime.datetime.today().weekday() == 5 else False
+if is_saturday:
+    function_to_call = days_future(2)
+else:
+    function_to_call = _tomorrow()
 
 
 def _get_response(method, header_append={}, **kwargs):
@@ -69,6 +72,10 @@ def generate_otp(mobile):
     })
     if response.status_code == 401:
         raise ConnectionError("Session Expired, logging in again!")
+    if response.status_code == 429:
+        raise ConnectionError(
+            f'Response Exception occurred in generate_otp! The response code was {response.status_code}.'
+            f' The content is {response.content}')
     if response.status_code != 200:
         raise Exception(f'Response Exception occurred in generate_otp! The response code was {response.status_code}.'
                         f' The content is {response.content}')
@@ -85,6 +92,10 @@ def validate_otp(otp, trxn_resp):
     })
     if response.status_code == 401:
         raise ConnectionError("Session Expired, logging in again!")
+    if response.status_code == 429:
+        raise ConnectionError(
+            f'Response Exception occurred in validate_otp! The response code was {response.status_code}.'
+            f' The content is {response.content}')
     if response.status_code != 200:
         raise Exception(f'Response Exception occurred in validate_otp! The response code was {response.status_code}.'
                         f' The content is {response.content}')
@@ -101,6 +112,10 @@ def calendar_by_district(district_id, bearer_token):
     })
     if response.status_code == 401:
         raise ConnectionError("Session Expired, logging in again!")
+    if response.status_code == 429:
+        raise ConnectionError(
+            f'Response Exception occurred in calendar_by_district! The response code was {response.status_code}.'
+            f' The content is {response.content}')
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in calendar_by_district! The response code was {response.status_code}.'
@@ -117,6 +132,10 @@ def find_by_district(district_id, bearer_token):
     })
     if response.status_code == 401:
         raise ConnectionError("Session Expired, logging in again!")
+    if response.status_code == 429:
+        raise ConnectionError(
+            f'Response Exception occurred in find_by_district! The response code was {response.status_code}.'
+            f' The content is {response.content}')
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in find_by_district! The response code was {response.status_code}.'
@@ -133,6 +152,10 @@ def calendar_by_pin(pin, bearer_token):
     })
     if response.status_code == 401:
         raise ConnectionError("Session Expired, logging in again!")
+    if response.status_code == 429:
+        raise ConnectionError(
+            f'Response Exception occurred in calendar_by_pin! The response code was {response.status_code}.'
+            f' The content is {response.content}')
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in calendar_by_pin! The response code was {response.status_code}.'
@@ -149,6 +172,10 @@ def find_by_pin(pin, bearer_token):
     })
     if response.status_code == 401:
         raise ConnectionError("Session Expired, logging in again!")
+    if response.status_code == 429:
+        raise ConnectionError(
+            f'Response Exception occurred in find_by_pin! The response code was {response.status_code}.'
+            f' The content is {response.content}')
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in find_by_pin! The response code was {response.status_code}.'
@@ -162,6 +189,10 @@ def get_all_beneficiaries(bearer_token):
     })
     if response.status_code == 401:
         raise ConnectionError("Session Expired, logging in again!")
+    if response.status_code == 429:
+        raise ConnectionError(
+            f'Response Exception occurred in get_all_beneficiaries! The response code was {response.status_code}.'
+            f' The content is {response.content}')
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in get_all_beneficiaries! The response code was {response.status_code}.'
@@ -173,6 +204,10 @@ def get_state_id(state):
     response = _get_response('getAllStates')
     if response.status_code == 401:
         raise ConnectionError("Session Expired, logging in again!")
+    if response.status_code == 429:
+        raise ConnectionError(
+            f'Response Exception occurred in get_state_id! The response code was {response.status_code}.'
+            f' The content is {response.content}')
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in get_state_id! The response code was {response.status_code}.'
@@ -187,6 +222,10 @@ def get_district_id(state_id, district):
     response = _get_response('getAllDistricts', url={'state_id': state_id})
     if response.status_code == 401:
         raise ConnectionError("Session Expired, logging in again!")
+    if response.status_code == 429:
+        raise ConnectionError(
+            f'Response Exception occurred in get_district_id! The response code was {response.status_code}.'
+            f' The content is {response.content}')
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in get_district_id! The response code was {response.status_code}.'
@@ -209,6 +248,10 @@ def schedule_appointment(dose, session_id, slot, beneficiary_id, captcha, bearer
     })
     if response.status_code == 401:
         raise ConnectionError("Session Expired, logging in again!")
+    if response.status_code == 429:
+        raise ConnectionError(
+            f'Response Exception occurred in schedule_appointment! The response code was {response.status_code}.'
+            f' The content is {response.content}')
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in schedule_appointment! The response code was {response.status_code}.'
@@ -222,6 +265,10 @@ def get_captcha(bearer_token):
     }, json={})
     if response.status_code == 401:
         raise ConnectionError("Session Expired, logging in again!")
+    if response.status_code == 429:
+        raise ConnectionError(
+            f'Response Exception occurred in get_captcha! The response code was {response.status_code}.'
+            f' The content is {response.content}')
     if response.status_code != 200:
         raise Exception(
             f'Response Exception occurred in get_captcha! The response code was {response.status_code}.'

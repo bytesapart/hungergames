@@ -1,12 +1,12 @@
-Phone: 1234567890
+Phone: 9867143600
 State: Maharashtra
 District: Mumbai
 Age: 18+
-Name: MI
+Name: CDP
 Covishield: Yes
 Slot: 3
-Hospital: Nanavati
-Pin: 400056
+Hospital: Kokilaben
+Pin: 400053
 Device: Android
 Mode: Ultra
 Refresh: 3

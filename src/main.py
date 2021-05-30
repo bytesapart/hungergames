@@ -483,7 +483,7 @@ def open_messages(driver):
                 toggle = WebDriverWait(driver, 30).until(
                     ec.presence_of_element_located((By.CLASS_NAME, "mat-slide-toggle-thumb")))
                 toggle.click()
-            sleep(40)
+            sleep(10)
     elif DEVICE.lower() == 'ios':
         pass
     else:
@@ -761,15 +761,18 @@ def schedule_for_candidate(driver):
     """
     try:
         if DOSE == 1:
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             schedule_button = driver.find_elements_by_xpath(
                 "//h3[contains(., '" + NAME + "')]/ancestor::ion-grid[contains(concat(' ', @class, ' '), ' cardblockcls ')]//ion-row[contains(concat(' ', @class, ' '), ' dose-data ')]//ul//a")[
                 0]
         else:
+            driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
             schedule_button = driver.find_elements_by_xpath(
                 "//h3[contains(., '" + NAME + "')]/ancestor::ion-grid[contains(concat(' ', @class, ' '), ' cardblockcls ')]//ion-row[contains(concat(' ', @class, ' '), ' dose-data ')]//ul//a")[
                 1]
         schedule_button.click()
-    except Exception:
+    except Exception as e:
+        print(e)
         print("Exception occurred! Retrying in function schedule_for_candidate()")
         schedule_for_candidate(driver)
 
@@ -817,6 +820,7 @@ def book_vaccine(driver):
     """
     try:
         wait = WebDriverWait(driver, 10)
+        driver.execute_script("window.scrollTo(0, document.body.scrollHeight);")
         wait.until(ec.presence_of_element_located((By.ID, "captchaImage")))
         wait.until(ec.presence_of_element_located((By.CLASS_NAME, "time-slot-list")))
         time_slots = driver.find_elements_by_xpath("//ion-button[contains(@class, 'time-slot')]")
@@ -933,7 +937,11 @@ def main():
                 select_state(driver)
                 select_district(driver)
             # sleep(.1)
-            check_if_something_went_wrong_error(driver)
+            if counting_entries == 90:
+                logout(driver)
+                counting_entries = 0
+                continue
+            # check_if_something_went_wrong_error(driver)
             driver.find_elements_by_tag_name("ion-button")[0].click()
             wait.until(ec.presence_of_all_elements_located((By.CLASS_NAME, "form-check")))
             filter_table(driver)
