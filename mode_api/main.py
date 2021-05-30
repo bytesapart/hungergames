@@ -388,7 +388,7 @@ def run(server_class=HTTPServer, handler_class=RequestHandler, port=1337):
     -------
     None
     """
-    server_address = ('', port)
+    server_address = ('0.0.0.0', port)
     httpd = server_class(server_address, handler_class)
     logger.info('Starting httpd...\n')
     try:
