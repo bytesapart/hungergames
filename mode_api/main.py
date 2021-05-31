@@ -4,6 +4,7 @@
 import cgi
 import datetime
 import requests
+import urllib
 
 import selenium.common.exceptions
 from selenium import webdriver
@@ -236,13 +237,18 @@ class RequestHandler(BaseHTTPRequestHandler):
         global _IOS_OTP
         if self.path.endswith('/' + PHONE_NUMBER):
             ctype, pdict = cgi.parse_header(self.headers.get('content-type'))
-            if ctype != 'application/json':
+            if ctype != 'application/json' and ctype != 'application/x-www-form-urlencoded':
                 self.send_response(400)
                 self.end_headers()
+            if ctype == 'application/json':
+                length = int(self.headers.get('content-length'))
+                body = json.loads(self.rfile.read(length))
+                _IOS_OTP = body['message'].split(' ')[6].strip('.')
+            elif ctype == 'application/x-www-form-urlencoded':
+                length = int(self.headers.get('content-length'))
+                body = urllib.parse.parse_qs(urllib.parse.unquote(self.rfile.read(length).decode()))
+                _IOS_OTP = body['text'][0].split(' ')[6].strip('.')
 
-            length = int(self.headers.get('content-length'))
-            body = json.loads(self.rfile.read(length))
-            _IOS_OTP = body['message'].split(' ')[6].strip('.')
 
             self._set_response()
             raise KeyboardInterrupt
@@ -301,13 +307,13 @@ def open_website(driver):
     driver.get(r'https://www.cowin.gov.in/')
     if DEVICE.lower() == "android":
         driver.execute_script("window.open('" + "https://messages.google.com/web/authentication" + "', '_blank')")
-    elif DEVICE.lower() == 'ios':
+    elif DEVICE.lower() == 'ios' or DEVICE.lower() == 'androidapk':
         ip = get_ip()
         if _IOS_PREVIOUS_IP != ip:
             logger.info(
                 'Your IP Address is --> ' + str(ip) + '. Please enter this IP in your iPhone, as shown in the Manual.')
-            input('After you have entered this IP address, press any key to continue')
-            driver.execute_script("window.open('" + "https://localhost:1337" + "', '_blank')")
+            # input('After you have entered this IP address, press any key to continue')
+            # driver.execute_script("window.open('" + "https://localhost:1337" + "', '_blank')")
     else:
         raise Exception("Device should be either iOS or Android!")
     sleep(.5)
@@ -328,7 +334,7 @@ def open_messages(driver):
                     ec.presence_of_element_located((By.CLASS_NAME, "mat-slide-toggle-thumb")))
                 toggle.click()
             sleep(20)
-    elif DEVICE.lower() == 'ios':
+    elif DEVICE.lower() == 'ios' or DEVICE.lower() == 'androidapk':
         pass
     else:
         raise Exception("Device should be either iOS or Android!")
@@ -373,7 +379,7 @@ def get_otp(driver):
         otp.pop()
         logger.info(">> Received OTP")
         return ''.join(otp)
-    elif DEVICE.lower() == 'ios':
+    elif DEVICE.lower() == 'ios' or DEVICE.lower() == 'androidapk':
         run()
         return _IOS_OTP
     else:
@@ -388,7 +394,7 @@ def run(server_class=HTTPServer, handler_class=RequestHandler, port=1337):
     -------
     None
     """
-    server_address = ('0.0.0.0', port)
+    server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     logger.info('Starting httpd...\n')
     try:
