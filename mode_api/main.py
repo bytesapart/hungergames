@@ -312,6 +312,7 @@ def open_website(driver):
         if _IOS_PREVIOUS_IP != ip:
             logger.info(
                 'Your IP Address is --> ' + str(ip) + '. Please enter this IP in your iPhone, as shown in the Manual.')
+            return None
             # input('After you have entered this IP address, press any key to continue')
             # driver.execute_script("window.open('" + "https://localhost:1337" + "', '_blank')")
     else:
@@ -335,7 +336,9 @@ def open_messages(driver):
                 toggle.click()
             sleep(20)
     elif DEVICE.lower() == 'ios' or DEVICE.lower() == 'androidapk':
-        pass
+        ip = get_ip()
+        logger.info(
+            'Your IP Address is --> ' + str(ip) + '. Please enter this IP in your iPhone, as shown in the Manual.')
     else:
         raise Exception("Device should be either iOS or Android!")
 
@@ -423,7 +426,8 @@ def login(driver):
     bearer_token = ''
     if OTP.lower() == 'auto':
         open_messages(driver)
-        driver.switch_to.window(driver.window_handles[2])
+        if DEVICE.lower() == 'android':
+            driver.switch_to.window(driver.window_handles[2])
         trxn_resp = api.generate_otp(PHONE_NUMBER)
         sleep(1)
         otp = get_otp(driver)
@@ -590,7 +594,7 @@ def main():
     setup()
 
     # ===== Step 2: Launch chrome and the websites =====
-    if OTP.lower() != 'manual':
+    if OTP.lower() != 'manual' and DEVICE.lower() == 'android':
         driver = launch_browser()
         open_website(driver)
     else:
@@ -654,7 +658,7 @@ def main():
     api.http_proxy = proxies[-1]
     api.https_proxy = proxies[-1]
 
-    division_value = 120 if PIN_CODE is None else 120 / len(PIN_CODE)
+    division_value = 100 if PIN_CODE is None else 100 / len(PIN_CODE)
 
     bearer_token = login(driver)
 
