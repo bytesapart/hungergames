@@ -1,12 +1,13 @@
 Phone: 1234567890
-State: Karnataka
-District: Bangalore Urban
+State: Maharashtra
+District: Mumbai
 Age: 18
 Name: CDP
 Covishield: Yes
 Slot: 2
-Pin: 560035
-Device: Android
+Hospital: Nanavati
+Pin: 400056
+Device: AndroidApk
 Mode: Normal
 Browser: Chrome
 Otp: Auto

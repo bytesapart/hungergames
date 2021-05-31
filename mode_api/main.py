@@ -243,12 +243,16 @@ class RequestHandler(BaseHTTPRequestHandler):
             if ctype == 'application/json':
                 length = int(self.headers.get('content-length'))
                 body = json.loads(self.rfile.read(length))
+                if 'CoWIN' not in body:
+                    return None
                 _IOS_OTP = body['message'].split(' ')[6].strip('.')
             elif ctype == 'application/x-www-form-urlencoded':
                 length = int(self.headers.get('content-length'))
-                body = urllib.parse.parse_qs(urllib.parse.unquote(self.rfile.read(length).decode()))
+                body = urllib.parse.unquote(self.rfile.read(length).decode())
+                if 'CoWIN' not in body:
+                    return None
+                body = urllib.parse.parse_qs(body)
                 _IOS_OTP = body['text'][0].split(' ')[6].strip('.')
-
 
             self._set_response()
             raise KeyboardInterrupt
@@ -459,7 +463,7 @@ def find_vaccines(centers):
     for center in centers:
         sessions = center['sessions']
         if HOSPITAL is not None:
-            if center['name'].lower() not in hospitals:
+            if not any([cent in center['name'].lower() for cent in hospitals]):
                 continue
         for session in sessions:
             with open(f"{datetime.datetime.now().strftime('%Y%m%d')}_{os.getpid()}.log.json", 'w') as outfile:
@@ -511,7 +515,7 @@ def find_vaccines_by_sessions(sessions):
 
     for session in sessions:
         if HOSPITAL is not None:
-            if session['name'].lower() not in hospitals:
+            if not any([sess in session['name'].lower() for sess in hospitals]):
                 continue
         with open(f"{datetime.datetime.now().strftime('%Y%m%d')}_{os.getpid()}.log.json", 'w') as outfile:
             json.dump(session, outfile, indent=4)
