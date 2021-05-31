@@ -55,7 +55,7 @@ logger = logging.getLogger('hungergames')
 logger.setLevel(logging.DEBUG)
 
 # create console handler and set level to debug
-ch = logging.StreamHandler()
+ch = logging.StreamHandler(sys.stdout)
 ch.setLevel(logging.DEBUG)
 
 # create formatter
