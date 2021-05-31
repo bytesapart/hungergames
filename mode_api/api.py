@@ -97,7 +97,7 @@ def validate_otp(otp, trxn_resp):
             f'Response Exception occurred in validate_otp! The response code was {response.status_code}.'
             f' The content is {response.content}')
     if response.status_code != 200:
-        raise Exception(f'Response Exception occurred in validate_otp! The response code was {response.status_code}.'
+        raise ConnectionError(f'Response Exception occurred in validate_otp! The response code was {response.status_code}.'
                         f' The content is {response.content}')
     bearer_token = response.json()['token']
     return bearer_token
@@ -117,7 +117,7 @@ def calendar_by_district(district_id, bearer_token):
             f'Response Exception occurred in calendar_by_district! The response code was {response.status_code}.'
             f' The content is {response.content}')
     if response.status_code != 200:
-        raise Exception(
+        raise ConnectionError(
             f'Response Exception occurred in calendar_by_district! The response code was {response.status_code}.'
             f' The content is {response.content}')
     return response
@@ -137,7 +137,7 @@ def find_by_district(district_id, bearer_token):
             f'Response Exception occurred in find_by_district! The response code was {response.status_code}.'
             f' The content is {response.content}')
     if response.status_code != 200:
-        raise Exception(
+        raise ConnectionError(
             f'Response Exception occurred in find_by_district! The response code was {response.status_code}.'
             f' The content is {response.content}')
     return response
@@ -157,7 +157,7 @@ def calendar_by_pin(pin, bearer_token):
             f'Response Exception occurred in calendar_by_pin! The response code was {response.status_code}.'
             f' The content is {response.content}')
     if response.status_code != 200:
-        raise Exception(
+        raise ConnectionError(
             f'Response Exception occurred in calendar_by_pin! The response code was {response.status_code}.'
             f' The content is {response.content}')
     return response
@@ -177,7 +177,7 @@ def find_by_pin(pin, bearer_token):
             f'Response Exception occurred in find_by_pin! The response code was {response.status_code}.'
             f' The content is {response.content}')
     if response.status_code != 200:
-        raise Exception(
+        raise ConnectionError(
             f'Response Exception occurred in find_by_pin! The response code was {response.status_code}.'
             f' The content is {response.content}')
     return response
@@ -194,7 +194,7 @@ def get_all_beneficiaries(bearer_token):
             f'Response Exception occurred in get_all_beneficiaries! The response code was {response.status_code}.'
             f' The content is {response.content}')
     if response.status_code != 200:
-        raise Exception(
+        raise ConnectionError(
             f'Response Exception occurred in get_all_beneficiaries! The response code was {response.status_code}.'
             f' The content is {response.content}')
     return response
@@ -209,7 +209,7 @@ def get_state_id(state):
             f'Response Exception occurred in get_state_id! The response code was {response.status_code}.'
             f' The content is {response.content}')
     if response.status_code != 200:
-        raise Exception(
+        raise ConnectionError(
             f'Response Exception occurred in get_state_id! The response code was {response.status_code}.'
             f' The content is {response.content}')
     states = response.json()['states']
@@ -227,7 +227,7 @@ def get_district_id(state_id, district):
             f'Response Exception occurred in get_district_id! The response code was {response.status_code}.'
             f' The content is {response.content}')
     if response.status_code != 200:
-        raise Exception(
+        raise ConnectionError(
             f'Response Exception occurred in get_district_id! The response code was {response.status_code}.'
             f' The content is {response.content}')
     districts = response.json()['districts']
@@ -253,7 +253,7 @@ def schedule_appointment(dose, session_id, slot, beneficiary_id, captcha, bearer
             f'Response Exception occurred in schedule_appointment! The response code was {response.status_code}.'
             f' The content is {response.content}')
     if response.status_code != 200:
-        raise Exception(
+        raise ConnectionError(
             f'Response Exception occurred in schedule_appointment! The response code was {response.status_code}.'
             f' The content is {response.content}')
     return response
@@ -270,7 +270,7 @@ def get_captcha(bearer_token):
             f'Response Exception occurred in get_captcha! The response code was {response.status_code}.'
             f' The content is {response.content}')
     if response.status_code != 200:
-        raise Exception(
+        raise ConnectionError(
             f'Response Exception occurred in get_captcha! The response code was {response.status_code}.'
             f' The content is {response.content}')
     return response

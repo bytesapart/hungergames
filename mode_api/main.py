@@ -214,6 +214,9 @@ def get_ip():
 
 
 class RequestHandler(BaseHTTPRequestHandler):
+    def setup(self) -> None:
+        BaseHTTPRequestHandler.setup(self)
+        # self.request.settimeout(10)
 
     def _set_response(self):
         self.send_response(200)
@@ -404,10 +407,14 @@ def run(server_class=HTTPServer, handler_class=RequestHandler, port=1337):
     server_address = ('', port)
     httpd = server_class(server_address, handler_class)
     logger.info('Starting httpd...\n')
+    httpd.timeout = 210
     try:
-        httpd.serve_forever()
+        httpd.handle_request()
     except KeyboardInterrupt:
         pass
+    except ConnectionError as ce:
+        logger.info(ce)
+        run()
     httpd.server_close()
     logger.info('Stopping httpd...\n')
 
@@ -428,20 +435,24 @@ def login(driver):
     """
     global OTP
     bearer_token = ''
-    if OTP.lower() == 'auto':
-        open_messages(driver)
-        if DEVICE.lower() == 'android':
-            driver.switch_to.window(driver.window_handles[2])
-        trxn_resp = api.generate_otp(PHONE_NUMBER)
+    try:
+        if OTP.lower() == 'auto':
+            open_messages(driver)
+            if DEVICE.lower() == 'android':
+                driver.switch_to.window(driver.window_handles[2])
+            trxn_resp = api.generate_otp(PHONE_NUMBER)
+            sleep(1)
+            otp = get_otp(driver)
+            bearer_token = api.validate_otp(otp, trxn_resp)
+        elif OTP.lower() == 'manual':
+            trxn_resp = api.generate_otp(PHONE_NUMBER)
+            otp = input("Enter OTP:")
+            bearer_token = api.validate_otp(otp, trxn_resp)
         sleep(1)
-        otp = get_otp(driver)
-        bearer_token = api.validate_otp(otp, trxn_resp)
-    elif OTP.lower() == 'manual':
-        trxn_resp = api.generate_otp(PHONE_NUMBER)
-        otp = input("Enter OTP:")
-        bearer_token = api.validate_otp(otp, trxn_resp)
-    sleep(1)
-    return bearer_token
+        return bearer_token
+    except ConnectionError as ce:
+        logger.info(ce)
+        login(driver)
 
 
 def find_vaccines(centers):
