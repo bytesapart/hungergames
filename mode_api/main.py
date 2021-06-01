@@ -216,11 +216,10 @@ def get_ip():
 class RequestHandler(BaseHTTPRequestHandler):
     def setup(self) -> None:
         BaseHTTPRequestHandler.setup(self)
-        # self.request.settimeout(10)
 
     def _set_response(self):
-        self.send_response(200)
-        self.send_header('Content-type', 'text/html')
+        self.send_header('Content-type', 'text/plain')
+        self.send_response_only(code=200, message='OK')
         self.end_headers()
 
     def do_GET(self):
@@ -247,18 +246,22 @@ class RequestHandler(BaseHTTPRequestHandler):
                 length = int(self.headers.get('content-length'))
                 body = json.loads(self.rfile.read(length))
                 if 'CoWIN' not in body:
+                    self.send_response(400)
+                    self.end_headers()
                     return None
                 _IOS_OTP = body['message'].split(' ')[6].strip('.')
             elif ctype == 'application/x-www-form-urlencoded':
                 length = int(self.headers.get('content-length'))
                 body = urllib.parse.unquote(self.rfile.read(length).decode())
                 if 'CoWIN' not in body:
+                    self.send_response(400)
+                    self.end_headers()
                     return None
                 body = urllib.parse.parse_qs(body)
                 _IOS_OTP = body['text'][0].split(' ')[6].strip('.')
 
-            self._set_response()
-            raise KeyboardInterrupt
+                self._set_response()
+                raise KeyboardInterrupt
 
 
 def launch_browser():
