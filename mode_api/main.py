@@ -218,7 +218,7 @@ class RequestHandler(BaseHTTPRequestHandler):
         BaseHTTPRequestHandler.setup(self)
 
     def _set_response(self):
-        self.send_header('Content-type', 'text/plain')
+        # self.send_header('Content-type', 'text/plain')
         self.send_response_only(code=200, message='OK')
         self.end_headers()
 
