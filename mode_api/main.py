@@ -725,6 +725,7 @@ def main():
             if MODE.lower() == 'ultra':
                 if len(centers['sessions']) == 0:
                     logger.info('No centers found!')
+                    sleep(REFRESH_TIMES)
                     continue
             else:
                 if len(centers['centers']) == 0:

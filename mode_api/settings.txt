@@ -7,8 +7,8 @@ Covishield: Yes
 Slot: 2
 Hospital: Nanavati
 Pin: 400056
-Device: AndroidApk
-Mode: Normal
+Device: Android
+Mode: Ultra
 Browser: Chrome
 Otp: Auto
 Refresh: 1
