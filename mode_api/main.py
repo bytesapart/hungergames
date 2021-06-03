@@ -648,21 +648,6 @@ def main():
 
         ],
         "proxies4": [
-            "13.232.190.195:1234",
-            "65.1.135.89:1234",
-            "15.206.169.114:1234",
-            "13.233.237.248:1234",
-            "3.108.61.77:1234",
-            "3.108.42.239:1234",
-            "15.206.145.158:1234",
-            "52.66.204.246:1234",
-            "13.233.113.252:1234",
-            "13.127.218.137:1234",
-            "65.2.9.243:1234",
-            "13.233.167.94:1234",
-            "15.206.117.200:1234",
-            "13.126.226.62:1234",
-            "15.206.125.233:1234",
             "13.126.33.199:1234",
             "3.6.92.15:1234",
             "3.6.38.116:1234",
@@ -756,6 +741,10 @@ def main():
             sleep(REFRESH_TIMES)
         except (ConnectionError, requests.exceptions.ProxyError) as ce:
             logger.info(ce)
+
+            if DRY is not None:
+                logger.info('Running in DRY mode, exitting!')
+                sys.exit(1)
 
             logger.info('Switching proxy!')
             previous_proxy_index = proxy_index

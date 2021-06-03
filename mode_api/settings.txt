@@ -4,11 +4,11 @@ District: Mumbai
 Age: 18
 Name: CDP
 Covishield: Yes
-Slot: 2
-Hospital: Nanavati
-Pin: 400056
+Slot: 3
+Hospital: KOKILABEN
+Pin: 400053
 Device: Android
 Mode: Ultra
 Browser: Chrome
-Otp: Auto
+Otp: Manual
 Refresh: 1
