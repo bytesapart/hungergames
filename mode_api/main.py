@@ -17,6 +17,7 @@ import api
 from time import sleep
 from pathlib import Path
 from http.server import BaseHTTPRequestHandler, HTTPServer
+from http_request_randomizer.requests.proxy.requestProxy import RequestProxy
 import os
 import sys
 import time
@@ -46,6 +47,7 @@ REFRESH_TIMES = 1
 BROWSER = 'Chrome'
 OTP = 'Auto'
 DRY = None
+PUBLICPROXY = None
 # ===== iOS Specefic Configs =====
 _IOS_PREVIOUS_IP = ''
 _IOS_OTP = ''
@@ -92,6 +94,7 @@ def setup():
     global OTP
     global DRY
     global MODE
+    global PUBLICPROXY
     settings = os.path.join(os.getcwd(), "settings.txt")
     if os.path.exists(settings):
         with open(settings, 'r') as the_file:
@@ -140,6 +143,8 @@ def setup():
                     DRY = line.split(':')[1].strip()
                 if line.split(':')[0].lower() == 'mode':
                     MODE = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'publicproxy':
+                    PUBLICPROXY = line.split(':')[1].strip()
     else:
         PHONE_NUMBER = input("Your Number: ")
         USER_STATE = input("Your State: ").lower()
@@ -192,6 +197,9 @@ def setup():
         MODE = input("Enter Mode (Values are Normal or Ultra, defaults to Normal): ").lower()
         if MODE == '':
             MODE = 'Normal'
+        PUBLICPROXY = input("Enter whether to use Public Proxy servers: ").lower()
+        if PUBLICPROXY == '':
+            PUBLICPROXY = None
 
     if HOSPITAL is not None:
         HOSPITAL = [hosp.strip() for hosp in HOSPITAL.split(',')]
@@ -572,10 +580,14 @@ def book_vaccine(session_id, slot, bearer_token):
         elif beneficiary['name'].lower() in [name.lower().strip() for name in NAME.split(',')]:
             logger.info(f"Using Beneficiary: {beneficiary['name']}")
             beneficiary_id.append(beneficiary['beneficiary_reference_id'])
+    # 6th of June, 2021: Captcha has been removed, hence commenting out the code that needs captcha
     if DRY is None:
-        captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha'])
+        # captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha'])
+        captcha = None
     else:
-        captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha']) + 'SPARTA'
+        # captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha']) + 'SPARTA'
+        captcha = None
+        session_id = '123'
     logger.info(tabulate([['Dose', 1], ['session_id', session_id], ['slot', slot], ['beneficiary_id', beneficiary_id],
                           ['captcha', captcha], ['bearer_token', bearer_token]]))
     final = api.schedule_appointment(DOSE, session_id, slot, beneficiary_id, captcha, bearer_token)
@@ -655,11 +667,21 @@ def main():
             "13.233.132.11:1234"
         ]
     }
+    if PUBLICPROXY is not None:
+        req_proxy = RequestProxy()  # you may get different number of proxy when  you run this at each time
+        list_of_proxies = req_proxy.get_proxy_list()  # this will create proxy list
 
-    proxies = proxies['proxies']
+        proxies = []  # int is list of Indian proxy
+        for proxy in list_of_proxies:
+            if proxy.country == 'India':
+                proxies.append(f'{proxy.ip}:{proxy.port}')
+    else:
+        proxies = proxies['proxies']
+
     proxy_index = 0
     api.http_proxy = proxies[-1]
-    api.https_proxy = proxies[-1]
+    if PUBLICPROXY is None:  # Only set HTTPS proxy if using private servers. Public proxies will fail on https
+        api.https_proxy = proxies[-1]
 
     division_value = 100 if PIN_CODE is None else 100 / len(PIN_CODE)
 
@@ -681,7 +703,8 @@ def main():
                     proxy_index = previous_proxy_index + 1
 
                 api.http_proxy = proxies[proxy_index]
-                api.https_proxy = proxies[proxy_index]
+                if PUBLICPROXY is None:  # Only set HTTPS proxy if using private proxy. Public proxies will fail!
+                    api.https_proxy = proxies[proxy_index]
                 logger.info(f"Proxy: {proxies[proxy_index]}")
                 logger.info(f"Proxy Index: {proxy_index}")
 

@@ -237,13 +237,22 @@ def get_district_id(state_id, district):
 
 
 def schedule_appointment(dose, session_id, slot, beneficiary_id, captcha, bearer_token):
+    # 6th of June, 2021: Captcha has been removed, hence commenting out the code that needs captcha
+    # response = _get_response("schedule", header_append={
+    #     "authorization": "Bearer {}".format(bearer_token)
+    # }, json={
+    #     "dose": dose,
+    #     "session_id": session_id,
+    #     "slot": slot,
+    #     "captcha": captcha,
+    #     "beneficiaries": beneficiary_id
+    # })
     response = _get_response("schedule", header_append={
         "authorization": "Bearer {}".format(bearer_token)
     }, json={
         "dose": dose,
         "session_id": session_id,
         "slot": slot,
-        "captcha": captcha,
         "beneficiaries": beneficiary_id
     })
     if response.status_code == 401:
