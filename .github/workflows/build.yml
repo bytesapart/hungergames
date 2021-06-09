@@ -66,6 +66,7 @@ jobs:
               cp ../mode_api/Setup_iOS.pdf Setup_iOS.pdf &&
               cp ../mode_api/Setup_Android.pdf Setup_Android.pdf &&
               cp ../mode_api/sms-forward-final-mod.apk sms-forward-final-mod.apk &&
+              cp ../mode_api/proxies.json proxies.json &&
               git describe --abbrev=0 --tags > version.txt &&
               zip -r9 hungergames-mode-api-mac.zip .
             OUT_FILE_NAME: hungergames-mode-api-mac.zip
@@ -100,6 +101,7 @@ jobs:
               cp ../mode_api/Setup_iOS.pdf Setup_iOS.pdf &&
               cp ../mode_api/Setup_Android.pdf Setup_Android.pdf &&
               cp ../mode_api/sms-forward-final-mod.apk sms-forward-final-mod.apk &&
+              cp ../mode_api/proxies.json proxies.json &&
               git describe --abbrev=0 --tags > version.txt &&
               7z a -tzip hungergames-mode-api-windows.zip .
             OUT_FILE_NAME: hungergames-mode-api-windows.zip
@@ -134,6 +136,7 @@ jobs:
               cp ../mode_api/Setup_iOS.pdf Setup_iOS.pdf &&
               cp ../mode_api/Setup_Android.pdf Setup_Android.pdf &&
               cp ../mode_api/sms-forward-final-mod.apk sms-forward-final-mod.apk &&
+              cp ../mode_api/proxies.json proxies.json &&
               git describe --abbrev=0 --tags > version.txt &&
               zip -r9 hungergames-mode-api-linux.zip .
             OUT_FILE_NAME: hungergames-mode-api-linux.zip
