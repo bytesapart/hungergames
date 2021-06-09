@@ -12,8 +12,8 @@ _username = "b5cab167-7977-4df1-8027-a63aa144f04e".encode()
 
 _secret = encrypt(_username, _password).decode()
 _api_mode = 'protected'
-http_proxy = ''
-https_proxy = ''
+http_proxy = None
+https_proxy = None
 
 
 def _today():
@@ -45,8 +45,11 @@ else:
 def _get_response(method, header_append={}, **kwargs):
     with open("apis.json", "r") as f:
         api_json = json.load(f)[_api_mode]
-        request = {**api_json[method], "header": {**api_json["genericHeaders"], **header_append},
-                   'proxies': {'http': https_proxy, "https": https_proxy}}
+        if http_proxy is not None or https_proxy is not None:
+            request = {**api_json[method], "header": {**api_json["genericHeaders"], **header_append},
+                       'proxies': {'http': https_proxy, "https": https_proxy}}
+        else:
+            request = {**api_json[method], "header": {**api_json["genericHeaders"], **header_append}}
 
     for key, value in kwargs.items():
         try:

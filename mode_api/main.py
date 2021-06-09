@@ -43,7 +43,7 @@ SLOT = None
 DOSE = 1
 MODE = 'Normal'
 DEVICE = "Android"
-REFRESH_TIMES = 1
+REFRESH_TIMES = 5
 BROWSER = 'Chrome'
 OTP = 'Auto'
 DRY = None
@@ -634,58 +634,33 @@ def main():
     vaccine_found = False
     proxy_counter = 0
 
-    proxies = {
-        "proxies": [
-            "13.232.190.195:1234",
-            "65.1.135.89:1234",
-            "15.206.169.114:1234",
-            "13.233.237.248:1234",
-            "3.108.61.77:1234"
-
-        ],
-        "proxies2": [
-            "3.108.42.239:1234",
-            "15.206.145.158:1234",
-            "52.66.204.246:1234",
-            "13.233.113.252:1234",
-            "13.127.218.137:1234"
-
-        ],
-        "proxies3": [
-            "65.2.9.243:1234",
-            "13.233.167.94:1234",
-            "15.206.117.200:1234",
-            "13.126.226.62:1234",
-            "15.206.125.233:1234"
-
-        ],
-        "proxies4": [
-            "13.126.33.199:1234",
-            "3.6.92.15:1234",
-            "3.6.38.116:1234",
-            "13.235.246.134:1234",
-            "13.233.132.11:1234"
-        ]
-    }
-    if PUBLICPROXY is not None:
-        req_proxy = RequestProxy()  # you may get different number of proxy when  you run this at each time
-        list_of_proxies = req_proxy.get_proxy_list()  # this will create proxy list
-
-        proxies = []  # int is list of Indian proxy
-        for proxy in list_of_proxies:
-            if proxy.country == 'India':
-                proxies.append(f'{proxy.ip}:{proxy.port}')
+    if os.path.isfile(os.path.join(os.getcwd(), 'proxies.json')):
+        with open(os.path.join(os.getcwd(), 'proxies.json')) as json_file:
+            proxies = json.load(json_file)['proxies']
     else:
-        proxies = proxies['proxies']
+        if PUBLICPROXY is not None:
+            req_proxy = RequestProxy()  # you may get different number of proxy when  you run this at each time
+            list_of_proxies = req_proxy.get_proxy_list()  # this will create proxy list
+
+            proxies = []  # int is list of Indian proxy
+            for proxy in list_of_proxies:
+                if proxy.country == 'India':
+                    proxies.append(f'{proxy.ip}:{proxy.port}')
+        else:
+            proxies = None
 
     proxy_index = 0
-    api.http_proxy = proxies[-1]
-    if PUBLICPROXY is None:  # Only set HTTPS proxy if using private servers. Public proxies will fail on https
-        api.https_proxy = proxies[-1]
+    if proxies is not None:
+        api.http_proxy = proxies[-1]
+        if PUBLICPROXY is None:  # Only set HTTPS proxy if using private servers. Public proxies will fail on https
+            api.https_proxy = proxies[-1]
 
     division_value = 100 if PIN_CODE is None else 100 / len(PIN_CODE)
 
     bearer_token = login(driver)
+    if USER_STATE is not None and USER_DISTRICT is not None:
+        state_id = api.get_state_id(USER_STATE)
+        district_id = api.get_district_id(state_id, USER_DISTRICT)
 
     while vaccine_found is False:
         try:
@@ -695,18 +670,19 @@ def main():
                 check_beneficiary(bearer_token)
 
             if proxy_counter % division_value == 0:
-                logger.info('Switching proxy!')
-                previous_proxy_index = proxy_index
-                if previous_proxy_index == len(proxies) - 1:
-                    proxy_index = 0
-                else:
-                    proxy_index = previous_proxy_index + 1
+                if proxies is not None:
+                    logger.info('Switching proxy!')
+                    previous_proxy_index = proxy_index
+                    if previous_proxy_index == len(proxies) - 1:
+                        proxy_index = 0
+                    else:
+                        proxy_index = previous_proxy_index + 1
 
-                api.http_proxy = proxies[proxy_index]
-                if PUBLICPROXY is None:  # Only set HTTPS proxy if using private proxy. Public proxies will fail!
-                    api.https_proxy = proxies[proxy_index]
-                logger.info(f"Proxy: {proxies[proxy_index]}")
-                logger.info(f"Proxy Index: {proxy_index}")
+                    api.http_proxy = proxies[proxy_index]
+                    if PUBLICPROXY is None:  # Only set HTTPS proxy if using private proxy. Public proxies will fail!
+                        api.https_proxy = proxies[proxy_index]
+                    logger.info(f"Proxy: {proxies[proxy_index]}")
+                    logger.info(f"Proxy Index: {proxy_index}")
 
             proxy_counter += 1
             logger.info(f"while count: {proxy_counter}")
@@ -724,8 +700,6 @@ def main():
                         centers['centers'].extend(api.calendar_by_pin(pin, bearer_token).json()['centers'])
                     centers['centers'] = list(filter(None, centers['centers']))
             else:
-                state_id = api.get_state_id(USER_STATE)
-                district_id = api.get_district_id(state_id, USER_DISTRICT)
                 if MODE.lower() == 'ultra':
                     centers = api.find_by_district(district_id, bearer_token).json()
                 else:
@@ -766,20 +740,21 @@ def main():
             logger.info(ce)
 
             if DRY is not None:
-                logger.info('Running in DRY mode, exitting!')
+                logger.info('Running in DRY mode, exiting!')
                 sys.exit(1)
 
-            logger.info('Switching proxy!')
-            previous_proxy_index = proxy_index
-            if previous_proxy_index == len(proxies) - 1:
-                proxy_index = 0
-            else:
-                proxy_index = previous_proxy_index + 1
+            if proxies is not None:
+                logger.info('Switching proxy!')
+                previous_proxy_index = proxy_index
+                if previous_proxy_index == len(proxies) - 1:
+                    proxy_index = 0
+                else:
+                    proxy_index = previous_proxy_index + 1
 
-            api.http_proxy = proxies[proxy_index]
-            api.https_proxy = proxies[proxy_index]
-            logger.info(f"Proxy: {proxies[proxy_index]}")
-            logger.info(f"Proxy Index: {proxy_index}")
+                api.http_proxy = proxies[proxy_index]
+                api.https_proxy = proxies[proxy_index]
+                logger.info(f"Proxy: {proxies[proxy_index]}")
+                logger.info(f"Proxy Index: {proxy_index}")
             proxy_counter = 1
             bearer_token = login(driver)
             continue
