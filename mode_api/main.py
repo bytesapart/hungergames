@@ -5,6 +5,7 @@ import cgi
 import datetime
 import requests
 import urllib
+import random
 
 import selenium.common.exceptions
 from selenium import webdriver
@@ -707,12 +708,12 @@ def main():
             if MODE.lower() == 'ultra':
                 if len(centers['sessions']) == 0:
                     logger.info('No centers found!')
-                    sleep(REFRESH_TIMES)
+                    sleep(random.uniform(REFRESH_TIMES, REFRESH_TIMES + 2))
                     continue
             else:
                 if len(centers['centers']) == 0:
                     logger.info('No centers found!')
-                    sleep(REFRESH_TIMES)
+                    sleep(random.uniform(REFRESH_TIMES, REFRESH_TIMES + 2))
                     continue
 
             logger.info('Centers found!')
@@ -735,7 +736,7 @@ def main():
                 except Exception as e:
                     logger.info(e)
                     continue
-            sleep(REFRESH_TIMES)
+            sleep(random.uniform(REFRESH_TIMES, REFRESH_TIMES + 2))
         except (ConnectionError, requests.exceptions.ProxyError) as ce:
             logger.info(ce)
 
