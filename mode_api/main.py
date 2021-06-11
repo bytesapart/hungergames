@@ -740,19 +740,15 @@ def main():
             logger.info(f"session_id_and_slot is {session_id_and_slot}")
             if session_id_and_slot is not None:
                 logger.info('Prepping to book vaccine')
-                try:
-                    if SAFETY is not None:
-                        logger.info('Changing API mode to: PROTECTED')
-                        api.change_api_mode('protected')
-                    vaccine_booking = book_vaccine(session_id_and_slot[0], session_id_and_slot[1], bearer_token)
-                    if vaccine_booking is True:
-                        logger.info("WooHooo!")
-                        break
-                    else:
-                        logger.info('Response code was not 200 while booking vaccine! Something went wrong! Retrying!')
-                        continue
-                except Exception as e:
-                    logger.info(e)
+                if SAFETY is not None:
+                    logger.info('Changing API mode to: PROTECTED')
+                    api.change_api_mode('protected')
+                vaccine_booking = book_vaccine(session_id_and_slot[0], session_id_and_slot[1], bearer_token)
+                if vaccine_booking is True:
+                    logger.info("WooHooo!")
+                    break
+                else:
+                    logger.info('Response code was not 200 while booking vaccine! Something went wrong! Retrying!')
                     continue
             sleep(random.uniform(REFRESH_TIMES, REFRESH_TIMES + 2))
         except (ConnectionError, requests.exceptions.ProxyError) as ce:
