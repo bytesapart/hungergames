@@ -266,11 +266,11 @@ def schedule_appointment(dose, session_id, slot, beneficiary_id, captcha, bearer
         raise ConnectionError(
             f'Response Exception occurred in schedule_appointment! The response code was {response.status_code}.'
             f' The content is {response.content}')
-    if response.status_code != 200:
+    if response.status_code == 400:
         raise ConnectionError(
             f'Response Exception occurred in schedule_appointment! The response code was {response.status_code}.'
             f' The content is {response.content}')
-    if response.status_code == 400:
+    if response.status_code != 200:
         raise ConnectionError(
             f'Response Exception occurred in schedule_appointment! The response code was {response.status_code}.'
             f' The content is {response.content}')
@@ -297,11 +297,8 @@ def get_captcha(bearer_token):
 def change_api_mode(api_mode):
     global _api_mode
     if api_mode.lower() == 'protected':
-        main.logger.info('Changing API mode to: PROTECTED')
         _api_mode = 'protected'
     elif api_mode.lower() == 'public':
-        main.logger.info('Changing API mode to: PUBLIC')
         _api_mode = 'public'
     else:
-        main.logger.info("Mode is neither Public or Protected. Changing to PUBLIC")
         _api_mode = 'public'

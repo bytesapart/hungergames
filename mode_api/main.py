@@ -630,6 +630,7 @@ def main():
     global REFRESH_TIMES
     global MODE
     global SAFETY
+    global DRY
     setup()
 
     # ===== Step 2: Launch chrome and the websites =====
@@ -677,10 +678,12 @@ def main():
             # Check beneficiary before hand because people put wrong names!
             if proxy_counter == 0:
                 if SAFETY is not None:
+                    logger.info('Changing API mode to: PROTECTED')
                     api.change_api_mode('protected')
                 check_beneficiary(bearer_token)
 
             if SAFETY is not None:
+                logger.info('Changing API mode to: PUBLIC')
                 api.change_api_mode('public')
             if proxy_counter % division_value == 0:
                 if proxies is not None:
@@ -739,6 +742,7 @@ def main():
                 logger.info('Prepping to book vaccine')
                 try:
                     if SAFETY is not None:
+                        logger.info('Changing API mode to: PROTECTED')
                         api.change_api_mode('protected')
                     vaccine_booking = book_vaccine(session_id_and_slot[0], session_id_and_slot[1], bearer_token)
                     if vaccine_booking is True:
