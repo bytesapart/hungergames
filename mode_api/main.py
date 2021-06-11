@@ -49,6 +49,7 @@ BROWSER = 'Chrome'
 OTP = 'Auto'
 DRY = None
 PUBLICPROXY = None
+SAFETY = None
 # ===== iOS Specefic Configs =====
 _IOS_PREVIOUS_IP = ''
 _IOS_OTP = ''
@@ -96,6 +97,7 @@ def setup():
     global DRY
     global MODE
     global PUBLICPROXY
+    global SAFETY
     settings = os.path.join(os.getcwd(), "settings.txt")
     if os.path.exists(settings):
         with open(settings, 'r') as the_file:
@@ -146,6 +148,8 @@ def setup():
                     MODE = line.split(':')[1].strip()
                 if line.split(':')[0].lower() == 'publicproxy':
                     PUBLICPROXY = line.split(':')[1].strip()
+                if line.split(':')[0].lower() == 'safety':
+                    SAFETY = line.split(':')[1].strip()
     else:
         PHONE_NUMBER = input("Your Number: ")
         USER_STATE = input("Your State: ").lower()
@@ -201,6 +205,9 @@ def setup():
         PUBLICPROXY = input("Enter whether to use Public Proxy servers: ").lower()
         if PUBLICPROXY == '':
             PUBLICPROXY = None
+        SAFETY = input("Whether to use Safety Mode: ").lower()
+        if SAFETY == '':
+            SAFETY = None
 
     if HOSPITAL is not None:
         HOSPITAL = [hosp.strip() for hosp in HOSPITAL.split(',')]
@@ -622,6 +629,7 @@ def main():
     # ===== Step 1: Read the configuration file =====
     global REFRESH_TIMES
     global MODE
+    global SAFETY
     setup()
 
     # ===== Step 2: Launch chrome and the websites =====
@@ -668,8 +676,12 @@ def main():
 
             # Check beneficiary before hand because people put wrong names!
             if proxy_counter == 0:
+                if SAFETY is not None:
+                    api.change_api_mode('protected')
                 check_beneficiary(bearer_token)
 
+            if SAFETY is not None:
+                api.change_api_mode('public')
             if proxy_counter % division_value == 0:
                 if proxies is not None:
                     logger.info('Switching proxy!')
@@ -726,6 +738,8 @@ def main():
             if session_id_and_slot is not None:
                 logger.info('Prepping to book vaccine')
                 try:
+                    if SAFETY is not None:
+                        api.change_api_mode('protected')
                     vaccine_booking = book_vaccine(session_id_and_slot[0], session_id_and_slot[1], bearer_token)
                     if vaccine_booking is True:
                         logger.info("WooHooo!")

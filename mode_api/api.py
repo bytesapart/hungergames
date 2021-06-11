@@ -1,8 +1,28 @@
+import logging
+
 import requests
 import json
 import hashlib
 import datetime
+import sys
 from secret import encrypt
+
+# create logger
+logger = logging.getLogger('hungergames')
+logger.setLevel(logging.DEBUG)
+
+# create console handler and set level to debug
+ch = logging.StreamHandler(sys.stdout)
+ch.setLevel(logging.DEBUG)
+
+# create formatter
+formatter = logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s')
+
+# add formatter to ch
+ch.setFormatter(formatter)
+
+# add ch to logger
+logger.addHandler(ch)
 
 # For states - https://cdn-api.co-vin.in/api/v2/admin/location/states
 # For distrcits - https://cdn-api.co-vin.in/api/v2/admin/location/districts/21
@@ -286,3 +306,16 @@ def get_captcha(bearer_token):
             f'Response Exception occurred in get_captcha! The response code was {response.status_code}.'
             f' The content is {response.content}')
     return response
+
+
+def change_api_mode(api_mode):
+    global _api_mode
+    if api_mode.lower() == 'protected':
+        logger.info('Changing API mode to: PROTECTED')
+        _api_mode = 'protected'
+    elif api_mode.lower() == 'public':
+        logger.info('Changing API mode to: PUBLIC')
+        _api_mode = 'public'
+    else:
+        logger.info("Mode is neither Public or Protected. Changing to PUBLIC")
+        _api_mode = 'public'
