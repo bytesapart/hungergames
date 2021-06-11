@@ -288,6 +288,10 @@ def schedule_appointment(dose, session_id, slot, beneficiary_id, captcha, bearer
         raise ConnectionError(
             f'Response Exception occurred in schedule_appointment! The response code was {response.status_code}.'
             f' The content is {response.content}')
+    if response.status_code != 400:
+        raise ConnectionError(
+            f'Response Exception occurred in schedule_appointment! The response code was {response.status_code}.'
+            f' The content is {response.content}')
     return response
 
 
