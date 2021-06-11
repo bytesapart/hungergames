@@ -1,4 +1,4 @@
-import logging
+import main
 
 import requests
 import json
@@ -297,11 +297,11 @@ def get_captcha(bearer_token):
 def change_api_mode(api_mode):
     global _api_mode
     if api_mode.lower() == 'protected':
-        logger.info('Changing API mode to: PROTECTED')
+        main.logger.info('Changing API mode to: PROTECTED')
         _api_mode = 'protected'
     elif api_mode.lower() == 'public':
-        logger.info('Changing API mode to: PUBLIC')
+        main.logger.info('Changing API mode to: PUBLIC')
         _api_mode = 'public'
     else:
-        logger.info("Mode is neither Public or Protected. Changing to PUBLIC")
+        main.logger.info("Mode is neither Public or Protected. Changing to PUBLIC")
         _api_mode = 'public'
