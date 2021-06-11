@@ -1,5 +1,3 @@
-import main
-
 import requests
 import json
 import hashlib
