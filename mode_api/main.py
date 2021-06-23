@@ -596,7 +596,7 @@ def book_vaccine(session_id, slot, bearer_token):
         # captcha = svg_decode.crack_captcha(api.get_captcha(bearer_token).json()['captcha']) + 'SPARTA'
         captcha = None
         session_id = '123'
-    logger.info(tabulate([['Dose', 1], ['session_id', session_id], ['slot', slot], ['beneficiary_id', beneficiary_id],
+    logger.info(tabulate([['Dose', DOSE], ['session_id', session_id], ['slot', slot], ['beneficiary_id', beneficiary_id],
                           ['captcha', captcha], ['bearer_token', bearer_token]]))
     final = api.schedule_appointment(DOSE, session_id, slot, beneficiary_id, captcha, bearer_token)
     logger.info(f"Final Response is: {final}")
