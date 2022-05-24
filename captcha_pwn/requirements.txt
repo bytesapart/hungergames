@@ -2,7 +2,7 @@ lxml==4.6.5
 selenium==3.141.0
 numpy==1.21.0
 matplotlib==3.4.2
-tensorflow_gpu==2.5.3
+tensorflow_gpu==2.6.4
 playsound==1.2.2
 tensorflow==2.5.3
 Pillow==9.0.1
